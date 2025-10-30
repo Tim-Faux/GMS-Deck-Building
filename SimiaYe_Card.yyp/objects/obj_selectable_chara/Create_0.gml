@@ -1,6 +1,7 @@
 #macro SELECTABLE_CHARA_ARROW_WIDTH 25
 #macro SELECTABLE_CHARA_ARROW_SPEED 17
 #macro SELECTABLE_CHARA_ARROW_PADDING 5
+#macro SELECTABLE_CHARA_HIGHLIGHT_PULSE_SPEED 22
 
 if(!variable_global_exists("object_being_clicked")) {
 	global.object_being_clicked = false
@@ -8,6 +9,7 @@ if(!variable_global_exists("object_being_clicked")) {
 chara_clicked = false
 is_selected = false
 arrow_pos = 0
+highlight_pulse_size = 0
 
 /// @desc						Draws the highlight behind this character.
 ///									NOTE this can only be used in the draw events
@@ -20,6 +22,10 @@ function draw_character_highlight() {
 	if(is_selected) {
 		max_radius *= 3 / 4	
 	}
+	else {
+		max_radius -= abs(sin(highlight_pulse_size / SELECTABLE_CHARA_HIGHLIGHT_PULSE_SPEED) * 7)
+	}
+	highlight_pulse_size++
 	
 	for (var dist_from_center = 0; dist_from_center < max_radius; dist_from_center++) {
 		var circle_alpha = ((highlight_intensity * max_radius) /
