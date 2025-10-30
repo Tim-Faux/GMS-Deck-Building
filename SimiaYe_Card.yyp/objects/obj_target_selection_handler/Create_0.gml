@@ -25,7 +25,7 @@ function select_target_attacker() {
 
 /// @desc												Finds all of the characters of the given classes
 ///															and creates obj_selectable_chara of them
-/// @param {Array<chara_class>} allowed_chara_classes	The classes allowed to attack, defaulting to all_chara
+/// @param {Array<Real>} allowed_chara_classes	The classes allowed to attack, defaulting to all_chara
 function create_attacker_selection(allowed_chara_classes = [chara_class.all_chara]) {
 	var all_allowed_attackers = find_allowed_attackers(allowed_chara_classes)
 
@@ -55,6 +55,9 @@ function find_allowed_attackers(allowed_class = [chara_class.all_chara]) {
 			array_push(allowed_attackers, chara_instance)
 		}
 	}
+	if(array_length(allowed_attackers) < num_chara_to_select) {
+		num_chara_to_select = array_length(allowed_attackers)
+	}
 	return allowed_attackers
 }
 
@@ -78,9 +81,11 @@ function chara_selected(chara_instance) {
 		show_chara_sprites()
 		layer_destroy_instances(highlighed_chara_layer)
 	}
+	else if (!array_contains(selected_chara, chara_instance)) {
+		num_chara_selected++
+		array_push(selected_chara, chara_instance)
+	}
 	
-	num_chara_selected++
-	array_push(selected_chara, chara_instance)
 	if(num_chara_selected >= num_chara_to_select || num_chara_to_select == 0) {
 		layer_destroy_instances(highlighed_chara_layer)
 		show_chara_sprites()
