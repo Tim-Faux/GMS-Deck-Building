@@ -30,7 +30,23 @@
   "physicsShape":1,
   "physicsShapePoints":[],
   "physicsStartAwake":true,
-  "properties":[],
+  "properties":[
+    {"$GMObjectProperty":"v1","%Name":"num_chara_to_select","filters":[],"listItems":[],"multiselect":false,"name":"num_chara_to_select","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"0","varType":1,},
+    {"$GMObjectProperty":"v1","%Name":"attacker_selection_type","filters":[],"listItems":[
+        "enum_card_selection_target.all_players",
+        "enum_card_selection_target.any_class",
+        "enum_card_selection_target.selected_class",
+      ],"multiselect":false,"name":"attacker_selection_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"enum_card_selection_target.all_players","varType":6,},
+    {"$GMObjectProperty":"v1","%Name":"defender_selection_type","filters":[],"listItems":[
+        "enum_card_attack_target.all_enemies",
+        "enum_card_attack_target.single_enemy",
+      ],"multiselect":false,"name":"defender_selection_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"enum_card_attack_target.all_enemies","varType":6,},
+    {"$GMObjectProperty":"v1","%Name":"allowed_classes","filters":[],"listItems":[
+        "chara_class.all_chara",
+        "chara_class.damage",
+        "chara_class.science",
+      ],"multiselect":true,"name":"allowed_classes","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"chara_class.all_chara","varType":6,},
+  ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,

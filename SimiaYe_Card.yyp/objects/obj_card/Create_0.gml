@@ -22,8 +22,22 @@ function discard_card() {
 	instance_destroy()
 }
 
-/// @description							Handles the card being played. This should be implemented in
-///												each card.
+/// @description							Handles the card being played. Allowing the player to
+///												select the attacker and defender of the card
 function play_card() {
-	
+	var target_selection_layer = layer_create(depth - 100)
+	instance_create_layer(x, y, target_selection_layer, obj_target_selection_handler, 
+	{
+		num_chara_to_select,
+		attacker_selection_type,
+		defender_selection_type,
+		allowed_classes,
+		card_played : id
+	})
+}
+
+/// @description							The callback function for obj_target_selection_handler,
+///												giving an opertunity for the card to discard the card
+function card_has_been_played() {
+	discard_card()
 }

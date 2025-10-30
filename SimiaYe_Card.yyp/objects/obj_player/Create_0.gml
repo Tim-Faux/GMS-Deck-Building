@@ -1,6 +1,4 @@
-
-chosen = false;
-main = false;
+class = chara_class.damage
 
 /// @desc								Removes health from the player equal to damage_taken and
 ///											check if player is still alive
@@ -10,4 +8,17 @@ function hit_by_enemy(damage_taken) {
 	show_debug_message(player_health)
 	if(player_health <= 0)
 		show_debug_message("Player is dead")
+}
+
+/// @desc								Finds the type and amount of damage/debuffs the character does
+///											when they attack
+/// @returns							The struct containing the attack data of the character
+function get_attack() {
+	//TODO need to make this the chara's actual attacks
+	var hitstrct = {
+	damage : 10,
+	debuffs : [[Card_Debuff_Effects.Poison, 3],
+				[Card_Debuff_Effects.Burn,  5]]
+	}
+	return hitstrct
 }

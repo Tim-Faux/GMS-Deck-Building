@@ -1,0 +1,1 @@
+class = chara_class.science
