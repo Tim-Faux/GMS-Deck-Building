@@ -10,6 +10,8 @@ chara_clicked = false
 is_selected = false
 arrow_pos = 0
 highlight_pulse_size = 0
+starting_image_x_scale = image_xscale
+starting_image_y_scale = image_yscale
 
 /// @desc						Draws the highlight behind this character.
 ///									NOTE this can only be used in the draw events
