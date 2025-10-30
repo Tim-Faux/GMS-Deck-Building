@@ -72,6 +72,14 @@ function target_selected(selected_target) {
 	}
 }
 
+/// @desc						The call back function for the obj_selectable_chara. Handles deselecting
+///									the character, cleaning up any references to their selection
+function target_deselected(selected_target) {
+	if (selecting_character) {
+		chara_deselected(selected_target)
+	}
+}
+
 /// @desc									Checks if the number of selected characters is equal to the 
 ///												allowed amount of characters before allowing an enemy
 ///												to be targeted
@@ -90,6 +98,17 @@ function chara_selected(chara_instance) {
 		layer_destroy_instances(highlighed_chara_layer)
 		show_chara_sprites()
 		select_target_enemy()
+	}
+}
+
+/// @desc									Removes the given character from the selected character array
+///												and decrements num_chara_selected
+/// @param {Id.Instance} chara_instance		The character being deselected
+function chara_deselected(chara_instance) {
+	var chara_index = array_get_index(selected_chara, chara_instance)
+	if (chara_index > -1) {
+		num_chara_selected--
+		array_delete(selected_chara, chara_index, 1)
 	}
 }
 
