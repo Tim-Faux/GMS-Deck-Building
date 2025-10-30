@@ -27,13 +27,13 @@ function hit_by_player(attack_data) {
 			
 			switch (debuff_type) {
 				case Card_Debuff_Effects.Poison:
-					array_push(damageToDisplay, [debuff_amount, c_purple])
+					array_push(damageToDisplay, [active_debuffs[$ debuff_type], c_purple])
 					break;
 				case Card_Debuff_Effects.Burn:
-					array_push(damageToDisplay, [debuff_amount, c_red])
+					array_push(damageToDisplay, [active_debuffs[$ debuff_type], c_red])
 					break;
 				default:
-					array_push(damageToDisplay, [debuff_amount, c_orange])
+					array_push(damageToDisplay, [active_debuffs[$ debuff_type], c_orange])
 					break;
 			}
 		}
