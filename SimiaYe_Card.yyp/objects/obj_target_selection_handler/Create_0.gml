@@ -282,3 +282,16 @@ function find_allowed_enemies() {
 	}
 	return allowed_enemies
 }
+
+/// @desc									Draws a rectangle over the whole camera to dim the game
+///												NOTE: this must be called in the Draw event or it won't
+///												work correctly
+function draw_target_selection_background() {
+	draw_set_colour(c_black)
+	draw_set_alpha(BACKGROUND_ALPHA)
+	var default_camera_id = camera_get_default()
+	var screen_width = camera_get_view_width(default_camera_id)
+	var screen_height = camera_get_view_height(default_camera_id)
+	draw_rectangle(0, 0, screen_width, screen_height, false)
+	draw_set_alpha(1)
+}
