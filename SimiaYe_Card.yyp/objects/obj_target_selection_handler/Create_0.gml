@@ -1,3 +1,6 @@
+#macro SELECTABLE_CHARA_BACK_BUTTON_PADDING 10
+#macro SELECTABLE_CHARA_CANCEL_BUTTON_PADDING 10
+
 highlighed_chara_layer = layer_create(depth - 1, "highlighed_chara_layer")
 highlighed_enemies_layer = layer_create(depth - 1, "highlighed_enemies_layer")
 selected_chara = []
@@ -10,6 +13,8 @@ select_target_attacker()
 ///									selection is needed
 function select_target_attacker() {
 	selecting_character = true
+	selected_chara = []
+	num_chara_selected = 0
 	if(attacker_selection_type == enum_card_selection_target.all_players) {
 		selected_chara = find_allowed_attackers()
 		num_chara_selected = array_length(selected_chara)
@@ -23,21 +28,21 @@ function select_target_attacker() {
 	}
 }
 
-/// @desc												Finds all of the characters of the given classes
-///															and creates obj_selectable_chara of them
-/// @param {Array<Real>} allowed_chara_classes	The classes allowed to attack, defaulting to all_chara
+/// @desc											Finds all of the characters of the given classes
+///														and creates obj_selectable_chara of them
+/// @param {Array<Real>} allowed_chara_classes		The classes allowed to attack, defaulting to all_chara
 function create_attacker_selection(allowed_chara_classes = [chara_class.all_chara]) {
 	var all_allowed_attackers = find_allowed_attackers(allowed_chara_classes)
 
 	for(var chara_index = 0; chara_index < array_length(all_allowed_attackers); chara_index++) {
-		//TODO create dimming box
 		var sprite = all_allowed_attackers[chara_index].sprite_index
 		instance_create_layer(all_allowed_attackers[chara_index].x, all_allowed_attackers[chara_index].y, highlighed_chara_layer, obj_selectable_chara, {
 			sprite_index : sprite,
 			chara_instance : all_allowed_attackers[chara_index]
 		})
 		all_allowed_attackers[chara_index].visible = false
-	}	
+	}
+	create_back_and_cancel_buttons(true)
 }
 
 /// @desc										Searches for all characers in the room and determines if
@@ -59,6 +64,40 @@ function find_allowed_attackers(allowed_class = [chara_class.all_chara]) {
 		num_chara_to_select = array_length(allowed_attackers)
 	}
 	return allowed_attackers
+}
+
+/// @desc									Creates the back and cancel buttons for the target selection
+/// @param {boolean} is_attacker_select		Determines which layer the buttons will be placed on and
+///												whether the back button is greyed out or not
+function create_back_and_cancel_buttons(is_attacker_select) {
+	var back_button_x = SELECTABLE_CHARA_BACK_BUTTON_PADDING + (sprite_get_width(object_get_sprite(ui_selectable_chara_back_button)) / 2)
+	var back_button_y = display_get_gui_height() / 2 - SELECTABLE_CHARA_BACK_BUTTON_PADDING -
+							(sprite_get_height(object_get_sprite(ui_selectable_chara_back_button)) / 2)
+	var cancel_button_x = SELECTABLE_CHARA_CANCEL_BUTTON_PADDING + (sprite_get_width(object_get_sprite(ui_selectable_chara_back_button)) / 2)
+	var cancel_button_y = display_get_gui_height() / 2 + SELECTABLE_CHARA_CANCEL_BUTTON_PADDING +
+							(sprite_get_height(object_get_sprite(ui_selectable_chara_back_button)) / 2)
+	
+	var layer_id = highlighed_enemies_layer
+	if(is_attacker_select) {
+		layer_id = highlighed_chara_layer
+	}
+	
+	instance_create_layer(back_button_x, back_button_y, layer_id, ui_selectable_chara_back_button, {
+		is_back_enabled : !is_attacker_select
+	})
+	instance_create_layer(cancel_button_x, cancel_button_y, layer_id, ui_selectable_chara_cancel_button)
+}
+
+/// @desc									Resets the target selection to selecting an attacker and
+///												hiding the target selection for the defenders
+function cancel_target_selection() {
+	show_chara_sprites()
+	show_enemy_sprites()
+	if(card_played != noone) {
+		card_played.reset_card()
+	}
+		
+	find_and_delete_related_layers(layer)
 }
 
 /// @desc						The call back function for the obj_selectable_chara, then determines if
@@ -268,7 +307,8 @@ function create_defender_selection() {
 			chara_instance : all_allowed_enemies[enemy_index]
 		})
 		all_allowed_enemies[enemy_index].visible = false
-	}	
+	}
+	create_back_and_cancel_buttons(false)
 }
 
 /// @desc									Finds all obj_enemy instances that can be targeted by an attack

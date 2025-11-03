@@ -41,3 +41,10 @@ function play_card() {
 function card_has_been_played() {
 	discard_card()
 }
+
+/// @description							The callback function for obj_target_selection_handler,
+///												reseting the card position if playing it was canceled
+function reset_card() {
+	x = card_start_x_position
+	y = card_start_y_position
+}

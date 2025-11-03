@@ -50,6 +50,8 @@
     {"name":"ui_player_deck_scrollbar","order":3,"path":"objects/ui_player_deck_scrollbar/ui_player_deck_scrollbar.yy",},
     {"name":"ui_player_hand","order":1,"path":"objects/ui_player_hand/ui_player_hand.yy",},
     {"name":"ui_room_switch_button","order":2,"path":"objects/ui_room_switch_button/ui_room_switch_button.yy",},
+    {"name":"ui_selectable_chara_back_button","order":8,"path":"objects/ui_selectable_chara_back_button/ui_selectable_chara_back_button.yy",},
+    {"name":"ui_selectable_chara_cancel_button","order":9,"path":"objects/ui_selectable_chara_cancel_button/ui_selectable_chara_cancel_button.yy",},
     {"name":"ui_temp_button","order":1,"path":"objects/ui_temp_button/ui_temp_button.yy",},
     {"name":"Arena","order":1,"path":"rooms/Arena/Arena.yy",},
     {"name":"rm_level_select","order":3,"path":"rooms/rm_level_select/rm_level_select.yy",},
@@ -67,5 +69,6 @@
     {"name":"spr_default_button","order":1,"path":"sprites/spr_default_button/spr_default_button.yy",},
     {"name":"spr_player_deck_header_background","order":8,"path":"sprites/spr_player_deck_header_background/spr_player_deck_header_background.yy",},
     {"name":"spr_player_deck_scroll_thumb","order":1,"path":"sprites/spr_player_deck_scroll_thumb/spr_player_deck_scroll_thumb.yy",},
+    {"name":"spr_selectable_chara_back_button","order":4,"path":"sprites/spr_selectable_chara_back_button/spr_selectable_chara_back_button.yy",},
   ],
 }

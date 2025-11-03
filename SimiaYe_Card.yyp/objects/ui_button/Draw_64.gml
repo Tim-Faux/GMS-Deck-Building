@@ -3,7 +3,14 @@
 draw_self()
 
 draw_set_font(font)
-draw_set_colour(text_color)
+
+if(image_blend == c_white || image_blend == -1) {
+	draw_set_colour(text_color)
+}
+else {
+	var blend_adjusted_text_color = merge_colour(text_color, image_blend, 0.5)
+	draw_set_colour(blend_adjusted_text_color)
+}
 
 draw_set_halign(fa_center)
 draw_set_valign(fa_middle)

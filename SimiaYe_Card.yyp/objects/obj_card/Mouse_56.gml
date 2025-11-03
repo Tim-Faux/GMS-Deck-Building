@@ -6,7 +6,6 @@ if(card_selected) {
 		play_card()
 	}
 	else {
-		x = card_start_x_position
-		y = card_start_y_position
+		reset_card()
 	}
 }
