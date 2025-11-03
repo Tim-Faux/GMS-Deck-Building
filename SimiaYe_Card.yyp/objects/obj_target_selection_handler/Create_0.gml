@@ -1,5 +1,6 @@
 #macro SELECTABLE_CHARA_BACK_BUTTON_PADDING 10
 #macro SELECTABLE_CHARA_CANCEL_BUTTON_PADDING 10
+#macro NUMBER_OF_TARGETS_TEXT_PADDING 25
 
 highlighed_chara_layer = layer_create(depth - 1, "highlighed_chara_layer")
 highlighed_enemies_layer = layer_create(depth - 1, "highlighed_enemies_layer")
@@ -334,4 +335,41 @@ function draw_target_selection_background() {
 	var screen_height = camera_get_view_height(default_camera_id)
 	draw_rectangle(0, 0, screen_width, screen_height, false)
 	draw_set_alpha(1)
+}
+
+/// @desc									Draws text indicating how many characters need to be selected
+///												NOTE: this must be called in the Draw event or it won't
+///												work correctly
+function draw_number_of_targets_to_select_prompt() {
+	var number_of_attackers_remaining = num_chara_to_select - num_chara_selected
+	var number_of_targets_to_select_text = $"Select {number_of_attackers_remaining} targets"
+	if (selecting_character) {
+		if(number_of_attackers_remaining > 1) {
+			if(num_chara_selected > 0) {
+				number_of_targets_to_select_text = $"Select {number_of_attackers_remaining} more attackers"
+			}
+			else {
+				number_of_targets_to_select_text = $"Select {number_of_attackers_remaining} attackers"
+			}
+		}
+		else {
+			if (num_chara_selected > 0) {
+				number_of_targets_to_select_text = $"Select {number_of_attackers_remaining} more attacker"
+			}
+			else {
+				number_of_targets_to_select_text = $"Select an attacker"
+			}
+		}
+	}
+	else {
+		number_of_targets_to_select_text = $"Select an enemy to attack"
+	}
+	
+	draw_set_colour(text_color)
+	draw_set_alpha(1)
+	draw_set_halign(fa_center)
+	draw_set_font(num_targets_to_select_font)
+	var text_x_pos = display_get_gui_width() / 2
+	var text_y_pos = NUMBER_OF_TARGETS_TEXT_PADDING
+	draw_text(text_x_pos, text_y_pos, number_of_targets_to_select_text)
 }

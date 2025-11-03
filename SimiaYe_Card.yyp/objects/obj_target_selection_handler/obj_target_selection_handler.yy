@@ -27,6 +27,10 @@
   "physicsShapePoints":[],
   "physicsStartAwake":true,
   "properties":[
+    {"$GMObjectProperty":"v2","%Name":"text_color","filters":[],"listItems":[],"multiselect":false,"name":"text_color","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"$FFFFFFFF","varType":7,},
+    {"$GMObjectProperty":"v2","%Name":"num_targets_to_select_font","filters":[
+        "GMFont",
+      ],"listItems":[],"multiselect":false,"name":"num_targets_to_select_font","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resource":{"name":"fnt_button_font","path":"fonts/fnt_button_font/fnt_button_font.yy",},"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"fnt_button_font","varType":5,},
     {"$GMObjectProperty":"v2","%Name":"card_played","filters":[
         "GMObject",
       ],"listItems":[],"multiselect":false,"name":"card_played","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"","varType":5,},

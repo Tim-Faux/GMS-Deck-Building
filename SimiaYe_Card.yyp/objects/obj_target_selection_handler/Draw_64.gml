@@ -1,1 +1,2 @@
 draw_target_selection_background()
+draw_number_of_targets_to_select_prompt()
