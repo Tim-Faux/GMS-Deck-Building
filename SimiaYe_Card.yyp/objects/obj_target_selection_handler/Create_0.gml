@@ -210,12 +210,9 @@ function all_enemies_selected() {
 /// @param {Id.Instance} enemy_instance		The enemy selected to take damage
 function enemy_selected(enemy_instance) {
 	if(enemy_instance != noone) {
-		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
-			enemy_instance.hit_by_player(selected_chara[chara_index].get_attack())
-		}
 		show_enemy_sprites()
 		if(card_played != noone) {
-			card_played.card_has_been_played()
+			card_played.card_has_been_played(selected_chara, enemy_instance)
 		}
 		
 		find_and_delete_related_layers(layer)

@@ -5,6 +5,17 @@ card_start_x_position = x
 card_start_y_position = y
 show_energy_error = false
 
+#region THIS NEED TO BE IMPLEMENTED IN EACH CARD
+//Be sure to check the Variable Definitions, there are many variables to manipulate there
+
+/// @description							The unique action of the card when it is played
+card_action = function (selected_chara, enemy_instance) {
+	for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
+		enemy_instance.hit_by_player(selected_chara[chara_index].get_attack())
+	}
+}
+#endregion
+
 /// @description							Checks to see if no other cards are selected then allows this
 ///												card to be selected
 function select_card() {
@@ -60,10 +71,13 @@ function show_not_enough_energy_error() {
 	draw_text(text_x_pos, text_y_pos, NOT_ENOUGH_ENERGY_TO_PLAY_THIS_CARD)
 }
 
-/// @description							The callback function for obj_target_selection_handler,
-///												giving an opertunity for the card to discard the card
-function card_has_been_played() {
+/// @description								The callback function for obj_target_selection_handler,
+///													giving an opportunity for the card to discard the card
+/// @param {Array<Id.Instance>} selected_chara	The character(s) selected to for the card's action
+/// @param {Id.Instance} enemy_instance			The enemy selected to take damage
+function card_has_been_played(selected_chara, enemy_instance) {
 	ui_player_energy.remove_from_player_current_energy(energy_cost)
+	card_action(selected_chara, enemy_instance)
 	discard_card()
 }
 

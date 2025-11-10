@@ -32,6 +32,7 @@
   "physicsShapePoints":[],
   "physicsStartAwake":true,
   "properties":[
+    {"$GMObjectProperty":"v2","%Name":"energy_cost","filters":[],"listItems":[],"multiselect":false,"name":"energy_cost","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"1","varType":1,},
     {"$GMObjectProperty":"v2","%Name":"num_chara_to_select","filters":[],"listItems":[],"multiselect":false,"name":"num_chara_to_select","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"0","varType":1,},
     {"$GMObjectProperty":"v2","%Name":"attacker_selection_type","filters":[],"listItems":[
         "enum_card_selection_target.all_players",
@@ -47,7 +48,6 @@
         "chara_class.damage",
         "chara_class.science",
       ],"multiselect":true,"name":"allowed_classes","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"chara_class.all_chara","varType":6,},
-    {"$GMObjectProperty":"v2","%Name":"energy_cost","filters":[],"listItems":[],"multiselect":false,"name":"energy_cost","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"1","varType":1,},
     {"$GMObjectProperty":"v2","%Name":"not_enough_energy_error_font","filters":[
         "GMFont",
       ],"listItems":[],"multiselect":false,"name":"not_enough_energy_error_font","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resource":{"name":"fnt_button_font","path":"fonts/fnt_button_font/fnt_button_font.yy",},"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"fnt_button_font","varType":5,},
