@@ -1,4 +1,7 @@
 #macro NOT_ENOUGH_ENERGY_TO_PLAY_THIS_CARD "Not enough energy to play this card!"
+#macro PADDING_BETWEEN_CARD_DESCRIPTION_LINES 2
+
+flexpanels = create_flexpanels()
 
 card_selected = false
 card_start_x_position = x
@@ -7,6 +10,7 @@ show_energy_error = false
 
 #region THIS NEED TO BE IMPLEMENTED IN EACH CARD
 //Be sure to check the Variable Definitions, there are many variables to manipulate there
+card_description = "This is example text of the card's description"
 
 /// @description							The unique action of the card when it is played
 card_action = function (selected_chara, enemy_instance) {
@@ -86,4 +90,102 @@ function card_has_been_played(selected_chara, enemy_instance) {
 function reset_card() {
 	x = card_start_x_position
 	y = card_start_y_position
+}
+
+/// @description							Creates the flexpanels for the card, with nodes for outside_border,
+///												 background, image_box, energy_circle, and description_box
+/// @returns								The parent node of the flex panel
+function create_card_flexpanels() {
+	var node = flexpanel_create_node({ 
+		name : "outside_border", 
+		width : sprite_width,
+		height : sprite_height,
+		padding : 4,
+		nodes : [
+		{
+			name : "background",
+			border : 8,
+			gap : 20,
+			nodes : [
+			{
+				name : "image_box",
+				height : 113,
+				nodes : [
+				{
+					name : "energy_circle",
+					width : 31,
+					height : 31,
+					left : -7,
+					top : -7
+				}]
+			},
+			{
+				name : "description_box",
+				height : 97,
+				padding : 2
+			}]
+		}]
+	})
+	
+	flexpanel_calculate_layout(node, sprite_width, sprite_height, flexpanel_direction.LTR)
+	return node
+}
+
+/// @description							Draws the amount of energy needed to play the card in the
+///												top left hand corner. NOTE: This can only be called in
+///												the draw function otherwise it will not work
+function draw_energy_cost() {
+	draw_set_colour(c_white)
+	draw_set_alpha(1)
+	draw_set_font(energy_cost_font)
+	draw_set_halign(fa_center)
+	draw_set_valign(fa_middle)
+	
+	var energy_circle_panel = flexpanel_node_layout_get_position(flexpanel_node_get_child(flexpanels, "energy_circle"), false)
+	var text_x_pos = x + energy_circle_panel.left + (energy_circle_panel.width / 2)
+	var text_y_pos = y + energy_circle_panel.top + ceil(energy_circle_panel.height / 2)
+	var text_size_scale = find_energy_cost_text_scaling(energy_circle_panel)
+	
+	draw_text_transformed(text_x_pos, text_y_pos, energy_cost, text_size_scale, text_size_scale, 0);
+}
+
+/// @description										Finds the scaling needed for the energy cost text
+/// @param {Array<Id.Instance>} energy_circle_panel		The panel that the energy cost will be displayed in
+/// @returns											The scaling factor of the text
+function find_energy_cost_text_scaling(energy_circle_panel) {
+	var max_string_width = energy_circle_panel.width -  energy_circle_panel.paddingLeft
+													- energy_circle_panel.paddingRight
+	var max_string_height = energy_circle_panel.height - energy_circle_panel.paddingTop
+													- energy_circle_panel.paddingBottom
+
+	var text_size_x_scale = max_string_width / string_width(energy_cost)
+	var text_size_y_scale = max_string_height / string_height(energy_cost)
+	if (text_size_x_scale > text_size_y_scale) {
+	    return text_size_y_scale
+	}
+	else {
+		return text_size_x_scale	
+	}
+}
+
+/// @description							Draws the text from card_description within the description_box 
+///												flex panel NOTE: This can only be called in the draw 
+///												function otherwise it will not work
+function draw_description() {
+	draw_set_colour(c_black)
+	draw_set_alpha(1)
+	draw_set_font(description_font)
+	draw_set_halign(fa_left)
+	draw_set_valign(fa_top)
+	
+	var description_box_panel = flexpanel_node_layout_get_position(flexpanel_node_get_child(flexpanels, "description_box"), false)
+	var text_x_pos = x + description_box_panel.paddingLeft + description_box_panel.left
+	var text_y_pos = y + description_box_panel.paddingTop + description_box_panel.top
+	var line_seperation = string_height(card_description) + PADDING_BETWEEN_CARD_DESCRIPTION_LINES
+	var text_max_width = description_box_panel.width - description_box_panel.paddingLeft 
+														- description_box_panel.paddingRight
+	var text_max_height = description_box_panel.height - description_box_panel.paddingTop
+													- description_box_panel.paddingBottom
+
+	draw_text_ext(text_x_pos, text_y_pos, card_description, line_seperation, text_max_width)
 }

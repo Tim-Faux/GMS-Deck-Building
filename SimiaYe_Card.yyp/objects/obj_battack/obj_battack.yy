@@ -1,9 +1,7 @@
 {
   "$GMObject":"",
   "%Name":"obj_battack",
-  "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-  ],
+  "eventList":[],
   "managed":true,
   "name":"obj_battack",
   "overriddenProperties":[
@@ -38,8 +36,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_battack",
-    "path":"sprites/spr_battack/spr_battack.yy",
+    "name":"spr_card",
+    "path":"sprites/spr_card/spr_card.yy",
   },
   "spriteMaskId":null,
   "visible":true,

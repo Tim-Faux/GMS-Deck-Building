@@ -53,7 +53,9 @@
   "name":"SimiaYe_Card",
   "resources":[
     {"id":{"name":"fnt_button_font","path":"fonts/fnt_button_font/fnt_button_font.yy",},},
+    {"id":{"name":"fnt_card_description","path":"fonts/fnt_card_description/fnt_card_description.yy",},},
     {"id":{"name":"fnt_damage","path":"fonts/fnt_damage/fnt_damage.yy",},},
+    {"id":{"name":"fnt_energy_cost","path":"fonts/fnt_energy_cost/fnt_energy_cost.yy",},},
     {"id":{"name":"fnt_energy","path":"fonts/fnt_energy/fnt_energy.yy",},},
     {"id":{"name":"obj_battack","path":"objects/obj_battack/obj_battack.yy",},},
     {"id":{"name":"obj_brick","path":"objects/obj_brick/obj_brick.yy",},},
@@ -107,6 +109,7 @@
     {"id":{"name":"spr_brick","path":"sprites/spr_brick/spr_brick.yy",},},
     {"id":{"name":"spr_button_test","path":"sprites/spr_button_test/spr_button_test.yy",},},
     {"id":{"name":"spr_card_sort_button","path":"sprites/spr_card_sort_button/spr_card_sort_button.yy",},},
+    {"id":{"name":"spr_card","path":"sprites/spr_card/spr_card.yy",},},
     {"id":{"name":"spr_close_layer","path":"sprites/spr_close_layer/spr_close_layer.yy",},},
     {"id":{"name":"spr_default_button","path":"sprites/spr_default_button/spr_default_button.yy",},},
     {"id":{"name":"spr_player_deck_header_background","path":"sprites/spr_player_deck_header_background/spr_player_deck_header_background.yy",},},

@@ -30,6 +30,8 @@
     {"name":"Timelines","order":7,"path":"folders/Timelines.yy",},
   ],
   "ResourceOrderSettings":[
+    {"name":"fnt_card_description","order":3,"path":"fonts/fnt_card_description/fnt_card_description.yy",},
+    {"name":"fnt_energy_cost","order":2,"path":"fonts/fnt_energy_cost/fnt_energy_cost.yy",},
     {"name":"fnt_energy","order":1,"path":"fonts/fnt_energy/fnt_energy.yy",},
     {"name":"obj_brick","order":1,"path":"objects/obj_brick/obj_brick.yy",},
     {"name":"obj_card","order":1,"path":"objects/obj_card/obj_card.yy",},
@@ -68,6 +70,7 @@
     {"name":"top_layer_check","order":2,"path":"scripts/top_layer_check/top_layer_check.yy",},
     {"name":"etest","order":2,"path":"sprites/etest/etest.yy",},
     {"name":"spr_card_sort_button","order":3,"path":"sprites/spr_card_sort_button/spr_card_sort_button.yy",},
+    {"name":"spr_card","order":1,"path":"sprites/spr_card/spr_card.yy",},
     {"name":"spr_close_layer","order":2,"path":"sprites/spr_close_layer/spr_close_layer.yy",},
     {"name":"spr_default_button","order":1,"path":"sprites/spr_default_button/spr_default_button.yy",},
     {"name":"spr_player_deck_header_background","order":8,"path":"sprites/spr_player_deck_header_background/spr_player_deck_header_background.yy",},
