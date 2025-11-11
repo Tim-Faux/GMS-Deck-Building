@@ -55,6 +55,9 @@
     {"$GMObjectProperty":"v2","%Name":"energy_cost_font","filters":[
         "GMFont",
       ],"listItems":[],"multiselect":false,"name":"energy_cost_font","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resource":{"name":"fnt_energy_cost","path":"fonts/fnt_energy_cost/fnt_energy_cost.yy",},"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"fnt_energy_cost","varType":5,},
+    {"$GMObjectProperty":"v2","%Name":"attacker_selection_type_font","filters":[
+        "GMFont",
+      ],"listItems":[],"multiselect":false,"name":"attacker_selection_type_font","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resource":{"name":"fnt_attacker_selection_type","path":"fonts/fnt_attacker_selection_type/fnt_attacker_selection_type.yy",},"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"fnt_attacker_selection_type","varType":5,},
     {"$GMObjectProperty":"v2","%Name":"description_font","filters":[
         "GMFont",
       ],"listItems":[],"multiselect":false,"name":"description_font","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resource":{"name":"fnt_card_description","path":"fonts/fnt_card_description/fnt_card_description.yy",},"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"fnt_card_description","varType":5,},

@@ -30,6 +30,7 @@
     {"name":"Timelines","order":7,"path":"folders/Timelines.yy",},
   ],
   "ResourceOrderSettings":[
+    {"name":"fnt_attacker_selection_type","order":4,"path":"fonts/fnt_attacker_selection_type/fnt_attacker_selection_type.yy",},
     {"name":"fnt_card_description","order":3,"path":"fonts/fnt_card_description/fnt_card_description.yy",},
     {"name":"fnt_energy_cost","order":2,"path":"fonts/fnt_energy_cost/fnt_energy_cost.yy",},
     {"name":"fnt_energy","order":1,"path":"fonts/fnt_energy/fnt_energy.yy",},

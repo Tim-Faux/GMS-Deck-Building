@@ -52,6 +52,7 @@
   },
   "name":"SimiaYe_Card",
   "resources":[
+    {"id":{"name":"fnt_attacker_selection_type","path":"fonts/fnt_attacker_selection_type/fnt_attacker_selection_type.yy",},},
     {"id":{"name":"fnt_button_font","path":"fonts/fnt_button_font/fnt_button_font.yy",},},
     {"id":{"name":"fnt_card_description","path":"fonts/fnt_card_description/fnt_card_description.yy",},},
     {"id":{"name":"fnt_damage","path":"fonts/fnt_damage/fnt_damage.yy",},},
