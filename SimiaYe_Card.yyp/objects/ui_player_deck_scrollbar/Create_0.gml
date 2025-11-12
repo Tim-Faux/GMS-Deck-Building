@@ -85,5 +85,6 @@ function move_scroll_thumb(smooth_scroll, thumb_scroll_min = scroll_min, thumb_s
 		display_card.y = display_card.ystart - (percent_scrolled * 
 							(height_of_card_list - display_get_gui_height() + 
 							header_bottom_y + CARD_PADDING))
+		display_card.check_on_screen()
 	}
 }

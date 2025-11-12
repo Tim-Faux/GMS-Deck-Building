@@ -48,7 +48,7 @@ function create_card_grid_view() {
 		var num_columns = floor(screen_width / (card_width + CARD_PADDING))
 		var num_rows = array_length(cards_to_display) / num_columns
 		height_of_card_list = (card_height + CARD_PADDING) * num_rows
-		var flexpanels = create_card_flexpanels(cards_to_display[0].sprite_width, cards_to_display[0].sprite_height, image_xscale, image_yscale)
+		var flexpanels = create_card_flexpanels(card_width, card_height)
 		
 		for (var card_index = 0; card_index < array_length(cards_to_display); card_index++) {
 			var card_x_pos = card_index % num_columns * (card_width + CARD_PADDING) + CARD_PADDING

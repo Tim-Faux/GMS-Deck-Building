@@ -3,6 +3,8 @@
 card_clicked = false
 remove_expanded_card = false
 flexpanels = create_card_flexpanels(sprite_width, sprite_height, image_xscale, image_yscale)
+draw_card = true
+check_on_screen()
 
 /// @desc								Draws a rectangle over the whole camera to dim the game
 ///											NOTE: this must be called in the Draw event or it won't
@@ -39,4 +41,13 @@ function create_expanded_card() {
 		card_description,
 		card_type
 	})
+}
+
+function check_on_screen() {
+	var sprite_top = y - sprite_yoffset
+	var sprite_left = x - sprite_xoffset
+	draw_card = sprite_top + sprite_height >= 0 &&
+				sprite_top < display_get_gui_height() &&
+				sprite_left + sprite_width >= 0 &&
+				sprite_left < display_get_gui_width()
 }
