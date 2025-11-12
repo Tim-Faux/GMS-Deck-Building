@@ -16,15 +16,15 @@ function select_target_attacker() {
 	selecting_character = true
 	selected_chara = []
 	num_chara_selected = 0
-	if(attacker_selection_type == enum_card_selection_target.all_players) {
+	if(attacker_selection_type == card_selection_target.all_players) {
 		selected_chara = find_allowed_attackers()
 		num_chara_selected = array_length(selected_chara)
 		select_target_enemy()
 	}
-	else if(attacker_selection_type == enum_card_selection_target.any_class) {
+	else if(attacker_selection_type == card_selection_target.any_class) {
 		create_attacker_selection()
 	}
-	else if(attacker_selection_type == enum_card_selection_target.selected_class) {
+	else if(attacker_selection_type == card_selection_target.selected_class) {
 		create_attacker_selection(allowed_classes)
 	}
 }
@@ -180,10 +180,10 @@ function show_chara_sprites(sprites_to_show = []) {
 ///												given card target
 function select_target_enemy() {
 	selecting_character = false
-	if(defender_selection_type == enum_card_attack_target.all_enemies) {
+	if(defender_selection_type == card_attack_target.all_enemies) {
 		all_enemies_selected()
 	}
-	else if(defender_selection_type == enum_card_attack_target.single_enemy) {
+	else if(defender_selection_type == card_attack_target.single_enemy) {
 		create_defender_selection()
 	}
 }

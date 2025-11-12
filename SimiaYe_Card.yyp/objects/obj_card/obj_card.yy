@@ -35,14 +35,14 @@
     {"$GMObjectProperty":"v2","%Name":"energy_cost","filters":[],"listItems":[],"multiselect":false,"name":"energy_cost","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"1","varType":1,},
     {"$GMObjectProperty":"v2","%Name":"num_chara_to_select","filters":[],"listItems":[],"multiselect":false,"name":"num_chara_to_select","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"0","varType":1,},
     {"$GMObjectProperty":"v2","%Name":"attacker_selection_type","filters":[],"listItems":[
-        "enum_card_selection_target.all_players",
-        "enum_card_selection_target.any_class",
-        "enum_card_selection_target.selected_class",
-      ],"multiselect":false,"name":"attacker_selection_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"enum_card_selection_target.all_players","varType":6,},
+        "card_selection_target.all_players",
+        "card_selection_target.any_class",
+        "card_selection_target.selected_class",
+      ],"multiselect":false,"name":"attacker_selection_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"card_selection_target.all_players","varType":6,},
     {"$GMObjectProperty":"v2","%Name":"defender_selection_type","filters":[],"listItems":[
-        "enum_card_attack_target.all_enemies",
-        "enum_card_attack_target.single_enemy",
-      ],"multiselect":false,"name":"defender_selection_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"enum_card_attack_target.all_enemies","varType":6,},
+        "card_attack_target.all_enemies",
+        "card_attack_target.single_enemy",
+      ],"multiselect":false,"name":"defender_selection_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"card_attack_target.all_enemies","varType":6,},
     {"$GMObjectProperty":"v2","%Name":"allowed_classes","filters":[],"listItems":[
         "chara_class.all_chara",
         "chara_class.damage",

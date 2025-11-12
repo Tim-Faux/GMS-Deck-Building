@@ -164,8 +164,8 @@ function find_energy_cost_text_scaling(energy_circle_panel) {
 /// @description										Finds which attackers are selected for the card and shows the
 ///															prompt for it in the top center of the card NOTE: This can
 ///															only be called in the draw function otherwise it will not work
-/// @param {enum_card_selection_target} attacker_selection_type		The card_selection_target to determine
-///																		how many attacker are selected
+/// @param {card_selection_target} attacker_selection_type		The card_selection_target to determine how
+///																	many attacker are selected
 /// @param {Array<chara_class>} allowed_classes			Array of all the allowed classes to be displayed
 /// @param {Pointer.FlexpanelNode} card_flexpanels		The parent node of the card's flex panel
 /// @param {Real} x_scale								Optional horizontal scaling argument, defaulting to 1
@@ -189,16 +189,16 @@ function draw_attacker_selection_type_text(attacker_selection_type, allowed_clas
 
 /// @description										Checks the attacker_selection_type and allowed_classes to
 ///															determine what text should be displayed
-/// @param {enum_card_selection_target} attacker_selection_type		The card_selection_target to determine
+/// @param {card_selection_target} attacker_selection_type		The card_selection_target to determine
 ///																		how many attacker are selected
 /// @param {Array<chara_class>} allowed_classes			Array of all the allowed classes to be displayed
 /// @returns											The string of all the allowed classes for selecting which
 ///															characters are allowed to attack for this card
 function find_attacker_selection_type_string(attacker_selection_type, allowed_classes) {
-	if(attacker_selection_type == enum_card_selection_target.all_players) {
+	if(attacker_selection_type == card_selection_target.all_players) {
 		return "All"
 	}
-	else if(attacker_selection_type == enum_card_selection_target.any_class || array_contains(allowed_classes, chara_class.all_chara)) {
+	else if(attacker_selection_type == card_selection_target.any_class || array_contains(allowed_classes, chara_class.all_chara)) {
 		return "Any"
 	}
 	else {

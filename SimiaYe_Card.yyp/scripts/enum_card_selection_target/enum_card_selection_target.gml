@@ -1,4 +1,4 @@
-enum enum_card_selection_target{
+enum card_selection_target{
 	all_players,
 	any_class,
 	selected_class
