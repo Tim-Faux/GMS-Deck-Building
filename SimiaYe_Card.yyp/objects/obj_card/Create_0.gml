@@ -111,13 +111,21 @@ function create_card_flexpanels() {
 				name : "image_box",
 				height : 113,
 				flexDirection : "row",
-				justifyContent : "center",
+				gap : 9,
 				nodes : [
+				{
+					name : "card_type",
+					margin : 1,
+					width : 20,
+					height : 20,
+					top : 26
+				},
 				{
 					name : "attacker_selection_type",
 					width : "45%",
 					height : 60
-				}]
+				},
+				]
 			},
 			{
 				name : "description_box",
@@ -137,6 +145,61 @@ function create_card_flexpanels() {
 	flexpanel_calculate_layout(node, sprite_width, sprite_height, flexpanel_direction.LTR)
 	return node
 }
+
+#region flexPanel debug code
+//This is the flex panel translated for the debug menu flex panel, it should not be uncommented as it
+//		will not work out of the box, but it is very useful for seeing what it looks like.
+//	NOTE for some reason it adds a 4 pixle border around everything, so it looks like its falling off
+//		the bottom when it's not actually
+//
+//To activate the debug menu run this code: show_debug_overlay(true)
+/*
+{
+	"name" : "outside_border",
+	"width" : 128,
+	"height" : 256,
+	"border" : 4,
+	"nodes" : [
+	{
+		"name" : "background",
+		"border" : 8,
+		"gap" : 20,
+		"nodes" : [
+		{
+			"name" : "image_box",
+			"height" : 113,
+			"flexDirection" : "row",
+			"gap" : 9,
+			"nodes" : [
+			{
+				"name" : "card_type",
+				"margin" : 1,
+				"width" : 20,
+				"height" : 20,
+				"top" : 26
+			},
+			{
+				"name" : "attacker_selection_type",
+				"width" : "45%",
+				"height" : 60
+			}]
+		},
+		{
+			"name" : "description_box",
+			"height" : 97,
+			"padding" : 2
+		}]
+	},
+	{
+		"name" : "energy_circle",
+		"width" : 31,
+		"height" : 31,
+		"margin" : 1,
+		"positionType" : "absolute"
+	}]
+}
+*/
+#endregion
 
 /// @description							Draws the amount of energy needed to play the card in the
 ///												top left hand corner. NOTE: This can only be called in
@@ -219,6 +282,28 @@ function find_attacker_selection_type_string() {
 			allowed_classes_string = string_delete(allowed_classes_string, 0, 2)
 		}
 		return allowed_classes_string
+	}
+}
+
+/// @description							Draws the symbol indicating which type of card this is, if 
+///												it's assigned NOTE: This can only be called in the draw 
+///												function otherwise it will not work
+function draw_card_type() {
+	draw_set_colour(c_white)
+	draw_set_alpha(1)
+	draw_set_font(attacker_selection_type_font)
+	draw_set_halign(fa_center)
+	draw_set_valign(fa_top)
+	
+	var card_type_panel = flexpanel_node_layout_get_position(flexpanel_node_get_child(flexpanels, "card_type"), false)
+	var text_x_pos = x + card_type_panel.left
+	var text_y_pos = y + card_type_panel.top
+	
+	if(card_type == card_type.attack) {
+		draw_sprite(spr_attack_symbol, -1, text_x_pos, text_y_pos)
+	}
+	else if(card_type == card_type.ability) {
+		draw_sprite(spr_ability_symbol, -1, text_x_pos, text_y_pos)
 	}
 }
 

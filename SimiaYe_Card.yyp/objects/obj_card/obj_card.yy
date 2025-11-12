@@ -48,6 +48,11 @@
         "chara_class.damage",
         "chara_class.science",
       ],"multiselect":true,"name":"allowed_classes","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"chara_class.all_chara","varType":6,},
+    {"$GMObjectProperty":"v2","%Name":"card_type","filters":[],"listItems":[
+        "card_type.attack",
+        "card_type.ability",
+        "card_type.none",
+      ],"multiselect":false,"name":"card_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"card_type.none","varType":6,},
     {"$GMObjectProperty":"v2","%Name":"not_enough_energy_error_font","filters":[
         "GMFont",
       ],"listItems":[],"multiselect":false,"name":"not_enough_energy_error_font","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resource":{"name":"fnt_button_font","path":"fonts/fnt_button_font/fnt_button_font.yy",},"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"fnt_button_font","varType":5,},
