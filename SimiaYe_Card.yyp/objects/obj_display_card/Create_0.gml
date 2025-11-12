@@ -2,6 +2,7 @@
 
 card_clicked = false
 remove_expanded_card = false
+flexpanels = create_card_flexpanels(sprite_width, sprite_height, image_xscale, image_yscale)
 
 /// @desc								Draws a rectangle over the whole camera to dim the game
 ///											NOTE: this must be called in the Draw event or it won't
@@ -23,12 +24,19 @@ function create_expanded_card() {
 	
 	var card_x_pos = (screen_width - (sprite_width * sprite_size_scale)) / 2
 	var card_y_pos = (screen_height - (sprite_height * sprite_size_scale)) / 2
+	var new_flexpanels = create_card_flexpanels(sprite_width * sprite_size_scale, sprite_height * sprite_size_scale, sprite_size_scale, sprite_size_scale)
 	
 	var expanded_card_instance_id = layer_create(-200, "expanded_card_instance")
 	instance_create_layer(card_x_pos, card_y_pos, expanded_card_instance_id, obj_display_card, {
 		sprite_index : sprite_index,
 		image_xscale : sprite_size_scale,
 		image_yscale : sprite_size_scale,
-		card_expanded : true
+		flexpanels : new_flexpanels,
+		card_expanded : true,
+		energy_cost,
+		attacker_selection_type,
+		allowed_classes,
+		card_description,
+		card_type
 	})
 }

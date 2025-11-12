@@ -98,6 +98,7 @@
     {"id":{"name":"rm_settings","path":"rooms/rm_settings/rm_settings.yy",},},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
     {"id":{"name":"Card_Debuff_Effects","path":"scripts/Card_Debuff_Effects/Card_Debuff_Effects.yy",},},
+    {"id":{"name":"card_drawn_elements","path":"scripts/card_drawn_elements/card_drawn_elements.yy",},},
     {"id":{"name":"enum_card_attack_target","path":"scripts/enum_card_attack_target/enum_card_attack_target.yy",},},
     {"id":{"name":"enum_card_selection_target","path":"scripts/enum_card_selection_target/enum_card_selection_target.yy",},},
     {"id":{"name":"enum_card_type","path":"scripts/enum_card_type/enum_card_type.yy",},},

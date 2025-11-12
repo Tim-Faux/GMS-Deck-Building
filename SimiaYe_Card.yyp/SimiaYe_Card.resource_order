@@ -63,6 +63,7 @@
     {"name":"rm_level_select","order":3,"path":"rooms/rm_level_select/rm_level_select.yy",},
     {"name":"rm_main_menu","order":2,"path":"rooms/rm_main_menu/rm_main_menu.yy",},
     {"name":"rm_settings","order":4,"path":"rooms/rm_settings/rm_settings.yy",},
+    {"name":"card_drawn_elements","order":4,"path":"scripts/card_drawn_elements/card_drawn_elements.yy",},
     {"name":"enum_card_attack_target","order":1,"path":"scripts/enum_card_attack_target/enum_card_attack_target.yy",},
     {"name":"enum_card_selection_target","order":2,"path":"scripts/enum_card_selection_target/enum_card_selection_target.yy",},
     {"name":"enum_card_type","order":3,"path":"scripts/enum_card_type/enum_card_type.yy",},
