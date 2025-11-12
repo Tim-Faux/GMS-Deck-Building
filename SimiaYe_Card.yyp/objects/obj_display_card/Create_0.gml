@@ -43,6 +43,7 @@ function create_expanded_card() {
 	})
 }
 
+/// @desc								Determines if the card is fully off screen and if so dont draw it
 function check_on_screen() {
 	var sprite_top = y - sprite_yoffset
 	var sprite_left = x - sprite_xoffset
