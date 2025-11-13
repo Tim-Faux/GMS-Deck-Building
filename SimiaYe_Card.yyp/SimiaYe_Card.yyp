@@ -18,6 +18,7 @@
     {"$GMFolder":"","%Name":"Card","folderPath":"folders/Objects/Card.yy","name":"Card","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Basic Cards","folderPath":"folders/Objects/Card/Basic Cards.yy","name":"Basic Cards","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Card Enums","folderPath":"folders/Objects/Card/Card Enums.yy","name":"Card Enums","resourceType":"GMFolder","resourceVersion":"2.0",},
+    {"$GMFolder":"","%Name":"Science Cards","folderPath":"folders/Objects/Card/Science Cards.yy","name":"Science Cards","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Characters","folderPath":"folders/Objects/Characters.yy","name":"Characters","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Enemy","folderPath":"folders/Objects/Enemy.yy","name":"Enemy","resourceType":"GMFolder","resourceVersion":"2.0",},
     {"$GMFolder":"","%Name":"Text Objects","folderPath":"folders/Objects/Enemy/Text Objects.yy","name":"Text Objects","resourceType":"GMFolder","resourceVersion":"2.0",},

@@ -8,13 +8,14 @@
   "name":"obj_card_14",
   "overriddenProperties":[
     {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"energy_cost","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"5",},
-    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"attacker_selection_type","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"card_selection_target.any_class",},
+    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"attacker_selection_type","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"card_selection_target.selected_class",},
     {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"defender_selection_type","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"card_attack_target.single_enemy",},
     {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"card_type","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"card_type.attack",},
+    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"allowed_classes","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"chara_class.science",},
   ],
   "parent":{
-    "name":"Basic Cards",
-    "path":"folders/Objects/Card/Basic Cards.yy",
+    "name":"Science Cards",
+    "path":"folders/Objects/Card/Science Cards.yy",
   },
   "parentObjectId":{
     "name":"obj_card",
