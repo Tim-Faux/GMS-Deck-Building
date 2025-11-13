@@ -17,8 +17,8 @@ function get_attack(damage_multiplier) {
 	//TODO need to make this the chara's actual attacks
 	var hitstrct = {
 	damage : 10 * damage_multiplier,
-	debuffs : [[Card_Debuff_Effects.Poison, 3 * damage_multiplier],
-				[Card_Debuff_Effects.Burn,  5 * damage_multiplier]]
+	debuffs : [[card_debuff_effects.Poison, 3 * damage_multiplier],
+				[card_debuff_effects.Burn,  5 * damage_multiplier]]
 	}
 	return hitstrct
 }
