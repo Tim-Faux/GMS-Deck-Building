@@ -21,6 +21,13 @@ function select_target_attacker() {
 		num_chara_selected = array_length(selected_chara)
 		select_target_enemy()
 	}
+	else if(attacker_selection_type == card_selection_target.random_chara) {
+		var allowed_attackers =  find_allowed_attackers()
+		var random_attacker = irandom(array_length(allowed_attackers)) - 1
+		selected_chara = [allowed_attackers[random_attacker]]
+		num_chara_selected = 1
+		select_target_enemy()
+	}
 	else if(attacker_selection_type == card_selection_target.any_class) {
 		create_attacker_selection()
 	}
@@ -195,7 +202,7 @@ function all_enemies_selected() {
 	for(var enemy_index = 0; enemy_index < array_length(enemy_instances); enemy_index++) {
 		if(enemy_instances[enemy_index] != noone) {
 			for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
-				enemy_instances[enemy_index].hit_by_player(selected_chara[chara_index].get_attack())
+				enemy_instances[enemy_index].hit_by_player(selected_chara[chara_index], 1)
 			}
 		}
 	}

@@ -2,11 +2,11 @@ active_debuffs = {}
 display_next_damage_text = true
 damageToDisplay = []
 
-/// @desc							Handles player attacks by applying debuffs and removing attack_data.damage
-///										from their health
-/// @param {Struct} attack_data		The struct containing information about the attack including damage,
-///										debuffs, and buffs						
-function hit_by_player(attack_data) {
+/// @desc										Handles player attacks by applying debuffs and removing
+///													attack_data.damage from their health
+/// @param {Id.Instance} attacking_chara		The character attacking this enemy			
+function hit_by_player(attacking_chara, damage_multiplyer) {
+	var attack_data = attacking_chara.get_attack(damage_multiplyer)
 	if(struct_exists(attack_data, "damage")) {
 		Health -= attack_data.damage
 		array_push(damageToDisplay, [attack_data.damage, c_white])

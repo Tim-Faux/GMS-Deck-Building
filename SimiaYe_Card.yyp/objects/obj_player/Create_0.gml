@@ -13,12 +13,12 @@ function hit_by_enemy(damage_taken) {
 /// @desc								Finds the type and amount of damage/debuffs the character does
 ///											when they attack
 /// @returns							The struct containing the attack data of the character
-function get_attack() {
+function get_attack(damage_multiplier) {
 	//TODO need to make this the chara's actual attacks
 	var hitstrct = {
-	damage : 10,
-	debuffs : [[Card_Debuff_Effects.Poison, 3],
-				[Card_Debuff_Effects.Burn,  5]]
+	damage : 10 * damage_multiplier,
+	debuffs : [[Card_Debuff_Effects.Poison, 3 * damage_multiplier],
+				[Card_Debuff_Effects.Burn,  5 * damage_multiplier]]
 	}
 	return hitstrct
 }

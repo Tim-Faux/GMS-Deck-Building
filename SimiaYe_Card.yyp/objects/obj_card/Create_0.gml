@@ -15,7 +15,7 @@ card_description = "This is example text of the card's description"
 /// @description							The unique action of the card when it is played
 card_action = function (selected_chara, enemy_instance) {
 	for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
-		enemy_instance.hit_by_player(selected_chara[chara_index].get_attack())
+		enemy_instance.hit_by_player(selected_chara[chara_index], 1)
 	}
 }
 #endregion

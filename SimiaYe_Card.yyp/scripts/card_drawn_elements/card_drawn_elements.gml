@@ -201,6 +201,9 @@ function find_attacker_selection_type_string(attacker_selection_type, allowed_cl
 	else if(attacker_selection_type == card_selection_target.any_class || array_contains(allowed_classes, chara_class.all_chara)) {
 		return "Any"
 	}
+	else if (attacker_selection_type == card_selection_target.random_chara) {
+		return "Random"	
+	}
 	else {
 		var allowed_classes_string = ""
 		if(array_contains(allowed_classes, chara_class.damage)) {
