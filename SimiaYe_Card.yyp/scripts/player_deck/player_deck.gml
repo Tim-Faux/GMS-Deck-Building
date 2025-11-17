@@ -1,4 +1,4 @@
-#macro DEFAULT_PLAYER_DECK [obj_battack, obj_battack, obj_battack]
+#macro DEFAULT_PLAYER_DECK [obj_battack, obj_battack, obj_card_31]
 
 check_for_player_full_deck()
 

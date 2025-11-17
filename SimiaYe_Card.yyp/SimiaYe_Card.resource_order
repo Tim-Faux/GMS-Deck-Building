@@ -44,6 +44,7 @@
     {"name":"obj_card_27","order":1,"path":"objects/obj_card_27/obj_card_27.yy",},
     {"name":"obj_card_28","order":2,"path":"objects/obj_card_28/obj_card_28.yy",},
     {"name":"obj_card_30","order":3,"path":"objects/obj_card_30/obj_card_30.yy",},
+    {"name":"obj_card_31","order":4,"path":"objects/obj_card_31/obj_card_31.yy",},
     {"name":"obj_card_4","order":2,"path":"objects/obj_card_4/obj_card_4.yy",},
     {"name":"obj_card","order":1,"path":"objects/obj_card/obj_card.yy",},
     {"name":"obj_display_card","order":3,"path":"objects/obj_display_card/obj_display_card.yy",},
