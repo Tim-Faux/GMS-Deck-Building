@@ -189,6 +189,7 @@ function select_target_enemy() {
 	selecting_character = false
 	if(defender_selection_type == card_attack_target.all_enemies) {
 		all_enemies_selected()
+		find_allowed_enemies()
 	}
 	else if(defender_selection_type == card_attack_target.single_enemy) {
 		create_defender_selection()
@@ -199,15 +200,9 @@ function select_target_enemy() {
 ///												and deletes the layers used for target selection
 function all_enemies_selected() {
 	var enemy_instances = find_allowed_enemies()
-	for(var enemy_index = 0; enemy_index < array_length(enemy_instances); enemy_index++) {
-		if(enemy_instances[enemy_index] != noone) {
-			for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
-				enemy_instances[enemy_index].hit_by_player(selected_chara[chara_index], 1)
-			}
-		}
-	}
+	
 	if(card_played != noone) {
-		card_played.card_has_been_played()
+		card_played.card_has_been_played(selected_chara, enemy_instances)
 	}
 	find_and_delete_related_layers(layer)
 }
