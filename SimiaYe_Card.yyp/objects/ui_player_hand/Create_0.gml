@@ -6,6 +6,12 @@ total_width_of_hand = 0
 
 add_multiple_cards(get_player_current_deck())
 
+/// @desc							Finds all the cards in the player's current hand
+/// @returns						An array of the cards currently in the player's hand
+function get_player_current_hand() {
+	return cards_in_hand
+}
+
 /// @desc							Adds a specified card to the player's hand and shows it in the UI
 /// @param {Asset.GMObject} card	The card that is being added to the player's hand
 function add_card(card) {
