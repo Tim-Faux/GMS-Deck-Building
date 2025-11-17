@@ -13,10 +13,14 @@ show_energy_error = false
 //Be sure to check the Variable Definitions, there are many variables to manipulate there
 card_description = "This is example text of the card's description"
 
-/// @description							The unique action of the card when it is played
-card_action = function (selected_chara, enemy_instance) {
-	for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
-		enemy_instance.hit_by_player(selected_chara[chara_index], 1)
+/// @description									The unique action of the card when it is played
+/// @param {Array<Id.Instance>} selected_chara		The character(s) selected to for the card's action
+/// @param {Array<Id.Instance>} enemy_instances		The enemy(s) selected to take damage
+card_action = function (selected_chara, enemy_instances) {
+	for (var enemy_index = 0; enemy_index < array_length(enemy_instances); enemy_index++) {
+		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
+			enemy_instances[enemy_index].hit_by_player(selected_chara[chara_index], 1)
+		}
 	}
 }
 #endregion

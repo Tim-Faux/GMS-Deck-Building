@@ -5,6 +5,7 @@ damage_to_display = []
 /// @desc										Handles player attacks by applying debuffs and removing
 ///													attack_data.damage from their health
 /// @param {Id.Instance} attacking_chara		The character attacking this enemy			
+/// @param {Real} damage_multiplyer				The amount that the character's damage will be multiplied by	
 function hit_by_player(attacking_chara, damage_multiplyer) {
 	var attack_data = attacking_chara.get_attack(damage_multiplyer)
 	if(struct_exists(attack_data, "damage")) {

@@ -214,7 +214,7 @@ function enemy_selected(enemy_instance) {
 	if(enemy_instance != noone) {
 		show_enemy_sprites()
 		if(card_played != noone) {
-			card_played.card_has_been_played(selected_chara, enemy_instance)
+			card_played.card_has_been_played(selected_chara, [enemy_instance])
 		}
 		
 		find_and_delete_related_layers(layer)
