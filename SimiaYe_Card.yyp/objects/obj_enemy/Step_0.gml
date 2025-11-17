@@ -6,7 +6,7 @@ var TIME_BETWEEN_ATTACKS = 12
 if(display_next_damage_text) {
 	if(array_length(damage_to_display) > 0) {
 		var damage_data = array_shift(damage_to_display)
-		var amount_of_damage = damage_data[0]
+		var amount_of_damage = format_display_number(damage_data[0])
 		var damage_text_color = damage_data[1]
 		instance_create_layer(x, y, "Instances", obj_damageText,
 		{

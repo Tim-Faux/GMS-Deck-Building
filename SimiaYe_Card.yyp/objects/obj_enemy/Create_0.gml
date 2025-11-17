@@ -55,3 +55,27 @@ function apply_debuffs(debuff_type, debuff_amount) {
 function attack_player() {
 	obj_player.hit_by_enemy(Attack_damage)
 }
+
+/// @desc							Formats a number by removing any trailing 0s or decimals
+/// @param {Real} num_to_format		The number to be returned after formatting
+/// @returns						A string representation of the given number with trailing 0s and if
+///										if needed decimal point removed
+function format_display_number(num_to_format) {
+	var num_string = string(num_to_format)
+	for(var char_index = string_length(num_string); char_index > string_pos(num_string, ".") - 1; char_index--) {
+		if(string_ends_with(num_string, "0")) {
+			num_string = string_delete(num_string, string_length(num_string), 1)
+		}
+		else if (string_ends_with(num_string, ".")) {
+			num_string = string_delete(num_string, string_length(num_string), 1)
+			break;
+		}
+		else {
+			break;	
+		}
+	}
+	if(string_length(num_string) == 0) {
+		num_string = "0"
+	}
+	return num_string
+}
