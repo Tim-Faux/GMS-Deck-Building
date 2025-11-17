@@ -54,15 +54,10 @@ function create_card_grid_view() {
 			var card_x_pos = card_index % num_columns * (card_width + CARD_PADDING) + CARD_PADDING
 			var card_y_pos = bottom_of_header + (floor(card_index / num_columns) * 
 								(card_height + CARD_PADDING)) + CARD_PADDING
-			
-			instance_create_layer(card_x_pos, card_y_pos, card_display_instance_id, obj_display_card, {
-				sprite_index : object_get_sprite(cards_to_display[card_index]),
+
+			instance_create_layer(card_x_pos, card_y_pos, card_display_instance_id, cards_to_display[card_index], {
 				flexpanels,
-				energy_cost : cards_to_display[card_index].energy_cost,
-				attacker_selection_type : cards_to_display[card_index].attacker_selection_type,
-				allowed_classes : cards_to_display[card_index].allowed_classes,
-				card_description : cards_to_display[card_index].card_description,
-				card_type : cards_to_display[card_index].card_type
+				is_display_card : true
 			})
 		}
 	}
