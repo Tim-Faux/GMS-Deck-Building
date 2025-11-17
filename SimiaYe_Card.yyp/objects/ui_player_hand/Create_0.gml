@@ -2,7 +2,6 @@
 
 cards_in_hand = array_create(0)
 is_hand_visible = true
-card_can_be_selected = true
 total_width_of_hand = 0
 
 add_multiple_cards(get_player_current_deck())

@@ -4,6 +4,7 @@
 flexpanels = create_card_flexpanels(sprite_width, sprite_height)
 
 card_selected = false
+draw_card = true
 card_start_x_position = x
 card_start_y_position = y
 show_energy_error = false
@@ -23,13 +24,15 @@ card_action = function (selected_chara, enemy_instance) {
 /// @description							Checks to see if no other cards are selected then allows this
 ///												card to be selected
 function select_card() {
-	if(!card_selected && ui_player_hand.card_can_be_selected && visible && is_top_layer(layer)) {
+	if(!card_selected && !global.object_being_clicked && visible && is_top_layer(layer)) {
+		global.object_being_clicked	= true
 		card_selected = true
-		ui_player_hand.card_can_be_selected = false
-		card_start_x_position = x
-		card_start_y_position = y
-		x = mouse_x - (sprite_width / 2)
-		y = mouse_y - (sprite_height / 2)
+		if(!is_display_card) {
+			card_start_x_position = x
+			card_start_y_position = y
+			x = mouse_x - (sprite_width / 2)
+			y = mouse_y - (sprite_height / 2)
+		}
 	}
 }
 
@@ -92,3 +95,37 @@ function reset_card() {
 	y = card_start_y_position
 }
 
+/// @desc								Creates a display card the size of the screen with this sprite
+function create_expanded_card() {
+	var screen_height = display_get_gui_height()
+	var screen_width = display_get_gui_width()
+	var sprite_size_scale = (screen_height - EXPANDED_CARD_PADDING) / sprite_height
+	
+	var card_x_pos = (screen_width - (sprite_width * sprite_size_scale)) / 2
+	var card_y_pos = (screen_height - (sprite_height * sprite_size_scale)) / 2
+	var new_flexpanels = create_card_flexpanels(sprite_width * sprite_size_scale, sprite_height * sprite_size_scale, sprite_size_scale, sprite_size_scale)
+	
+	var expanded_card_instance_id = layer_create(-200, "expanded_card_instance")
+	instance_create_layer(card_x_pos, card_y_pos, expanded_card_instance_id, obj_display_card, {
+		sprite_index : sprite_index,
+		image_xscale : sprite_size_scale,
+		image_yscale : sprite_size_scale,
+		flexpanels : new_flexpanels,
+		card_expanded : true,
+		energy_cost,
+		attacker_selection_type,
+		allowed_classes,
+		card_description,
+		card_type
+	})
+}
+
+/// @desc								Determines if the card is fully off screen and if so dont draw it
+function check_on_screen() {
+	var sprite_top = y - sprite_yoffset
+	var sprite_left = x - sprite_xoffset
+	draw_card = sprite_top + sprite_height >= 0 &&
+				sprite_top < display_get_gui_height() &&
+				sprite_left + sprite_width >= 0 &&
+				sprite_left < display_get_gui_width()
+}
