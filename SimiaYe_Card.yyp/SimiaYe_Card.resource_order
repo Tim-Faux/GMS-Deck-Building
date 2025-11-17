@@ -7,6 +7,7 @@
     {"name":"Objects","order":8,"path":"folders/Objects.yy",},
     {"name":"Card","order":2,"path":"folders/Objects/Card.yy",},
     {"name":"Card Enums","order":2,"path":"folders/Objects/Card/Card Enums.yy",},
+    {"name":"Damage Cards","order":7,"path":"folders/Objects/Card/Damage Cards.yy",},
     {"name":"Multi-Class Cards","order":6,"path":"folders/Objects/Card/Multi-Class Cards.yy",},
     {"name":"Science Cards","order":5,"path":"folders/Objects/Card/Science Cards.yy",},
     {"name":"Enemy","order":1,"path":"folders/Objects/Enemy.yy",},
