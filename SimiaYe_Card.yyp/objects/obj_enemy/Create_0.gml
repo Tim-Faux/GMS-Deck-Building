@@ -62,7 +62,12 @@ function attack_player() {
 ///										if needed decimal point removed
 function format_display_number(num_to_format) {
 	var num_string = string(num_to_format)
-	for(var char_index = string_length(num_string); char_index > string_pos(num_string, ".") - 1; char_index--) {
+	var decimal_pos = string_pos(num_string, ".")
+	if(decimal_pos == 0) {
+		return num_string
+	}
+	
+	for(var char_index = string_length(num_string); char_index > decimal_pos - 1; char_index--) {
 		if(string_ends_with(num_string, "0")) {
 			num_string = string_delete(num_string, string_length(num_string), 1)
 		}

@@ -1,0 +1,1 @@
+display_effect_text()
