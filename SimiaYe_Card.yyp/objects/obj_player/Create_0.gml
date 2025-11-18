@@ -1,14 +1,15 @@
 class = chara_class.damage
 chara_shield = 0
+player_current_health = player_max_health
 
 /// @desc								Handles the character being hit and check if player is
 ///											still alive
 /// @param {Real} damage_taken			The amount of damage the player is taking
 function hit_by_enemy(damage_taken) {
 	var remaining_damage = damage_sheild(damage_taken)
-	player_health -= remaining_damage
-	show_debug_message(player_health)
-	if(player_health <= 0)
+	player_current_health = clamp(player_current_health - remaining_damage, 0, player_max_health)
+	show_debug_message(player_current_health)
+	if(player_current_health <= 0)
 		show_debug_message("Player is dead")
 }
 
@@ -44,4 +45,12 @@ function get_attack(damage_multiplier) {
 function add_sheild(shield_amount) {
 	if (shield_amount > 0)
 		chara_shield += shield_amount
+}
+
+/// @desc								Heals the chara by the given amount up, but not more than,
+///											their max health
+/// @param {Real} health_to_add			The maximum health to be healed
+function heal_chara(health_to_add) {
+	if(health_to_add > 0)
+		player_current_health = clamp(player_current_health + health_to_add, 0, player_max_health)
 }
