@@ -34,6 +34,11 @@ function select_target_attacker() {
 	else if(attacker_selection_type == card_selection_target.selected_class) {
 		create_attacker_selection(allowed_classes)
 	}
+	else if(attacker_selection_type == card_selection_target.no_chara) {
+		selected_chara = []
+		num_chara_selected = 0
+		select_target_enemy()
+	}
 }
 
 /// @desc											Finds all of the characters of the given classes

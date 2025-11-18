@@ -40,6 +40,7 @@
         "card_selection_target.any_class",
         "card_selection_target.selected_class",
         "card_selection_target.random_chara",
+        "card_selection_target.no_chara",
       ],"multiselect":false,"name":"attacker_selection_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"card_selection_target.all_players","varType":6,},
     {"$GMObjectProperty":"v2","%Name":"defender_selection_type","filters":[],"listItems":[
         "card_attack_target.all_enemies",
