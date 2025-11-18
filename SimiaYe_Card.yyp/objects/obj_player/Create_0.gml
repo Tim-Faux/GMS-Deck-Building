@@ -1,4 +1,5 @@
 #macro TIME_BETWEEN_EFFECT_TEXT 12
+#macro MAX_CHARA_SHIELD 5
 
 class = chara_class.damage
 active_buffs = {}
@@ -11,25 +12,11 @@ player_current_health = player_max_health
 ///											still alive
 /// @param {Real} damage_taken			The amount of damage the player is taking
 function hit_by_enemy(damage_taken) {
-	var remaining_damage = damage_sheild(damage_taken)
-	player_current_health = clamp(player_current_health - remaining_damage, 0, player_max_health)
+	damage_taken = clamp(damage_taken - chara_shield, 0, damage_taken)
+	player_current_health = clamp(player_current_health - damage_taken, 0, player_max_health)
 	show_debug_message(player_current_health)
 	if(player_current_health <= 0)
 		show_debug_message("Player is dead")
-}
-
-/// @desc								Blocks damage equal to the character's shield and if the damage
-///											is greater than the shield it returns the remaining damage
-/// @param {Real} damage_taken			The amount of damage the player is taking
-/// @returns							The remain damage to be dealt, a minimum of 0
-function damage_sheild(damage_taken) {
-	if (chara_shield >= damage_taken) {
-		chara_shield -= damage_taken
-		return 0
-	}
-	damage_taken -= chara_shield
-	chara_shield = 0
-	return damage_taken
 }
 
 /// @desc								Displays the damage, buffs, and debuffs applied to the chara, 
@@ -102,7 +89,7 @@ function get_attack(damage_multiplier) {
 /// @param {Real} shield_amount			The amount of shield being added
 function add_sheild(shield_amount) {
 	if (shield_amount > 0)
-		chara_shield += shield_amount
+		chara_shield = clamp(chara_shield + shield_amount, 0, MAX_CHARA_SHIELD)
 }
 
 /// @desc								Heals the chara by the given amount up, but not more than,
