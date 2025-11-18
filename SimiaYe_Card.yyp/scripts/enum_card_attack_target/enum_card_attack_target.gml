@@ -1,4 +1,5 @@
 enum card_attack_target {
 all_enemies,
-single_enemy
+single_enemy,
+no_enemies
 }

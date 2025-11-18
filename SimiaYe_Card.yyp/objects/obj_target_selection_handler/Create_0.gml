@@ -194,6 +194,13 @@ function select_target_enemy() {
 	else if(defender_selection_type == card_attack_target.single_enemy) {
 		create_defender_selection()
 	}
+	else if(defender_selection_type == card_attack_target.no_enemies) {
+		if(card_played != noone) {
+			card_played.card_has_been_played(selected_chara, [])
+		}
+		
+		find_and_delete_related_layers(layer)
+	}
 }
 
 /// @desc									Applies damage from each selected character to each enemy

@@ -44,6 +44,7 @@
     {"$GMObjectProperty":"v2","%Name":"defender_selection_type","filters":[],"listItems":[
         "card_attack_target.all_enemies",
         "card_attack_target.single_enemy",
+        "card_attack_target.no_enemies",
       ],"multiselect":false,"name":"defender_selection_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"card_attack_target.all_enemies","varType":6,},
     {"$GMObjectProperty":"v2","%Name":"allowed_classes","filters":[],"listItems":[
         "chara_class.all_chara",
