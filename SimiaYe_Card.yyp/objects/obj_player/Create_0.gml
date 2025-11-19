@@ -107,12 +107,29 @@ function heal_chara(health_to_add) {
 function apply_buff(buff_type, buff_amount) {
 	if(active_buffs[$ buff_type] == undefined)
 			active_buffs[$ buff_type] = buff_amount
-		else
-			active_buffs[$ buff_type] += buff_amount
+	else
+		active_buffs[$ buff_type] += buff_amount
 			
-		switch (buff_type) {
-			case card_buff_effects.Strength:
-				array_push(effect_to_display, [active_buffs[$ buff_type], c_maroon])
-				break;
-		}
+	switch (buff_type) {
+		case card_buff_effects.Strength:
+			array_push(effect_to_display, [active_buffs[$ buff_type], c_maroon])
+			break;
+	}
+}
+
+/// @desc										Increases the amount of a given buff by multiplying it
+///													by amount_multipled and adds them to the 
+///													effect_to_display queue
+/// @param {card_buff_effects} buff_type		The buff being modified
+/// @param {Real} buff_amount					The amount of the buff being added
+function multiply_buff(buff_type, amount_multiplied) {
+	if(active_buffs[$ buff_type] != undefined) {
+			active_buffs[$ buff_type] *= amount_multiplied
+	}
+			
+	switch (buff_type) {
+		case card_buff_effects.Strength:
+			array_push(effect_to_display, [active_buffs[$ buff_type], c_maroon])
+			break;
+	}
 }
