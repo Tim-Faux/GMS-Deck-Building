@@ -87,7 +87,7 @@ function get_attack(damage_multiplier) {
 
 /// @desc								Adds the amount of shield provided to the chara's shield
 /// @param {Real} shield_amount			The amount of shield being added
-function add_sheild(shield_amount) {
+function add_shield(shield_amount) {
 	if (shield_amount > 0)
 		chara_shield = clamp(chara_shield + shield_amount, 0, MAX_CHARA_SHIELD)
 }
