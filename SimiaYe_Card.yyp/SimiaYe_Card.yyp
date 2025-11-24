@@ -51,7 +51,7 @@
   "isEcma":false,
   "LibraryEmitters":[],
   "MetaData":{
-    "IDEVersion":"2024.14.0.207",
+    "IDEVersion":"2024.14.1.210",
   },
   "name":"SimiaYe_Card",
   "resources":[
@@ -128,6 +128,7 @@
     {"id":{"name":"player_deck","path":"scripts/player_deck/player_deck.yy",},},
     {"id":{"name":"player_discard_deck","path":"scripts/player_discard_deck/player_discard_deck.yy",},},
     {"id":{"name":"Script1","path":"scripts/Script1/Script1.yy",},},
+    {"id":{"name":"struct_card_action","path":"scripts/struct_card_action/struct_card_action.yy",},},
     {"id":{"name":"top_layer_check","path":"scripts/top_layer_check/top_layer_check.yy",},},
     {"id":{"name":"etest","path":"sprites/etest/etest.yy",},},
     {"id":{"name":"spr_ability_symbol","path":"sprites/spr_ability_symbol/spr_ability_symbol.yy",},},

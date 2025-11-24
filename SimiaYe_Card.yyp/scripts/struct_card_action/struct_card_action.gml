@@ -1,0 +1,71 @@
+function struct_card_action(_selected_chara, _selected_enemies) constructor {
+	selected_chara = _selected_chara
+	selected_enemies = _selected_enemies
+	
+	/// @description								Loops through each selected character and hit each
+	///													selected enemy with their attack multiplied by
+	///													attack_multiplier
+	/// @param {Real} attack_multiplier				How much each character's attack is muliplied by
+	static charas_attack_enemies = function(attack_multiplier) {
+		for (var enemy_index = 0; enemy_index < array_length(selected_enemies); enemy_index++) {
+			for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
+				selected_enemies[enemy_index].hit_by_player(selected_chara[chara_index], attack_multiplier)
+			}
+		}	
+	}
+	
+	/// @description								Loops through each selected character and hit each
+	///													selected enemy with their attack multiplied by
+	///													the amount of shield that character has
+	static deal_dmg_to_enemies_equal_to_shield = function() {
+		for (var enemy_index = 0; enemy_index < array_length(selected_enemies); enemy_index++) {
+			for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
+				selected_enemies[enemy_index].hit_by_player(selected_chara[chara_index], selected_chara[chara_index].chara_shield)
+			}
+		}
+	}
+	
+	/// @description								Applies a given debuff to all selected enemies
+	/// @param {card_debuff_effects} debuff_type	The debuff being applied to this enemy
+	/// @param {Real} debuff_amount					The amount of the debuff being added
+	static apply_debuff_to_enemies = function(debuff_type, debuff_amount) {
+		for (var enemy_index = 0; enemy_index < array_length(selected_enemies); enemy_index++) {
+			selected_enemies[enemy_index].apply_debuffs(debuff_type, debuff_amount)
+		}	
+	}
+	
+	/// @description								Applies shield to all selected characters
+	/// @param {Real} shield_amount					The amount of shield each character gets
+	static charas_gain_shield = function(shield_amount) {
+		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
+			selected_chara[chara_index].add_shield(shield_amount)
+		}
+	}
+	
+	/// @description								Heals all selected charactes
+	/// @param {Real} heal_amount					The amount of health each character heals
+	static charas_heal = function(heal_amount) {
+		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
+			selected_chara[chara_index].heal_chara(heal_amount)
+		}
+	}
+	
+	/// @description								Applies a given buff to all selected characters
+	/// @param {card_buff_effects} buff_type		The buff being applied
+	/// @param {Real} buff_amount					The amount of the buff being added
+	static add_buff_to_charas = function (buff_type, buff_amount) {
+		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
+			selected_chara[chara_index].apply_buff(buff_type, buff_amount)
+		}	
+	}
+	
+	/// @description								Multiplies the given buff by mult_amount for 
+	///													each selected character
+	/// @param {card_buff_effects} buff_type		The buff being multiplied
+	/// @param {Real} mult_amount					The amount the buff is being multiplied by
+	static mult_charas_buff = function (buff_type, mult_amount) {
+		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
+			selected_chara[chara_index].multiply_buff(buff_type, mult_amount)
+		}	
+	}
+}

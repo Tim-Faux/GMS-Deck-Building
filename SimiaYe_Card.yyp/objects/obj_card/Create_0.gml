@@ -14,14 +14,9 @@ show_energy_error = false
 card_description = "This is example text of the card's description"
 
 /// @description									The unique action of the card when it is played
-/// @param {Array<Id.Instance>} selected_chara		The character(s) selected to for the card's action
-/// @param {Array<Id.Instance>} enemy_instances		The enemy(s) selected to take damage
-card_action = function (selected_chara, enemy_instances) {
-	for (var enemy_index = 0; enemy_index < array_length(enemy_instances); enemy_index++) {
-		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
-			enemy_instances[enemy_index].hit_by_player(selected_chara[chara_index], 1)
-		}
-	}
+/// @param {struct_card_action} card_action_struct	The struct that contains all card actions
+card_action = function (card_action_struct) {
+	card_action_struct.charas_attack_enemies(1)
 }
 #endregion
 
@@ -88,7 +83,8 @@ function show_not_enough_energy_error() {
 /// @param {Id.Instance} enemy_instance			The enemy selected to take damage
 function card_has_been_played(selected_chara, enemy_instance) {
 	ui_player_energy.remove_from_player_current_energy(energy_cost)
-	card_action(selected_chara, enemy_instance)
+	var card_action_struct = new struct_card_action(selected_chara, enemy_instance)
+	card_action(card_action_struct)
 	discard_card()
 }
 

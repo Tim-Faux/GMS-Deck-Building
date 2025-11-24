@@ -89,6 +89,7 @@
     {"name":"enum_chara_class","order":2,"path":"scripts/enum_chara_class/enum_chara_class.yy",},
     {"name":"player_deck","order":1,"path":"scripts/player_deck/player_deck.yy",},
     {"name":"player_discard_deck","order":3,"path":"scripts/player_discard_deck/player_discard_deck.yy",},
+    {"name":"struct_card_action","order":8,"path":"scripts/struct_card_action/struct_card_action.yy",},
     {"name":"top_layer_check","order":2,"path":"scripts/top_layer_check/top_layer_check.yy",},
     {"name":"etest","order":2,"path":"sprites/etest/etest.yy",},
     {"name":"spr_ability_symbol","order":3,"path":"sprites/spr_ability_symbol/spr_ability_symbol.yy",},

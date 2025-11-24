@@ -4,10 +4,7 @@ event_inherited();
 card_description = "Heal 1 character for 1 health"
 
 /// @desc											A selected chara is healed 1 health
-/// @param {Array<Id.Instance>} selected_chara		The character(s) selected to for the card's action
-/// @param {Array<Id.Instance>} enemy_instances		The enemy(s) selected to take damage
-card_action = function (selected_chara, enemy_instances) {
-	for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
-		selected_chara[chara_index].heal_chara(1)
-	}
+/// @param {struct_card_action} card_action_struct	The struct that contains all card actions
+card_action = function (card_action_struct) {
+	card_action_struct.charas_heal(1)
 }
