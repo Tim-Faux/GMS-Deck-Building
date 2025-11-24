@@ -30,7 +30,7 @@ function struct_card_action(_selected_chara, _selected_enemies) constructor {
 	/// @param {Real} debuff_amount					The amount of the debuff being added
 	static apply_debuff_to_enemies = function(debuff_type, debuff_amount) {
 		for (var enemy_index = 0; enemy_index < array_length(selected_enemies); enemy_index++) {
-			selected_enemies[enemy_index].apply_debuffs(debuff_type, debuff_amount)
+			selected_enemies[enemy_index].apply_debuff_to_enemy(debuff_type, debuff_amount)
 		}	
 	}
 	

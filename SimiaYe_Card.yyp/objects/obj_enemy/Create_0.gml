@@ -9,46 +9,28 @@ damage_to_display = []
 function hit_by_player(attacking_chara, damage_multiplyer) {
 	var attack_data = attacking_chara.get_attack(damage_multiplyer)
 	if(struct_exists(attack_data, "damage")) {
-		Health -= attack_data.damage
+		take_damage(attack_data.damage)
 		array_push(damage_to_display, [attack_data.damage, c_white])
-		if(Health <= 0) {
-			Is_alive = false
-		}
 	}
 	
 	if(struct_exists(attack_data, "debuffs")) {
 		for(var attack_debuff_index = 0; attack_debuff_index < array_length(attack_data.debuffs); attack_debuff_index++) {
 			var debuff_type = attack_data.debuffs[attack_debuff_index][0]
 			var debuff_amount = attack_data.debuffs[attack_debuff_index][1]
-			apply_debuffs(debuff_type, debuff_amount)
+			apply_debuff_to_enemy(debuff_type, debuff_amount)
 		}
 	}
 }
 
-/// @desc										Applies debuffs to this enemy and adds them to the 
-///													damage_to_display queue
+/// @description								Debuffs this enemy through the debuff_handler and adds it
+///													to the damage_to_display
 /// @param {card_debuff_effects} debuff_type	The debuff being applied to this enemy
 /// @param {Real} debuff_amount					The amount of the debuff being added
-function apply_debuffs(debuff_type, debuff_amount) {
-	if(active_debuffs[$ debuff_type] == undefined)
-			active_debuffs[$ debuff_type] = debuff_amount
-		else
-			active_debuffs[$ debuff_type] += debuff_amount
-			
-		switch (debuff_type) {
-			case card_debuff_effects.Poison:
-				array_push(damage_to_display, [active_debuffs[$ debuff_type], c_purple])
-				break;
-			case card_debuff_effects.Burn:
-				array_push(damage_to_display, [active_debuffs[$ debuff_type], c_red])
-				break;
-			case card_debuff_effects.Weakness:
-				array_push(damage_to_display, [active_debuffs[$ debuff_type], c_dkgrey])
-				break;
-			default:
-				array_push(damage_to_display, [active_debuffs[$ debuff_type], c_orange])
-				break;
-		}
+function apply_debuff_to_enemy(debuff_type, debuff_amount) {
+	var debuff_damage = apply_debuff(active_debuffs, debuff_type, debuff_amount)
+	if(array_length(debuff_damage) == 2) {
+		array_push(damage_to_display, debuff_damage)
+	}
 }
 
 /// @desc			Damages the player by enemy Attack_damage
@@ -92,7 +74,7 @@ function trigger_end_of_turn_debuffs() {
 	struct_foreach(active_debuffs, function (debuff_name, debuff_amount) {
 		var debuff_data = get_debuff_damage(active_debuffs, debuff_name)
 		if(array_length(debuff_data) == 2) {
-			array_push(damageToDisplay, debuff_data)
+			array_push(damage_to_display, debuff_data)
 			take_damage(debuff_data[0])
 		}
 	})
