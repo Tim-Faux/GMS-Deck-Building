@@ -56,6 +56,7 @@ function attack_player() {
 	obj_player.hit_by_enemy(Attack_damage)
 }
 
+
 /// @desc							Formats a number by removing any trailing 0s or decimals
 /// @param {Real} num_to_format		The number to be returned after formatting
 /// @returns						A string representation of the given number with trailing 0s and if
@@ -83,4 +84,26 @@ function format_display_number(num_to_format) {
 		num_string = "0"
 	}
 	return num_string
+}
+
+/// @desc							Loops through the debuffs currently active on this enemy and
+///										applys the damage
+function trigger_end_of_turn_debuffs() {
+	struct_foreach(active_debuffs, function (debuff_name, debuff_amount) {
+		var debuff_data = get_debuff_damage(active_debuffs, debuff_name)
+		if(array_length(debuff_data) == 2) {
+			array_push(damageToDisplay, debuff_data)
+			take_damage(debuff_data[0])
+		}
+	})
+}
+
+/// @desc							Removes health from this enemy and checks if they die
+/// @param {Real} health_damage		The amount of health to remove from this enemy
+function take_damage(health_damage) {
+	Health -= health_damage
+	if(Health <= 0 && Is_alive) {
+		Is_alive = false
+		show_debug_message("This enemy is dead")
+	}
 }

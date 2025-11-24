@@ -1,3 +1,7 @@
+if(!variable_global_exists("player_discarded_deck")) {
+	global.player_discarded_deck = array_create(0)
+}
+
 /// @desc							Checks that the player_discarded_deck exists and if not 
 ///										creates an empty array
 function check_for_player_discard_deck() {
@@ -36,7 +40,9 @@ function remove_card_from_player_discard_deck(card) {
 ///										copy so this work can be done afterwards.
 /// @returns						The cards removed from the deck
 function remove_all_cards_from_player_discard_deck() {
-	var all_discarded_cards = array_create_ext(array_length(global.player_discarded_deck), function(_index) {
+	check_for_player_discard_deck()
+	var num_discarded_cards = array_length(global.player_discarded_deck)
+	var all_discarded_cards = array_create_ext(num_discarded_cards, function(_index) {
 		return global.player_discarded_deck[_index] })
 	global.player_discarded_deck = array_create(0)
 	return all_discarded_cards
