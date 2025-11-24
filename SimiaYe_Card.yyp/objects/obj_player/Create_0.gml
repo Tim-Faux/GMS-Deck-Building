@@ -44,6 +44,10 @@ function display_effect_text() {
 /// @returns						A string representation of the given number with trailing 0s and if
 ///										if needed decimal point removed
 function format_display_number(num_to_format) {
+	if(num_to_format == undefined) {
+		return "0"	
+	}
+	
 	var num_string = string(num_to_format)
 	var decimal_pos = string_pos(num_string, ".")
 	if(decimal_pos == 0) {
