@@ -4,7 +4,7 @@
 if(!variable_global_exists("player_total_energy")) {
 	global.player_total_energy = PLAYER_DEFAULT_ENERGY
 }
-player_current_energy = global.player_total_energy
+reset_player_current_energy()
 
 /// @desc							Gets the player's current energy with amount of energy spent removed
 /// @returns						The current energy the player has
@@ -25,6 +25,11 @@ function remove_from_player_current_energy(num_energy) {
 /// @param {Real} num_energy		The amount of energy to add to the player's current energy supply
 function add_to_player_current_energy(num_energy) {
 	player_current_energy += num_energy
+}
+
+/// @desc							Resets the player's current energy to their total energy
+function reset_player_current_energy() {
+	player_current_energy = global.player_total_energy
 }
 
 /// @desc							Draws the text to display the amount of energy the player has left

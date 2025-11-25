@@ -44,6 +44,7 @@ function end_enemy_turn() {
 	
 	button_can_be_pressed = true
 	ui_player_hand.fill_player_hand()
+	ui_player_energy.reset_player_current_energy()
 	if(position_meeting(mouse_x, mouse_y, ui_end_turn_button)) {
 		handle_mouse_enter()
 	}
