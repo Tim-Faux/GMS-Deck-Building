@@ -498,7 +498,7 @@ function draw_target_selection_background() {
 	draw_set_alpha(1)
 }
 
-/// @desc									Draws text indicating how many characters need to be selected
+/// @desc									Draws text indicating how many targets need to be selected
 ///												NOTE: this must be called in the Draw event or it won't
 ///												work correctly
 function draw_number_of_targets_to_select_prompt() {
