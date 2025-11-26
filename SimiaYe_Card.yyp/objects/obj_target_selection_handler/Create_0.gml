@@ -22,6 +22,7 @@ enum selection_target {
 /// @desc						Reads the attacker_selection_type and decides whether a character
 ///									selection is needed
 function select_target_attacker() {
+	show_enemy_sprites()
 	current_selection_target = selection_target.character
 	selected_chara = []
 	num_chara_selected = 0
@@ -64,7 +65,7 @@ function create_attacker_selection(allowed_chara_classes = [chara_class.all_char
 		})
 		all_allowed_attackers[chara_index].visible = false
 	}
-	create_back_and_cancel_buttons(true)
+	create_back_and_cancel_buttons()
 }
 
 /// @desc										Searches for all characers in the room and determines if
@@ -89,24 +90,93 @@ function find_allowed_attackers(allowed_class = [chara_class.all_chara]) {
 }
 
 /// @desc									Creates the back and cancel buttons for the target selection
-/// @param {boolean} is_attacker_select		Determines which layer the buttons will be placed on and
-///												whether the back button is greyed out or not
-function create_back_and_cancel_buttons(is_attacker_select) {
+function create_back_and_cancel_buttons() {
+	var layer_id = highlighed_chara_layer
+	if(current_selection_target == selection_target.card) {
+		layer_id = highlighed_cards_layer
+	}
+	else if (current_selection_target == selection_target.enemy) {
+		layer_id = highlighed_enemies_layer
+	}
+	
+	if(current_selection_target == selection_target.character && 
+		(card_selection_type == card_select_target_card.in_hand ||
+		defender_selection_type == card_attack_target.single_enemy)) {
+		create_back_button(layer_id)
+		create_cancel_button(layer_id, true)
+	}
+	else if (current_selection_target == selection_target.card && 
+				(attacker_selection_type == card_selection_target.any_class ||
+				attacker_selection_type == card_selection_target.selected_class ||
+				defender_selection_type == card_attack_target.single_enemy)) {
+		create_back_button(layer_id)
+		create_cancel_button(layer_id, true)
+	}
+	else if (current_selection_target == selection_target.enemy && 
+				(card_selection_type == card_select_target_card.in_hand ||
+				attacker_selection_type == card_selection_target.any_class ||
+				attacker_selection_type == card_selection_target.selected_class)) {
+		create_back_button(layer_id)
+		create_cancel_button(layer_id, true)
+	}
+	else {
+		create_cancel_button(layer_id, false)
+	}
+}
+
+/// @desc								Determines the position and return method of the target selection's 
+///											back button and creates the button in the given layer
+/// @param {String, Id.Layer} layer_id	The target selection layer to put the back button on
+function create_back_button(layer_id) {
 	var back_button_x = SELECTABLE_CHARA_BACK_BUTTON_PADDING + (sprite_get_width(object_get_sprite(ui_selectable_chara_back_button)) / 2)
 	var back_button_y = display_get_gui_height() / 2 - SELECTABLE_CHARA_BACK_BUTTON_PADDING -
 							(sprite_get_height(object_get_sprite(ui_selectable_chara_back_button)) / 2)
-	var cancel_button_x = SELECTABLE_CHARA_CANCEL_BUTTON_PADDING + (sprite_get_width(object_get_sprite(ui_selectable_chara_back_button)) / 2)
-	var cancel_button_y = display_get_gui_height() / 2 + SELECTABLE_CHARA_CANCEL_BUTTON_PADDING +
-							(sprite_get_height(object_get_sprite(ui_selectable_chara_back_button)) / 2)
 	
-	var layer_id = highlighed_enemies_layer
-	if(is_attacker_select) {
-		layer_id = highlighed_chara_layer
-	}
-	
+	var back_function = find_back_button_return_fuction()
 	instance_create_layer(back_button_x, back_button_y, layer_id, ui_selectable_chara_back_button, {
-		is_back_enabled : !is_attacker_select
+		back_return_fuction : back_function
 	})
+}
+
+/// @desc									Finds the method that the player should return to after the
+///												back button is pressed
+/// @returns								The method to be run when the back button is pressed or undefined
+function find_back_button_return_fuction() {
+	if(current_selection_target == selection_target.character) {
+		return undefined
+	}
+	if(current_selection_target == selection_target.card) {
+		if(attacker_selection_type == card_selection_target.any_class ||
+			attacker_selection_type == card_selection_target.selected_class) {
+			return method(id, select_target_attacker)
+		}
+	}
+	else if(current_selection_target == selection_target.enemy) {
+		if(card_selection_type == card_select_target_card.in_hand) {
+			return method(id, select_target_card)
+		}
+		else if(attacker_selection_type == card_selection_target.any_class ||
+			attacker_selection_type == card_selection_target.selected_class) {
+			return method(id, select_target_attacker)
+		}
+	}
+	return undefined
+}
+
+/// @desc								Determines the position of the target selection's cancel button
+///											and creates the button in the given layer
+/// @param {String, Id.Layer} layer_id	The target selection layer to put the cancel button on
+/// @param {bool} has_back_button		Flag to help determine where the cancel button should be placed
+function create_cancel_button(layer_id, has_back_button) {
+	var cancel_button_x = SELECTABLE_CHARA_CANCEL_BUTTON_PADDING + (sprite_get_width(object_get_sprite(ui_selectable_chara_back_button)) / 2)
+	var cancel_button_y = 0
+	if(has_back_button)
+		cancel_button_y = display_get_gui_height() / 2 + SELECTABLE_CHARA_CANCEL_BUTTON_PADDING +
+								(sprite_get_height(object_get_sprite(ui_selectable_chara_back_button)) / 2)
+	else {
+		cancel_button_y = display_get_gui_height() / 2 -
+								(sprite_get_height(object_get_sprite(ui_selectable_chara_back_button)) / 2)
+	}
 	instance_create_layer(cancel_button_x, cancel_button_y, layer_id, ui_selectable_chara_cancel_button)
 }
 
@@ -163,7 +233,6 @@ function chara_selected(chara_instance) {
 	
 	if(num_chara_selected >= num_chara_to_select || num_chara_to_select == 0) {
 		layer_destroy_instances(highlighed_chara_layer)
-		show_chara_sprites()
 		select_target_card()
 	}
 }
@@ -218,7 +287,11 @@ function select_target_card() {
 ///													of cards from allowed_cards
 /// @param {Array<Id.Instance>} allowed_cards	The cards that the player can select
 function create_card_selection(allowed_cards) {
+	show_chara_sprites()
+	show_enemy_sprites()
 	current_selection_target = selection_target.card
+	selected_cards = []
+	num_cards_selected = 0
 	
 	var numCards = array_length(allowed_cards)
 	var spacing_between_cards = clamp((display_get_gui_width() / numCards) - allowed_cards[0].sprite_width, 1, 100 / numCards)
@@ -231,6 +304,7 @@ function create_card_selection(allowed_cards) {
 		})
 		xpos += allowed_cards[card_index].sprite_width + spacing_between_cards
 	}
+	create_back_and_cancel_buttons()
 }
 
 /// @desc									Handles when a card is selected for the card action by
@@ -266,6 +340,7 @@ function card_deselected(card_instance) {
 /// @desc									Decides whether an enemy selection is needed based on the
 ///												given card target
 function select_target_enemy() {
+	show_chara_sprites()
 	current_selection_target = selection_target.enemy
 	if(defender_selection_type == card_attack_target.all_enemies) {
 		all_enemies_selected()
@@ -395,7 +470,7 @@ function create_defender_selection() {
 		})
 		all_allowed_enemies[enemy_index].visible = false
 	}
-	create_back_and_cancel_buttons(false)
+	create_back_and_cancel_buttons()
 }
 
 /// @desc									Finds all obj_enemy instances that can be targeted by an attack
