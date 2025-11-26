@@ -32,7 +32,7 @@ function select_target_attacker() {
 	}
 	else if(attacker_selection_type == card_selection_target.random_chara) {
 		var allowed_attackers =  find_allowed_attackers()
-		var random_attacker = irandom(array_length(allowed_attackers)) - 1
+		var random_attacker = irandom(array_length(allowed_attackers) - 1)
 		selected_chara = [allowed_attackers[random_attacker]]
 		num_chara_selected = 1
 		select_target_card()
