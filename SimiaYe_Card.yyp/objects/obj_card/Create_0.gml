@@ -1,5 +1,6 @@
 #macro NOT_ENOUGH_ENERGY_TO_PLAY_THIS_CARD "Not enough energy to play this card!"
 #macro PADDING_BETWEEN_CARD_DESCRIPTION_LINES 2
+#macro CARD_SELECTION_CONFIRMATION_MOVEMENT 30
 
 flexpanels = create_card_flexpanels(sprite_width, sprite_height)
 
@@ -8,6 +9,7 @@ draw_card = true
 card_start_x_position = x
 card_start_y_position = y
 show_energy_error = false
+is_selected = false
 
 #region THIS NEED TO BE IMPLEMENTED IN EACH CARD
 //Be sure to check the Variable Definitions, there are many variables to manipulate there
@@ -26,7 +28,7 @@ function select_card() {
 	if(!card_selected && !global.object_being_clicked && visible && is_top_layer(layer)) {
 		global.object_being_clicked	= true
 		card_selected = true
-		if(!is_display_card) {
+		if(!is_display_card && !is_selectable_card) {
 			card_start_x_position = x
 			card_start_y_position = y
 			x = mouse_x - (sprite_width / 2)
@@ -56,8 +58,10 @@ function play_card() {
 		{
 			num_chara_to_select,
 			attacker_selection_type,
+			card_selection_type,
 			defender_selection_type,
 			allowed_classes,
+			num_cards_to_select,
 			card_played : id
 		})
 	}

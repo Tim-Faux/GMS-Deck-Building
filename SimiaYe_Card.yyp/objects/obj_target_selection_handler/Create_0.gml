@@ -3,30 +3,39 @@
 #macro NUMBER_OF_TARGETS_TEXT_PADDING 25
 
 highlighed_chara_layer = layer_create(depth - 1, "highlighed_chara_layer")
+highlighed_cards_layer = layer_create(depth - 1, "highlighed_cards_layer")
 highlighed_enemies_layer = layer_create(depth - 1, "highlighed_enemies_layer")
 selected_chara = []
+selected_cards = []
 num_chara_selected = 0
-selecting_character = true
+num_cards_selected = 0
+current_selection_target = selection_target.character
 
 select_target_attacker()
+
+enum selection_target {
+	character,
+	card,
+	enemy
+}
 
 /// @desc						Reads the attacker_selection_type and decides whether a character
 ///									selection is needed
 function select_target_attacker() {
-	selecting_character = true
+	current_selection_target = selection_target.character
 	selected_chara = []
 	num_chara_selected = 0
 	if(attacker_selection_type == card_selection_target.all_players) {
 		selected_chara = find_allowed_attackers()
 		num_chara_selected = array_length(selected_chara)
-		select_target_enemy()
+		select_target_card()
 	}
 	else if(attacker_selection_type == card_selection_target.random_chara) {
 		var allowed_attackers =  find_allowed_attackers()
 		var random_attacker = irandom(array_length(allowed_attackers)) - 1
 		selected_chara = [allowed_attackers[random_attacker]]
 		num_chara_selected = 1
-		select_target_enemy()
+		select_target_card()
 	}
 	else if(attacker_selection_type == card_selection_target.any_class) {
 		create_attacker_selection()
@@ -37,7 +46,7 @@ function select_target_attacker() {
 	else if(attacker_selection_type == card_selection_target.no_chara) {
 		selected_chara = []
 		num_chara_selected = 0
-		select_target_enemy()
+		select_target_card()
 	}
 }
 
@@ -113,22 +122,28 @@ function cancel_target_selection() {
 	find_and_delete_related_layers(layer)
 }
 
-/// @desc						The call back function for the obj_selectable_chara, then determines if
-///									a character or an enemy was being selected and forwards the action
+/// @desc						The call back function for the obj_selectable_chara and obj_card, 
+///									that determines what was being selected and forwards the action
 function target_selected(selected_target) {
-	if (selecting_character) {
+	if (current_selection_target == selection_target.character) {
 		chara_selected(selected_target)
+	}
+	else if(current_selection_target == selection_target.card) {
+		card_selected(selected_target)
 	}
 	else {
 		enemy_selected(selected_target)
 	}
 }
 
-/// @desc						The call back function for the obj_selectable_chara. Handles deselecting
-///									the character, cleaning up any references to their selection
+/// @desc						The call back function for the obj_selectable_chara and obj_card. Handles
+///									deselecting a target, cleaning up any references to their selection
 function target_deselected(selected_target) {
-	if (selecting_character) {
+	if (current_selection_target == selection_target.character) {
 		chara_deselected(selected_target)
+	}
+	else if(current_selection_target == selection_target.card) {
+		card_deselected(selected_target)
 	}
 }
 
@@ -149,7 +164,7 @@ function chara_selected(chara_instance) {
 	if(num_chara_selected >= num_chara_to_select || num_chara_to_select == 0) {
 		layer_destroy_instances(highlighed_chara_layer)
 		show_chara_sprites()
-		select_target_enemy()
+		select_target_card()
 	}
 }
 
@@ -188,10 +203,70 @@ function show_chara_sprites(sprites_to_show = []) {
 	}
 }
 
+/// @desc										Determines the cards that can be selected based on the
+///													card's card_selection_type
+function select_target_card() {
+	if(card_selection_type == card_select_target_card.none) {
+		select_target_enemy()
+	}
+	if(card_selection_type == card_select_target_card.in_hand) {
+		create_card_selection(ui_player_hand.get_player_current_hand())
+	}
+}
+
+/// @desc										Creates a screen that allows the player to select a number
+///													of cards from allowed_cards
+/// @param {Array<Id.Instance>} allowed_cards	The cards that the player can select
+function create_card_selection(allowed_cards) {
+	current_selection_target = selection_target.card
+	
+	var numCards = array_length(allowed_cards)
+	var spacing_between_cards = clamp((display_get_gui_width() / numCards) - allowed_cards[0].sprite_width, 1, 100 / numCards)
+	var total_width_of_card_selection = ((allowed_cards[0].sprite_width + spacing_between_cards) * numCards) + spacing_between_cards
+	var xpos = (display_get_gui_width() - total_width_of_card_selection) / 2
+	var ypos = (display_get_gui_height() - allowed_cards[0].sprite_height) / 2
+	for (var card_index = 0; card_index < numCards; card_index++) {
+		instance_create_layer(xpos, ypos, highlighed_cards_layer, allowed_cards[card_index].object_index, {
+			is_selectable_card : true
+		})
+		xpos += allowed_cards[card_index].sprite_width + spacing_between_cards
+	}
+}
+
+/// @desc									Handles when a card is selected for the card action by
+///												tracking how many cards have been selected before
+///												allowing the enemy target to be selected
+/// @param {Id.Instance} card_instance		The card selected for the card action
+function card_selected(card_instance) {
+	if(card_instance == noone) {
+		layer_destroy_instances(highlighed_cards_layer)
+	}
+	else if (!array_contains(selected_cards, card_instance)) {
+		num_cards_selected++
+		array_push(selected_cards, card_instance)
+	}
+	
+	if(num_cards_selected >= num_cards_to_select || num_cards_to_select == 0) {
+		layer_destroy_instances(highlighed_cards_layer)
+		select_target_enemy()
+	}
+}
+
+/// @desc									Removes the given card from the selected card array
+///												and decrements num_cards_selected
+/// @param {Id.Instance} chara_instance		The character being deselected
+function card_deselected(card_instance) {
+	var card_index = array_get_index(selected_cards, card_instance)
+	if (card_index > -1) {
+		num_cards_selected--
+		array_delete(selected_cards, card_index, 1)
+	}
+}
+
 /// @desc									Decides whether an enemy selection is needed based on the
 ///												given card target
 function select_target_enemy() {
-	selecting_character = false
+	current_selection_target = selection_target.enemy
 	if(defender_selection_type == card_attack_target.all_enemies) {
 		all_enemies_selected()
 		find_allowed_enemies()
@@ -354,7 +429,7 @@ function draw_target_selection_background() {
 function draw_number_of_targets_to_select_prompt() {
 	var number_of_attackers_remaining = num_chara_to_select - num_chara_selected
 	var number_of_targets_to_select_text = $"Select {number_of_attackers_remaining} targets"
-	if (selecting_character) {
+	if (current_selection_target == selection_target.character) {
 		if(number_of_attackers_remaining > 1) {
 			if(num_chara_selected > 0) {
 				number_of_targets_to_select_text = $"Select {number_of_attackers_remaining} more attackers"

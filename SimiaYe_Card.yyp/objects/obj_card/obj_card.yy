@@ -35,6 +35,7 @@
   "properties":[
     {"$GMObjectProperty":"v2","%Name":"energy_cost","filters":[],"listItems":[],"multiselect":false,"name":"energy_cost","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"1","varType":1,},
     {"$GMObjectProperty":"v2","%Name":"num_chara_to_select","filters":[],"listItems":[],"multiselect":false,"name":"num_chara_to_select","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"0","varType":1,},
+    {"$GMObjectProperty":"v2","%Name":"num_cards_to_select","filters":[],"listItems":[],"multiselect":false,"name":"num_cards_to_select","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"0","varType":1,},
     {"$GMObjectProperty":"v2","%Name":"attacker_selection_type","filters":[],"listItems":[
         "card_selection_target.all_players",
         "card_selection_target.any_class",
@@ -47,6 +48,10 @@
         "card_attack_target.single_enemy",
         "card_attack_target.no_enemies",
       ],"multiselect":false,"name":"defender_selection_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"card_attack_target.all_enemies","varType":6,},
+    {"$GMObjectProperty":"v2","%Name":"card_selection_type","filters":[],"listItems":[
+        "card_select_target_card.in_hand",
+        "card_select_target_card.none",
+      ],"multiselect":false,"name":"card_selection_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"card_select_target_card.none","varType":6,},
     {"$GMObjectProperty":"v2","%Name":"allowed_classes","filters":[],"listItems":[
         "chara_class.all_chara",
         "chara_class.damage",
@@ -62,7 +67,7 @@
       ],"listItems":[],"multiselect":false,"name":"not_enough_energy_error_font","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resource":{"name":"fnt_button_font","path":"fonts/fnt_button_font/fnt_button_font.yy",},"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"fnt_button_font","varType":5,},
     {"$GMObjectProperty":"v2","%Name":"not_enough_energy_error_color","filters":[],"listItems":[],"multiselect":false,"name":"not_enough_energy_error_color","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"$FF0000B2","varType":7,},
     {"$GMObjectProperty":"v2","%Name":"is_display_card","filters":[],"listItems":[],"multiselect":false,"name":"is_display_card","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"False","varType":3,},
-    {"$GMObjectProperty":"v2","%Name":"card_expanded","filters":[],"listItems":[],"multiselect":false,"name":"card_expanded","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"False","varType":3,},
+    {"$GMObjectProperty":"v2","%Name":"is_selectable_card","filters":[],"listItems":[],"multiselect":false,"name":"is_selectable_card","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"False","varType":3,},
   ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
