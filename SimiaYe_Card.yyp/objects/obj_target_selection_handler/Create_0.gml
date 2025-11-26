@@ -502,9 +502,9 @@ function draw_target_selection_background() {
 ///												NOTE: this must be called in the Draw event or it won't
 ///												work correctly
 function draw_number_of_targets_to_select_prompt() {
-	var number_of_attackers_remaining = num_chara_to_select - num_chara_selected
-	var number_of_targets_to_select_text = $"Select {number_of_attackers_remaining} targets"
+	var number_of_targets_to_select_text = $"Select your targets"
 	if (current_selection_target == selection_target.character) {
+		var number_of_attackers_remaining = num_chara_to_select - num_chara_selected
 		if(number_of_attackers_remaining > 1) {
 			if(num_chara_selected > 0) {
 				number_of_targets_to_select_text = $"Select {number_of_attackers_remaining} more attackers"
@@ -519,6 +519,25 @@ function draw_number_of_targets_to_select_prompt() {
 			}
 			else {
 				number_of_targets_to_select_text = $"Select an attacker"
+			}
+		}
+	}
+	else if (current_selection_target == selection_target.card) {
+		var number_of_cards_remaining = num_cards_to_select - num_cards_selected
+		if(number_of_cards_remaining > 1) {
+			if(num_cards_selected > 0) {
+				number_of_targets_to_select_text = $"Select {number_of_cards_remaining} more cards"
+			}
+			else {
+				number_of_targets_to_select_text = $"Select {number_of_cards_remaining} cards"
+			}
+		}
+		else {
+			if (num_cards_selected > 0) {
+				number_of_targets_to_select_text = $"Select {number_of_cards_remaining} more card"
+			}
+			else {
+				number_of_targets_to_select_text = $"Select a card"
 			}
 		}
 	}
