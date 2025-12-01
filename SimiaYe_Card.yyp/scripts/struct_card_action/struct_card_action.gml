@@ -1,5 +1,6 @@
-function struct_card_action(_selected_chara, _selected_enemies) constructor {
+function struct_card_action(_selected_chara, _selected_cards, _selected_enemies) constructor {
 	selected_chara = _selected_chara
+	selected_cards = _selected_cards
 	selected_enemies = _selected_enemies
 	
 	/// @description								Loops through each selected character and hit each
@@ -67,5 +68,21 @@ function struct_card_action(_selected_chara, _selected_enemies) constructor {
 		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
 			selected_chara[chara_index].multiply_buff(buff_type, mult_amount)
 		}	
+	}
+	
+	/// @description								Removes all selected cards from the player's hand and
+	///													puts them in the discard pile
+	static discard_selected_cards = function () {
+		for (var card_index = 0; card_index < array_length(selected_cards); card_index++) {
+			add_card_to_discard_deck(selected_cards[card_index].object_index)
+			ui_player_hand.remove_card(selected_cards[card_index])
+		}
+	}
+	
+	/// @description								Adds a given amount of energy to the player's current
+	///													energy pool
+	/// @param {Real} mult_amount					The amount of energy added to the player's energy pool
+	static add_energy = function (energy_amount) {
+		ui_player_energy.add_to_player_current_energy(energy_amount)
 	}
 }

@@ -5,6 +5,7 @@
 highlighed_chara_layer = layer_create(depth - 1, "highlighed_chara_layer")
 highlighed_cards_layer = layer_create(depth - 1, "highlighed_cards_layer")
 highlighed_enemies_layer = layer_create(depth - 1, "highlighed_enemies_layer")
+selectable_to_hand_card_struct = {}
 selected_chara = []
 selected_cards = []
 num_chara_selected = 0
@@ -312,9 +313,10 @@ function create_card_selection(allowed_cards) {
 	var xpos = (display_get_gui_width() - total_width_of_card_selection) / 2
 	var ypos = (display_get_gui_height() - allowed_cards[0].sprite_height) / 2
 	for (var card_index = 0; card_index < numCards; card_index++) {
-		instance_create_layer(xpos, ypos, highlighed_cards_layer, allowed_cards[card_index].object_index, {
+		var selectable_card_instance = instance_create_layer(xpos, ypos, highlighed_cards_layer, allowed_cards[card_index].object_index, {
 			is_selectable_card : true
 		})
+		selectable_to_hand_card_struct[$ selectable_card_instance] = allowed_cards[card_index]
 		xpos += allowed_cards[card_index].sprite_width + spacing_between_cards
 	}
 	create_back_and_cancel_buttons()
@@ -325,12 +327,12 @@ function create_card_selection(allowed_cards) {
 ///												allowing the enemy target to be selected
 /// @param {Id.Instance} card_instance		The card selected for the card action
 function card_selected(card_instance) {
-	if(card_instance == noone) {
+	if(!struct_exists(selectable_to_hand_card_struct, card_instance)) {
 		layer_destroy_instances(highlighed_cards_layer)
 	}
-	else if (!array_contains(selected_cards, card_instance)) {
+	else if (!array_contains(selected_cards, selectable_to_hand_card_struct[$ card_instance])) {
 		num_cards_selected++
-		array_push(selected_cards, card_instance)
+		array_push(selected_cards, selectable_to_hand_card_struct[$ card_instance])
 	}
 	
 	if(num_cards_selected >= num_cards_to_select || num_cards_to_select == 0) {
@@ -364,7 +366,7 @@ function select_target_enemy() {
 	}
 	else if(defender_selection_type == card_attack_target.no_enemies) {
 		if(card_played != noone) {
-			card_played.card_has_been_played(selected_chara, [])
+			card_played.card_has_been_played(selected_chara, selected_cards, [])
 		}
 		
 		find_and_delete_related_layers(layer)
@@ -377,7 +379,7 @@ function all_enemies_selected() {
 	var enemy_instances = find_allowed_enemies()
 	
 	if(card_played != noone) {
-		card_played.card_has_been_played(selected_chara, enemy_instances)
+		card_played.card_has_been_played(selected_chara, selected_cards, enemy_instances)
 	}
 	find_and_delete_related_layers(layer)
 }
@@ -389,7 +391,7 @@ function enemy_selected(enemy_instance) {
 	if(enemy_instance != noone) {
 		show_enemy_sprites()
 		if(card_played != noone) {
-			card_played.card_has_been_played(selected_chara, [enemy_instance])
+			card_played.card_has_been_played(selected_chara, selected_cards, [enemy_instance])
 		}
 		
 		find_and_delete_related_layers(layer)

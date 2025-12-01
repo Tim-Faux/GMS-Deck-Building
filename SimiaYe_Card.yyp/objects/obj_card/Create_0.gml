@@ -83,11 +83,12 @@ function show_not_enough_energy_error() {
 
 /// @description								The callback function for obj_target_selection_handler,
 ///													giving an opportunity for the card to discard the card
-/// @param {Array<Id.Instance>} selected_chara	The character(s) selected to for the card's action
+/// @param {Array<Id.Instance>} selected_chara	The character(s) selected for the card's action
+/// @param {Array<Id.Instance>} selected_cards	The card(s) selected for the card's action
 /// @param {Id.Instance} enemy_instance			The enemy selected to take damage
-function card_has_been_played(selected_chara, enemy_instance) {
+function card_has_been_played(selected_chara, selected_cards, enemy_instance) {
 	ui_player_energy.remove_from_player_current_energy(energy_cost)
-	var card_action_struct = new struct_card_action(selected_chara, enemy_instance)
+	var card_action_struct = new struct_card_action(selected_chara, selected_cards, enemy_instance)
 	card_action(card_action_struct)
 	discard_card()
 }
