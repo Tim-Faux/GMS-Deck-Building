@@ -81,6 +81,7 @@ function struct_card_action(_selected_chara, _selected_cards, _selected_enemies)
 	
 	/// @description								Draws cards from the player's deck one at a time and
 	///													adds it to their hand
+	/// @param {Real} num_card_to_draw				How many cards should be drawn
 	static draw_num_cards = function(num_card_to_draw) {
 		repeat (num_card_to_draw) {
 			var drawn_card = draw_card()
