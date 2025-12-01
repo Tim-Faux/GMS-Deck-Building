@@ -308,6 +308,9 @@ function create_card_selection(allowed_cards) {
 	num_cards_selected = 0
 	
 	var numCards = array_length(allowed_cards)
+	if(num_cards_to_select > numCards) {
+		num_cards_to_select = numCards	
+	}
 	var spacing_between_cards = clamp((display_get_gui_width() / numCards) - allowed_cards[0].sprite_width, 1, 100 / numCards)
 	var total_width_of_card_selection = ((allowed_cards[0].sprite_width + spacing_between_cards) * numCards) + spacing_between_cards
 	var xpos = (display_get_gui_width() - total_width_of_card_selection) / 2
