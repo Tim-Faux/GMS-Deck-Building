@@ -79,6 +79,20 @@ function struct_card_action(_selected_chara, _selected_cards, _selected_enemies)
 		}
 	}
 	
+	/// @description								Draws cards from the player's deck one at a time and
+	///													adds it to their hand
+	static draw_num_cards = function(num_card_to_draw) {
+		repeat (num_card_to_draw) {
+			var drawn_card = draw_card()
+			if(drawn_card != -1) {
+				var add_card_succeeded = ui_player_hand.add_card(drawn_card)
+				if(!add_card_succeeded) {
+					break	
+				}
+			}
+		}
+	}
+	
 	/// @description								Adds a given amount of energy to the player's current
 	///													energy pool
 	/// @param {Real} mult_amount					The amount of energy added to the player's energy pool

@@ -60,12 +60,19 @@ function get_player_current_hand() {
 
 /// @desc							Adds a specified card to the player's hand and shows it in the UI
 /// @param {Asset.GMObject} card	The card that is being added to the player's hand
+/// @returns {bool}					True if the card was added to the player's hand or false and it was
+///										returned to the top of the player's deck
 function add_card(card) {
 	var card_instance = instance_create_layer(x, y, "Instances", card)
 	var number_of_cards_in_hand = array_length(cards_in_hand)
 	if(number_of_cards_in_hand < MAX_PLAYER_HAND_SIZE) {
 		array_push(cards_in_hand, card_instance)
 		set_cards_in_hand_position()
+		return true
+	}
+	else {
+		add_card_to_top_of_player_current_deck(card)
+		return false
 	}
 }
 
