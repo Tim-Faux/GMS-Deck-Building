@@ -38,6 +38,7 @@
     {"name":"fnt_energy_cost","order":2,"path":"fonts/fnt_energy_cost/fnt_energy_cost.yy",},
     {"name":"fnt_energy","order":1,"path":"fonts/fnt_energy/fnt_energy.yy",},
     {"name":"obj_brick","order":1,"path":"objects/obj_brick/obj_brick.yy",},
+    {"name":"obj_card_10","order":3,"path":"objects/obj_card_10/obj_card_10.yy",},
     {"name":"obj_card_15","order":1,"path":"objects/obj_card_15/obj_card_15.yy",},
     {"name":"obj_card_16","order":2,"path":"objects/obj_card_16/obj_card_16.yy",},
     {"name":"obj_card_2","order":1,"path":"objects/obj_card_2/obj_card_2.yy",},
