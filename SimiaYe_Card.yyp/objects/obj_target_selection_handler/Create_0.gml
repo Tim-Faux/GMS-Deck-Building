@@ -498,7 +498,9 @@ function find_allowed_enemies() {
 	var allowed_enemies = array_create(0)
 	for(var enemy_index = 0; enemy_index < num_avaliable_enemies; enemy_index++) {
 		var enemy_instance = instance_find(obj_enemy, enemy_index)
-		array_push(allowed_enemies, enemy_instance)
+		if (enemy_instance.Is_alive) {
+			array_push(allowed_enemies, enemy_instance)
+		}
 	}
 	return allowed_enemies
 }
