@@ -42,11 +42,18 @@ function end_enemy_turn() {
 		enemies[enemy_index].trigger_end_of_turn_debuffs()
 	}
 	
-	button_can_be_pressed = true
-	ui_player_hand.fill_player_hand()
-	ui_player_energy.reset_player_current_energy()
-	if(position_meeting(mouse_x, mouse_y, ui_end_turn_button)) {
-		handle_mouse_enter()
+	if(skip_players_next_turn) {
+		skip_players_next_turn = false
+		end_player_turn()
+		start_enemy_turn()
+	}
+	else {
+		button_can_be_pressed = true
+		ui_player_hand.fill_player_hand()
+		ui_player_energy.reset_player_current_energy()
+		if(position_meeting(mouse_x, mouse_y, ui_end_turn_button)) {
+			handle_mouse_enter()
+		}
 	}
 }
 

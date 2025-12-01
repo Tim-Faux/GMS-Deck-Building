@@ -100,4 +100,10 @@ function struct_card_action(_selected_chara, _selected_cards, _selected_enemies)
 	static add_energy = function (energy_amount) {
 		ui_player_energy.add_to_player_current_energy(energy_amount)
 	}
+	
+	/// @description								Informs the ui_end_turn_button that the player's next
+	///													turn is being skipped
+	static skip_next_turn = function () {
+		ui_end_turn_button.skip_players_next_turn = true
+	}
 }
