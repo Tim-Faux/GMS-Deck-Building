@@ -279,8 +279,14 @@ function select_target_card() {
 	if(card_selection_type == card_select_target_card.none) {
 		select_target_enemy()
 	}
-	if(card_selection_type == card_select_target_card.in_hand) {
+	else if(card_selection_type == card_select_target_card.in_hand) {
 		create_card_selection(find_allowed_cards())
+	}
+	else if(card_selection_type == card_select_target_card.whole_hand) {
+		var cards_in_hand = find_allowed_cards()
+		num_cards_selected = array_length(cards_in_hand)
+		array_copy(selected_cards, 0, cards_in_hand, 0, num_cards_selected)
+		select_target_enemy()
 	}
 }
 
@@ -288,7 +294,8 @@ function select_target_card() {
 ///													removing the played card instance if needed
 /// @returns {array<Id.Instance>}				The cards which can be select for the card action
 function find_allowed_cards() {
-	if(card_selection_type == card_select_target_card.in_hand) {
+	if(card_selection_type == card_select_target_card.in_hand ||
+		card_selection_type == card_select_target_card.whole_hand) {
 		var cards_in_hand = ui_player_hand.get_player_current_hand()
 		var allowed_cards = array_filter(cards_in_hand, 
 								function(element, index) { return element != card_played })

@@ -50,6 +50,7 @@
       ],"multiselect":false,"name":"defender_selection_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"card_attack_target.all_enemies","varType":6,},
     {"$GMObjectProperty":"v2","%Name":"card_selection_type","filters":[],"listItems":[
         "card_select_target_card.in_hand",
+        "card_select_target_card.whole_hand",
         "card_select_target_card.none",
       ],"multiselect":false,"name":"card_selection_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"card_select_target_card.none","varType":6,},
     {"$GMObjectProperty":"v2","%Name":"allowed_classes","filters":[],"listItems":[
