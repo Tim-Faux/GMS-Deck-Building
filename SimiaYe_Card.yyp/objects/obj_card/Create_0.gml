@@ -20,6 +20,10 @@ card_description = "This is example text of the card's description"
 card_action = function (card_action_struct) {
 	card_action_struct.charas_attack_enemies(1)
 }
+
+card_drawn_action = function () {
+	// Only implement this function if a card has an on draw effect
+}
 #endregion
 
 /// @description							Checks to see if no other cards are selected then allows this

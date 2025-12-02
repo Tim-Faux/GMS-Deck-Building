@@ -6,6 +6,7 @@ player_hand_size = DEFAULT_PLAYER_HAND_SIZE
 cards_in_hand = array_create(0)
 is_hand_visible = true
 total_width_of_hand = 0
+run_card_drawn_functions = false
 
 initial_hand_setup()
 
@@ -68,6 +69,7 @@ function add_card(card) {
 	if(number_of_cards_in_hand < MAX_PLAYER_HAND_SIZE) {
 		array_push(cards_in_hand, card_instance)
 		set_cards_in_hand_position()
+		card_instance.card_drawn_action()
 		return true
 	}
 	else {
@@ -87,7 +89,28 @@ function add_multiple_cards(cards) {
 		var card_instance = instance_create_layer(x, y, "Instances", cards[card_index])
 		cards_in_hand[card_index + current_num_cards_in_hand] = card_instance
 	}
+	run_card_drawn_functions = true
 	set_cards_in_hand_position()
+}
+
+/// @desc							Creates a copy of the given card in the player's hand
+/// @param {Id.Instance} card		The card that is being copied
+function add_copy_of_card_to_hand(card) {
+	var card_instance = instance_create_layer(x, y, "Instances", card.object_index)
+	var number_of_cards_in_hand = array_length(cards_in_hand)
+	if(number_of_cards_in_hand < MAX_PLAYER_HAND_SIZE) {
+		var card_index = array_get_index(cards_in_hand, card)
+		if(card_index != -1)
+			array_insert(cards_in_hand, card_index + 1, card_instance)
+		else
+			array_push(cards_in_hand, card_instance)
+		set_cards_in_hand_position()
+		return true
+	}
+	else {
+		add_card_to_top_of_player_current_deck(card)
+		return false
+	}
 }
 
 /// @desc							Removes the given card from the players hand if it exists
@@ -132,6 +155,15 @@ function get_width_of_player_hand() {
 		}
 	}
 	return total_width_of_hand
+}
+
+/// @desc							Runs the card_drawn_action for each of the cards in hand. This
+///										is intended to only be called when the player is drawing a
+///										completely new hand.
+function run_card_drawn_code() {
+	for(var card_index = array_length(cards_in_hand) - 1; card_index >= 0; card_index--) {
+		cards_in_hand[card_index].card_drawn_action()
+	}
 }
 
 /// @desc							Makes all the cards in the player's hand visible
