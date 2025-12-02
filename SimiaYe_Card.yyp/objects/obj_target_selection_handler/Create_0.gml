@@ -20,6 +20,8 @@ enum selection_target {
 	enemy
 }
 
+#region Attacker Selection
+
 /// @desc						Reads the attacker_selection_type and decides whether a character
 ///									selection is needed
 function select_target_attacker() {
@@ -52,23 +54,6 @@ function select_target_attacker() {
 	}
 }
 
-/// @desc											Finds all of the characters of the given classes
-///														and creates obj_selectable_chara of them
-/// @param {Array<Real>} allowed_chara_classes		The classes allowed to attack, defaulting to all_chara
-function create_attacker_selection(allowed_chara_classes = [chara_class.all_chara]) {
-	var all_allowed_attackers = find_allowed_attackers(allowed_chara_classes)
-
-	for(var chara_index = 0; chara_index < array_length(all_allowed_attackers); chara_index++) {
-		var sprite = all_allowed_attackers[chara_index].sprite_index
-		instance_create_layer(all_allowed_attackers[chara_index].x, all_allowed_attackers[chara_index].y, highlighed_chara_layer, obj_selectable_chara, {
-			sprite_index : sprite,
-			chara_instance : all_allowed_attackers[chara_index]
-		})
-		all_allowed_attackers[chara_index].visible = false
-	}
-	create_back_and_cancel_buttons()
-}
-
 /// @desc										Searches for all characers in the room and determines if
 ///													their class is one of the allowed options to attack
 /// @param {Array<Real>} allowed_class			The classes allowed to attack, defaulting to all_chara
@@ -90,6 +75,248 @@ function find_allowed_attackers(allowed_class = [chara_class.all_chara]) {
 	return allowed_attackers
 }
 
+/// @desc											Finds all of the characters of the given classes
+///														and creates obj_selectable_chara of them
+/// @param {Array<Real>} allowed_chara_classes		The classes allowed to attack, defaulting to all_chara
+function create_attacker_selection(allowed_chara_classes = [chara_class.all_chara]) {
+	var all_allowed_attackers = find_allowed_attackers(allowed_chara_classes)
+
+	for(var chara_index = 0; chara_index < array_length(all_allowed_attackers); chara_index++) {
+		var sprite = all_allowed_attackers[chara_index].sprite_index
+		instance_create_layer(all_allowed_attackers[chara_index].x, all_allowed_attackers[chara_index].y, highlighed_chara_layer, obj_selectable_chara, {
+			sprite_index : sprite,
+			chara_instance : all_allowed_attackers[chara_index]
+		})
+		all_allowed_attackers[chara_index].visible = false
+	}
+	create_back_and_cancel_buttons()
+}
+
+/// @desc											Shows the given or all of the character sprites
+/// @param {Array<Id.Instance>} sprites_to_show		All of the instances desired to be no longer visible
+function show_chara_sprites(sprites_to_show = []) {
+	if(array_length(sprites_to_show) <= 0) {
+		sprites_to_show = find_allowed_attackers()
+	}
+	
+	for (var chara_index = 0; chara_index < array_length(sprites_to_show); chara_index++) {
+		sprites_to_show[chara_index].visible = true
+	}
+}
+
+/// @desc									Checks if the number of selected characters is equal to the 
+///												allowed amount of characters before allowing an enemy
+///												to be targeted
+/// @param {Id.Instance} chara_instance		The character selected to attack an enemy
+function chara_selected(chara_instance) {
+	if(chara_instance == noone) {
+		show_chara_sprites()
+		layer_destroy_instances(highlighed_chara_layer)
+	}
+	else if (!array_contains(selected_chara, chara_instance)) {
+		num_chara_selected++
+		array_push(selected_chara, chara_instance)
+	}
+	
+	if(num_chara_selected >= num_chara_to_select || num_chara_to_select == 0) {
+		layer_destroy_instances(highlighed_chara_layer)
+		select_target_card()
+	}
+}
+
+/// @desc									Removes the given character from the selected character array
+///												and decrements num_chara_selected
+/// @param {Id.Instance} chara_instance		The character being deselected
+function chara_deselected(chara_instance) {
+	var chara_index = array_get_index(selected_chara, chara_instance)
+	if (chara_index > -1) {
+		num_chara_selected--
+		array_delete(selected_chara, chara_index, 1)
+	}
+}
+#endregion
+
+#region Card Selection
+/// @desc										Determines the cards that can be selected based on the
+///													card's card_selection_type
+function select_target_card() {
+	if(card_selection_type == card_select_target_card.none) {
+		select_target_enemy()
+	}
+	else if(card_selection_type == card_select_target_card.in_hand) {
+		create_card_selection(find_allowed_cards())
+	}
+	else if(card_selection_type == card_select_target_card.whole_hand) {
+		var cards_in_hand = find_allowed_cards()
+		num_cards_selected = array_length(cards_in_hand)
+		array_copy(selected_cards, 0, cards_in_hand, 0, num_cards_selected)
+		select_target_enemy()
+	}
+}
+
+/// @desc										Determines which cards can be selected for this card action,
+///													removing the played card instance if needed
+/// @returns {array<Id.Instance>}				The cards which can be select for the card action
+function find_allowed_cards() {
+	if(card_selection_type == card_select_target_card.in_hand ||
+		card_selection_type == card_select_target_card.whole_hand) {
+		var cards_in_hand = ui_player_hand.get_player_current_hand()
+		var allowed_cards = array_filter(cards_in_hand, 
+								function(element, index) { return element != card_played })
+		return allowed_cards
+	}
+	return []
+}
+
+/// @desc										Creates a screen that allows the player to select a number
+///													of cards from allowed_cards
+/// @param {Array<Id.Instance>} allowed_cards	The cards that the player can select
+function create_card_selection(allowed_cards) {
+	show_chara_sprites()
+	show_enemy_sprites()
+	current_selection_target = selection_target.card
+	selected_cards = []
+	num_cards_selected = 0
+	
+	var numCards = array_length(allowed_cards)
+	if(num_cards_to_select > numCards) {
+		num_cards_to_select = numCards	
+	}
+	var spacing_between_cards = clamp((display_get_gui_width() / numCards) - allowed_cards[0].sprite_width, 1, 100 / numCards)
+	var total_width_of_card_selection = ((allowed_cards[0].sprite_width + spacing_between_cards) * numCards) + spacing_between_cards
+	var xpos = (display_get_gui_width() - total_width_of_card_selection) / 2
+	var ypos = (display_get_gui_height() - allowed_cards[0].sprite_height) / 2
+	for (var card_index = 0; card_index < numCards; card_index++) {
+		var selectable_card_instance = instance_create_layer(xpos, ypos, highlighed_cards_layer, allowed_cards[card_index].object_index, {
+			is_selectable_card : true
+		})
+		selectable_to_hand_card_struct[$ selectable_card_instance] = allowed_cards[card_index]
+		xpos += allowed_cards[card_index].sprite_width + spacing_between_cards
+	}
+	create_back_and_cancel_buttons()
+}
+
+/// @desc									Handles when a card is selected for the card action by
+///												tracking how many cards have been selected before
+///												allowing the enemy target to be selected
+/// @param {Id.Instance} card_instance		The card selected for the card action
+function card_selected(card_instance) {
+	if(!struct_exists(selectable_to_hand_card_struct, card_instance)) {
+		layer_destroy_instances(highlighed_cards_layer)
+	}
+	else if (!array_contains(selected_cards, selectable_to_hand_card_struct[$ card_instance])) {
+		num_cards_selected++
+		array_push(selected_cards, selectable_to_hand_card_struct[$ card_instance])
+	}
+	
+	if(num_cards_selected >= num_cards_to_select || num_cards_to_select == 0) {
+		layer_destroy_instances(highlighed_cards_layer)
+		select_target_enemy()
+	}
+}
+
+/// @desc									Removes the given card from the selected card array
+///												and decrements num_cards_selected
+/// @param {Id.Instance} chara_instance		The character being deselected
+function card_deselected(card_instance) {
+	var card_index = array_get_index(selected_cards, card_instance)
+	if (card_index > -1) {
+		num_cards_selected--
+		array_delete(selected_cards, card_index, 1)
+	}
+}
+#endregion
+
+#region Enemy Selection
+/// @desc									Decides whether an enemy selection is needed based on the
+///												given card target
+function select_target_enemy() {
+	show_chara_sprites()
+	current_selection_target = selection_target.enemy
+	if(defender_selection_type == card_attack_target.all_enemies) {
+		all_enemies_selected()
+	}
+	else if(defender_selection_type == card_attack_target.single_enemy) {
+		create_defender_selection()
+	}
+	else if(defender_selection_type == card_attack_target.no_enemies) {
+		if(card_played != noone) {
+			card_played.card_has_been_played(selected_chara, selected_cards, [])
+		}
+		
+		find_and_delete_related_layers(layer)
+	}
+}
+
+/// @desc									Applies damage from each selected character to each enemy
+///												and deletes the layers used for target selection
+function all_enemies_selected() {
+	var enemy_instances = find_allowed_enemies()
+	
+	if(card_played != noone) {
+		card_played.card_has_been_played(selected_chara, selected_cards, enemy_instances)
+	}
+	find_and_delete_related_layers(layer)
+}
+
+/// @desc									Creates obj_selectable_chara for each enemy that can be targeted
+///												by the played attack
+function create_defender_selection() {
+	var all_allowed_enemies = find_allowed_enemies()
+
+	for(var enemy_index = 0; enemy_index < array_length(all_allowed_enemies); enemy_index++) {
+		var sprite = all_allowed_enemies[enemy_index].sprite_index
+		instance_create_layer(all_allowed_enemies[enemy_index].x, all_allowed_enemies[enemy_index].y, highlighed_enemies_layer, obj_selectable_chara, {
+			sprite_index : sprite,
+			chara_instance : all_allowed_enemies[enemy_index]
+		})
+		all_allowed_enemies[enemy_index].visible = false
+	}
+	create_back_and_cancel_buttons()
+}
+
+/// @desc									Finds all obj_enemy instances that can be targeted by an attack
+/// @returns								The array of enemies that can be targeted
+function find_allowed_enemies() {
+	var num_avaliable_enemies = instance_number(obj_enemy)
+	var allowed_enemies = array_create(0)
+	for(var enemy_index = 0; enemy_index < num_avaliable_enemies; enemy_index++) {
+		var enemy_instance = instance_find(obj_enemy, enemy_index)
+		if (enemy_instance.Is_alive) {
+			array_push(allowed_enemies, enemy_instance)
+		}
+	}
+	return allowed_enemies
+}
+
+/// @desc									Applies damage from each selected character to a single enemy
+///												and deletes the layers used for target selection
+/// @param {Id.Instance} enemy_instance		The enemy selected to take damage
+function enemy_selected(enemy_instance) {
+	if(enemy_instance != noone) {
+		show_enemy_sprites()
+		if(card_played != noone) {
+			card_played.card_has_been_played(selected_chara, selected_cards, [enemy_instance])
+		}
+		
+		find_and_delete_related_layers(layer)
+	}
+}
+
+/// @desc											Makes the selected or all enemy instances visible
+/// @param {Array<Id.Instance>} sprites_to_show		All of the instances desired to be visible
+function show_enemy_sprites(sprites_to_show = []) {
+	if(array_length(sprites_to_show) <= 0) {
+		sprites_to_show = find_allowed_enemies()
+	}
+	
+	for (var enemy_index = 0; enemy_index < array_length(sprites_to_show); enemy_index++) {
+		sprites_to_show[enemy_index].visible = true
+	}
+}
+#endregion
+
+#region Target Selection UI
 /// @desc									Creates the back and cancel buttons for the target selection
 function create_back_and_cancel_buttons() {
 	var layer_id = highlighed_chara_layer
@@ -193,275 +420,6 @@ function cancel_target_selection() {
 	find_and_delete_related_layers(layer)
 }
 
-/// @desc						The call back function for the obj_selectable_chara and obj_card, 
-///									that determines what was being selected and forwards the action
-function target_selected(selected_target) {
-	if (current_selection_target == selection_target.character) {
-		chara_selected(selected_target)
-	}
-	else if(current_selection_target == selection_target.card) {
-		card_selected(selected_target)
-	}
-	else {
-		enemy_selected(selected_target)
-	}
-}
-
-/// @desc						The call back function for the obj_selectable_chara and obj_card. Handles
-///									deselecting a target, cleaning up any references to their selection
-function target_deselected(selected_target) {
-	if (current_selection_target == selection_target.character) {
-		chara_deselected(selected_target)
-	}
-	else if(current_selection_target == selection_target.card) {
-		card_deselected(selected_target)
-	}
-}
-
-/// @desc									Checks if the number of selected characters is equal to the 
-///												allowed amount of characters before allowing an enemy
-///												to be targeted
-/// @param {Id.Instance} chara_instance		The character selected to attack an enemy
-function chara_selected(chara_instance) {
-	if(chara_instance == noone) {
-		show_chara_sprites()
-		layer_destroy_instances(highlighed_chara_layer)
-	}
-	else if (!array_contains(selected_chara, chara_instance)) {
-		num_chara_selected++
-		array_push(selected_chara, chara_instance)
-	}
-	
-	if(num_chara_selected >= num_chara_to_select || num_chara_to_select == 0) {
-		layer_destroy_instances(highlighed_chara_layer)
-		select_target_card()
-	}
-}
-
-/// @desc									Removes the given character from the selected character array
-///												and decrements num_chara_selected
-/// @param {Id.Instance} chara_instance		The character being deselected
-function chara_deselected(chara_instance) {
-	var chara_index = array_get_index(selected_chara, chara_instance)
-	if (chara_index > -1) {
-		num_chara_selected--
-		array_delete(selected_chara, chara_index, 1)
-	}
-}
-
-/// @desc											Hides the given or all of the character sprites
-/// @param {Array<Id.Instance>} sprites_to_hide		All of the instances desired to be no longer visible
-function hide_chara_sprites(sprites_to_hide = []) {
-	if(array_length(sprites_to_hide) <= 0) {
-		sprites_to_hide = find_allowed_attackers()
-	}
-	
-	for (var chara_index = 0; chara_index < array_length(sprites_to_hide); chara_index++) {
-		sprites_to_hide[chara_index].visible = false
-	}
-}
-
-/// @desc											Shows the given or all of the character sprites
-/// @param {Array<Id.Instance>} sprites_to_show		All of the instances desired to be no longer visible
-function show_chara_sprites(sprites_to_show = []) {
-	if(array_length(sprites_to_show) <= 0) {
-		sprites_to_show = find_allowed_attackers()
-	}
-	
-	for (var chara_index = 0; chara_index < array_length(sprites_to_show); chara_index++) {
-		sprites_to_show[chara_index].visible = true
-	}
-}
-
-/// @desc										Determines the cards that can be selected based on the
-///													card's card_selection_type
-function select_target_card() {
-	if(card_selection_type == card_select_target_card.none) {
-		select_target_enemy()
-	}
-	else if(card_selection_type == card_select_target_card.in_hand) {
-		create_card_selection(find_allowed_cards())
-	}
-	else if(card_selection_type == card_select_target_card.whole_hand) {
-		var cards_in_hand = find_allowed_cards()
-		num_cards_selected = array_length(cards_in_hand)
-		array_copy(selected_cards, 0, cards_in_hand, 0, num_cards_selected)
-		select_target_enemy()
-	}
-}
-
-/// @desc										Determines which cards can be selected for this card action,
-///													removing the played card instance if needed
-/// @returns {array<Id.Instance>}				The cards which can be select for the card action
-function find_allowed_cards() {
-	if(card_selection_type == card_select_target_card.in_hand ||
-		card_selection_type == card_select_target_card.whole_hand) {
-		var cards_in_hand = ui_player_hand.get_player_current_hand()
-		var allowed_cards = array_filter(cards_in_hand, 
-								function(element, index) { return element != card_played })
-		return allowed_cards
-	}
-	return []
-}
-
-/// @desc										Creates a screen that allows the player to select a number
-///													of cards from allowed_cards
-/// @param {Array<Id.Instance>} allowed_cards	The cards that the player can select
-function create_card_selection(allowed_cards) {
-	show_chara_sprites()
-	show_enemy_sprites()
-	current_selection_target = selection_target.card
-	selected_cards = []
-	num_cards_selected = 0
-	
-	var numCards = array_length(allowed_cards)
-	if(num_cards_to_select > numCards) {
-		num_cards_to_select = numCards	
-	}
-	var spacing_between_cards = clamp((display_get_gui_width() / numCards) - allowed_cards[0].sprite_width, 1, 100 / numCards)
-	var total_width_of_card_selection = ((allowed_cards[0].sprite_width + spacing_between_cards) * numCards) + spacing_between_cards
-	var xpos = (display_get_gui_width() - total_width_of_card_selection) / 2
-	var ypos = (display_get_gui_height() - allowed_cards[0].sprite_height) / 2
-	for (var card_index = 0; card_index < numCards; card_index++) {
-		var selectable_card_instance = instance_create_layer(xpos, ypos, highlighed_cards_layer, allowed_cards[card_index].object_index, {
-			is_selectable_card : true
-		})
-		selectable_to_hand_card_struct[$ selectable_card_instance] = allowed_cards[card_index]
-		xpos += allowed_cards[card_index].sprite_width + spacing_between_cards
-	}
-	create_back_and_cancel_buttons()
-}
-
-/// @desc									Handles when a card is selected for the card action by
-///												tracking how many cards have been selected before
-///												allowing the enemy target to be selected
-/// @param {Id.Instance} card_instance		The card selected for the card action
-function card_selected(card_instance) {
-	if(!struct_exists(selectable_to_hand_card_struct, card_instance)) {
-		layer_destroy_instances(highlighed_cards_layer)
-	}
-	else if (!array_contains(selected_cards, selectable_to_hand_card_struct[$ card_instance])) {
-		num_cards_selected++
-		array_push(selected_cards, selectable_to_hand_card_struct[$ card_instance])
-	}
-	
-	if(num_cards_selected >= num_cards_to_select || num_cards_to_select == 0) {
-		layer_destroy_instances(highlighed_cards_layer)
-		select_target_enemy()
-	}
-}
-
-/// @desc									Removes the given card from the selected card array
-///												and decrements num_cards_selected
-/// @param {Id.Instance} chara_instance		The character being deselected
-function card_deselected(card_instance) {
-	var card_index = array_get_index(selected_cards, card_instance)
-	if (card_index > -1) {
-		num_cards_selected--
-		array_delete(selected_cards, card_index, 1)
-	}
-}
-
-/// @desc									Decides whether an enemy selection is needed based on the
-///												given card target
-function select_target_enemy() {
-	show_chara_sprites()
-	current_selection_target = selection_target.enemy
-	if(defender_selection_type == card_attack_target.all_enemies) {
-		all_enemies_selected()
-		find_allowed_enemies()
-	}
-	else if(defender_selection_type == card_attack_target.single_enemy) {
-		create_defender_selection()
-	}
-	else if(defender_selection_type == card_attack_target.no_enemies) {
-		if(card_played != noone) {
-			card_played.card_has_been_played(selected_chara, selected_cards, [])
-		}
-		
-		find_and_delete_related_layers(layer)
-	}
-}
-
-/// @desc									Applies damage from each selected character to each enemy
-///												and deletes the layers used for target selection
-function all_enemies_selected() {
-	var enemy_instances = find_allowed_enemies()
-	
-	if(card_played != noone) {
-		card_played.card_has_been_played(selected_chara, selected_cards, enemy_instances)
-	}
-	find_and_delete_related_layers(layer)
-}
-
-/// @desc									Applies damage from each selected character to a single enemy
-///												and deletes the layers used for target selection
-/// @param {Id.Instance} enemy_instance		The enemy selected to take damage
-function enemy_selected(enemy_instance) {
-	if(enemy_instance != noone) {
-		show_enemy_sprites()
-		if(card_played != noone) {
-			card_played.card_has_been_played(selected_chara, selected_cards, [enemy_instance])
-		}
-		
-		find_and_delete_related_layers(layer)
-	}
-}
-
-/// @desc											Makes the selected or all enemy instances not visible
-/// @param {Array<Id.Instance>} sprites_to_hide		All of the instances desired to be no longer visible
-function hide_enemy_sprites(sprites_to_hide = []) {
-	if(array_length(sprites_to_hide) <= 0) {
-		sprites_to_hide = find_allowed_enemies()
-	}
-	
-	for (var enemy_index = 0; enemy_index < array_length(sprites_to_hide); enemy_index++) {
-		sprites_to_hide[enemy_index].visible = false
-	}
-}
-
-/// @desc											Makes the selected or all enemy instances visible
-/// @param {Array<Id.Instance>} sprites_to_show		All of the instances desired to be visible
-function show_enemy_sprites(sprites_to_show = []) {
-	if(array_length(sprites_to_show) <= 0) {
-		sprites_to_show = find_allowed_enemies()
-	}
-	
-	for (var enemy_index = 0; enemy_index < array_length(sprites_to_show); enemy_index++) {
-		sprites_to_show[enemy_index].visible = true
-	}
-}
-
-/// @desc									Creates obj_selectable_chara for each enemy that can be targeted
-///												by the played attack
-function create_defender_selection() {
-	var all_allowed_enemies = find_allowed_enemies()
-
-	for(var enemy_index = 0; enemy_index < array_length(all_allowed_enemies); enemy_index++) {
-		var sprite = all_allowed_enemies[enemy_index].sprite_index
-		instance_create_layer(all_allowed_enemies[enemy_index].x, all_allowed_enemies[enemy_index].y, highlighed_enemies_layer, obj_selectable_chara, {
-			sprite_index : sprite,
-			chara_instance : all_allowed_enemies[enemy_index]
-		})
-		all_allowed_enemies[enemy_index].visible = false
-	}
-	create_back_and_cancel_buttons()
-}
-
-/// @desc									Finds all obj_enemy instances that can be targeted by an attack
-/// @returns								The array of enemies that can be targeted
-function find_allowed_enemies() {
-	var num_avaliable_enemies = instance_number(obj_enemy)
-	var allowed_enemies = array_create(0)
-	for(var enemy_index = 0; enemy_index < num_avaliable_enemies; enemy_index++) {
-		var enemy_instance = instance_find(obj_enemy, enemy_index)
-		if (enemy_instance.Is_alive) {
-			array_push(allowed_enemies, enemy_instance)
-		}
-	}
-	return allowed_enemies
-}
-
 /// @desc									Draws a rectangle over the whole camera to dim the game
 ///												NOTE: this must be called in the Draw event or it won't
 ///												work correctly
@@ -530,3 +488,32 @@ function draw_number_of_targets_to_select_prompt() {
 	var text_y_pos = NUMBER_OF_TARGETS_TEXT_PADDING
 	draw_text(text_x_pos, text_y_pos, number_of_targets_to_select_text)
 }
+#endregion
+
+/// @desc						The call back function for the obj_selectable_chara and obj_card, 
+///									that determines what was being selected and forwards the action
+function target_selected(selected_target) {
+	if (current_selection_target == selection_target.character) {
+		chara_selected(selected_target)
+	}
+	else if(current_selection_target == selection_target.card) {
+		card_selected(selected_target)
+	}
+	else {
+		enemy_selected(selected_target)
+	}
+}
+
+/// @desc						The call back function for the obj_selectable_chara and obj_card. Handles
+///									deselecting a target, cleaning up any references to their selection
+function target_deselected(selected_target) {
+	if (current_selection_target == selection_target.character) {
+		chara_deselected(selected_target)
+	}
+	else if(current_selection_target == selection_target.card) {
+		card_deselected(selected_target)
+	}
+}
+
+
+
