@@ -11,6 +11,11 @@ function hit_by_player(attacking_chara, damage_multiplyer) {
 	if(struct_exists(attack_data, "damage")) {
 		take_damage(attack_data.damage)
 		array_push(damage_to_display, [attack_data.damage, c_white])
+		
+		if(struct_exists(active_debuffs, card_debuff_effects.Mark) &&
+			active_debuffs[$ card_debuff_effects.Mark] > 0) {
+				attacking_chara.add_shield(1)
+		}
 	}
 	
 	if(struct_exists(attack_data, "debuffs")) {
