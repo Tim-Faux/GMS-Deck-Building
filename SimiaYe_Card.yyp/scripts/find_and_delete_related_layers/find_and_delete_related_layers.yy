@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"find_and_delete_related_layers",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"find_and_delete_related_layers",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
