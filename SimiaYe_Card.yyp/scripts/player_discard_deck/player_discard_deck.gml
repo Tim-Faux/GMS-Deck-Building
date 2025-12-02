@@ -47,3 +47,8 @@ function remove_all_cards_from_player_discard_deck() {
 	global.player_discarded_deck = array_create(0)
 	return all_discarded_cards
 }
+
+/// @desc							Resets the player's discard deck by removing all the cards
+function reset_player_discard_deck() {
+	remove_all_cards_from_player_discard_deck()
+}

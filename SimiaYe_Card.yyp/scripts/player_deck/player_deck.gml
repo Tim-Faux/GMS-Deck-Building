@@ -121,3 +121,19 @@ function check_for_player_current_deck() {
 		shuffle_player_current_deck()
 	}
 }
+
+/// @desc							Resets the player's current deck to have the same cards
+///										as player_full_deck
+function reset_player_current_deck() {
+	if(!variable_global_exists("player_current_deck") || global.player_current_deck == undefined) {
+		check_for_player_current_deck()
+	}
+	else {
+		check_for_player_full_deck()
+		var num_cards_in_full_deck = array_length(global.player_full_deck)
+		global.player_current_deck = array_create_ext(num_cards_in_full_deck, function(index) {
+			return global.player_full_deck[index]
+		})
+		shuffle_player_current_deck()
+	}
+}
