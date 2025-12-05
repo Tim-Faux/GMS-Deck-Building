@@ -8,9 +8,7 @@ height_of_card_list = 0
 var header_depth = layer_get_depth(layer) - 5
 var card_display_header_instance_id = layer_create(header_depth, "card_display_header_instance")
 create_card_display_header(card_display_header_instance_id)
-
 create_card_grid_view()
-create_scroll_bar()
 
 /// @desc									Creates the header that displays above the player deck
 /// @param {String, Id.Layer} layer_id		The layer the header will be shown on
@@ -50,16 +48,19 @@ function create_card_grid_view() {
 		height_of_card_list = ((card_height + CARD_PADDING) * num_rows) + CARD_PADDING
 		var flexpanels = create_card_flexpanels(card_width, card_height)
 		
+		var display_cards = array_create(array_length(cards_to_display))
 		for (var card_index = 0; card_index < array_length(cards_to_display); card_index++) {
 			var card_x_pos = card_index % num_columns * (card_width + CARD_PADDING) + CARD_PADDING
 			var card_y_pos = bottom_of_header + (floor(card_index / num_columns) * 
 								(card_height + CARD_PADDING)) + CARD_PADDING
 
-			instance_create_layer(card_x_pos, card_y_pos, card_display_instance_id, cards_to_display[card_index], {
+			var display_card = instance_create_layer(card_x_pos, card_y_pos, card_display_instance_id, cards_to_display[card_index], {
 				flexpanels,
 				is_display_card : true
 			})
+			display_cards[card_index] = display_card
 		}
+		create_scroll_bar(display_cards)
 	}
 }
 
@@ -77,7 +78,7 @@ function draw_card_grid_background() {
 }
 
 /// @desc									Creates a scroll bar to move all display cards
-function create_scroll_bar() {
+function create_scroll_bar(objects_to_move) {
 	if((bottom_of_header + height_of_card_list) > display_get_gui_height()) {
 		var scroll_bar_layer_name = "scroll_bar_instance"
 		var scroll_bar_instance_id = layer_get_id(scroll_bar_layer_name)
@@ -92,8 +93,9 @@ function create_scroll_bar() {
 		var bar_sprite_y_scale = (display_get_gui_height() - bar_y_pos -  SCROLL_BAR_PADDING) / bar_sprite_height
 		instance_create_layer(bar_x_pos, bar_y_pos, scroll_bar_instance_id, ui_player_deck_scrollbar, {
 			image_yscale : bar_sprite_y_scale,
-			list_of_card_height : height_of_card_list,
-			header_bottom_y : bottom_of_header
+			header_bottom_y : bottom_of_header,
+			scrollable_list_height : height_of_card_list,
+			objects_to_move
 		})
 	}
 }

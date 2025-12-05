@@ -5,7 +5,6 @@
 flexpanels = create_card_flexpanels(sprite_width, sprite_height)
 
 card_selected = false
-draw_card = true
 card_start_x_position = x
 card_start_y_position = y
 show_energy_error = false
@@ -127,14 +126,4 @@ function create_expanded_card() {
 		card_description,
 		card_type
 	})
-}
-
-/// @desc								Determines if the card is fully off screen and if so dont draw it
-function check_on_screen() {
-	var sprite_top = y - sprite_yoffset
-	var sprite_left = x - sprite_xoffset
-	draw_card = sprite_top + sprite_height >= 0 &&
-				sprite_top < display_get_gui_height() &&
-				sprite_left + sprite_width >= 0 &&
-				sprite_left < display_get_gui_width()
 }
