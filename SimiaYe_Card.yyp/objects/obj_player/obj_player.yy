@@ -27,7 +27,7 @@
   "physicsShapePoints":[],
   "physicsStartAwake":true,
   "properties":[
-    {"$GMObjectProperty":"v1","%Name":"player_health","filters":[],"listItems":[],"multiselect":false,"name":"player_health","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"15","varType":1,},
+    {"$GMObjectProperty":"v2","%Name":"player_health","filters":[],"listItems":[],"multiselect":false,"name":"player_health","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"15","varType":1,},
   ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",

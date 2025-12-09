@@ -29,9 +29,9 @@
   "physicsShapePoints":[],
   "physicsStartAwake":true,
   "properties":[
-    {"$GMObjectProperty":"v1","%Name":"text_color","filters":[],"listItems":[],"multiselect":false,"name":"text_color","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"$FFFFFFFF","varType":7,},
-    {"$GMObjectProperty":"v1","%Name":"text_font","filters":[],"listItems":[],"multiselect":false,"name":"text_font","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resource":{"name":"fnt_damage","path":"fonts/fnt_damage/fnt_damage.yy",},"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"fnt_damage","varType":5,},
-    {"$GMObjectProperty":"v1","%Name":"damage_taken","filters":[],"listItems":[],"multiselect":false,"name":"damage_taken","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"0","varType":0,},
+    {"$GMObjectProperty":"v2","%Name":"text_color","filters":[],"listItems":[],"multiselect":false,"name":"text_color","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"$FFFFFFFF","varType":7,},
+    {"$GMObjectProperty":"v2","%Name":"text_font","filters":[],"listItems":[],"multiselect":false,"name":"text_font","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resource":{"name":"fnt_damage","path":"fonts/fnt_damage/fnt_damage.yy",},"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"fnt_damage","varType":5,},
+    {"$GMObjectProperty":"v2","%Name":"damage_taken","filters":[],"listItems":[],"multiselect":false,"name":"damage_taken","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"0","varType":0,},
   ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
