@@ -77,7 +77,4 @@ function get_movement_sprites_array() {
 	return [[move_north_west_sprite,	move_north_sprite,	move_north_east_sprite],
 			[move_west_sprite,			stand_still_sprite,	move_east_sprite],
 			[move_south_west_sprite,	move_south_sprite,	move_south_east_sprite]]
-	//[[move_south_west_sprite,	move_west_sprite,	move_north_west_sprite],
-	//		[move_north_sprite,			stand_still_sprite,	move_south_sprite],
-	//		[move_south_east_sprite,	move_east_sprite,	move_north_east_sprite]]
 }
