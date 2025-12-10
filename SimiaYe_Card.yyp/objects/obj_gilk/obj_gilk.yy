@@ -1,11 +1,11 @@
 {
   "$GMObject":"",
-  "%Name":"obj_main",
+  "%Name":"obj_gilk",
   "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":7,"eventType":6,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_main",
+  "name":"obj_gilk",
   "overriddenProperties":[],
   "parent":{
     "name":"Characters",
@@ -33,8 +33,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_player",
-    "path":"sprites/spr_player/spr_player.yy",
+    "name":"spr_gilk_stand",
+    "path":"sprites/spr_gilk_stand/spr_gilk_stand.yy",
   },
   "spriteMaskId":null,
   "visible":true,

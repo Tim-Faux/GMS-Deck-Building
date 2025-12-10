@@ -1,36 +1,13 @@
 
-if (chosen = true) {
+if (arena = false) {
+	var x_movement = InputX(INPUT_CLUSTER.NAVIGATION) * WALK_SPEED
+	var y_movement = InputY(INPUT_CLUSTER.NAVIGATION) * WALK_SPEED
 
-//make this character the main player
-	if (main = true) {
-		object_get_parent(obj_main)
+	if(x_movement != 0) {
+		move_horizontally(x_movement)
 	}
-	else {
-		object_get_parent(obj_player)
+	if(y_movement != 0) {
+		move_vertically(y_movement)
 	}
-
-//arena
-	if (arena = true) {
-		//health
-		if (health <= 0)
-			chosen = false
-	}
+	set_movement_sprite(x_movement, y_movement)
 }
-//if out of arena you follow main player
-else if (main = false) {
-	x = (obj_main.x)
-	y = (obj_main.y)
-		
-	if (place_meeting(x, y, obj_wall)) {
-		x -= (obj_main.x)
-		y -= (obj_main.y)
-	}
-}
-
-
- //selecting characters in the select screen
- //if place_meeting(x+10,y+10,ui_charaselect){
-	//x = ui_charaselect.x
-	//y = ui_charaselect.y
-	
-	//chosen = true
