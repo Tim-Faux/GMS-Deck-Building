@@ -2,17 +2,13 @@
 // You can write your code in this editor
 
 if (arena = false) {
-	
-	var xmove = keyboard_check(ord("D")) - keyboard_check(ord("A"))
-	var ymove = keyboard_check(ord("S")) - keyboard_check(ord("W"))
+	var x_movement = InputX(INPUT_CLUSTER.NAVIGATION) * WALK_SPEED
+	var y_movement = InputY(INPUT_CLUSTER.NAVIGATION) * WALK_SPEED
 
-	//movement momentum
-		x = x + (xmove * pspeed);
-		y = y + (ymove * pspeed);
-		if (place_meeting(x, y, obj_wall)) {
-			x -= (xmove * pspeed)
-		}
-		if (place_meeting(x, y, obj_wall)) {
-			y -= (ymove * pspeed);
-		}
+	if(x_movement != 0) {
+		move_horizontally(x_movement)
+	}
+	if(y_movement != 0) {
+		move_vertically(y_movement)
+	}
 }
