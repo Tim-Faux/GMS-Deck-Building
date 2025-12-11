@@ -1,4 +1,5 @@
 #macro WALK_SPEED 6
+#macro SPACE_BETWEEN_FOLLOWERS 5
 
 move_north_west_sprite =	noone
 move_north_sprite =			noone
@@ -11,6 +12,9 @@ move_west_sprite =			noone
 
 stand_still_sprite =		noone
 arena = false
+// @desc	The array determining the x, y, and angle around their target this character wants to path to
+target_pos = [0, 0, 90]
+set_follow_target()
 
 /// @desc								Removes health from the player equal to damage_taken and
 ///											check if player is still alive
@@ -66,7 +70,6 @@ function set_movement_sprite(x_movement, y_movement) {
 							1 + (x_movement / abs(x_movement))
 	var movement_sprites = get_movement_sprites_array()
 	sprite_index = movement_sprites[y_sprite_index][x_sprite_index]
-	var temp = spr_gilk_walkleft
 }
 
 /// @desc									Creates a 2D array with all of the charater's movement 
@@ -77,4 +80,38 @@ function get_movement_sprites_array() {
 	return [[move_north_west_sprite,	move_north_sprite,	move_north_east_sprite],
 			[move_west_sprite,			stand_still_sprite,	move_east_sprite],
 			[move_south_west_sprite,	move_south_sprite,	move_south_east_sprite]]
+}
+
+/// @desc							Finds the an avaliable obj_player to follow
+function set_follow_target() {
+	if(!is_controlled_chara) {
+		for(var chara_index = 0; chara_index < instance_number(obj_player); chara_index++) {
+			var chara_to_follow = instance_find(obj_player, chara_index)
+			if(chara_to_follow != id && chara_to_follow != noone && chara_to_follow.follower == noone) {
+				chara_to_follow.follower = id
+				set_target_pos(chara_to_follow.x, chara_to_follow.y, 270)
+				break
+			}
+		}
+	}
+}
+
+/// @desc							Sets the target_pos to define where this obj_player's pathing target
+/// @param {Real} target_x			The x coordinate this character paths towards
+/// @param {Real} target_y			The y coordinate this character paths towards
+/// @param {Real} angle				The angle in degrees around the targeted position for this character
+///										to target
+function set_target_pos(target_x, target_y, angle) {
+	target_pos[0] = target_x - ((sprite_width + SPACE_BETWEEN_FOLLOWERS) * dcos(angle))
+	target_pos[1] = target_y + ((sprite_height + SPACE_BETWEEN_FOLLOWERS) * dsin(angle))
+	target_pos[2] = angle
+}
+
+/// @desc							Moves this character towards its target_pos so long as it's not
+///										controlled by the player
+function chase_target() {
+	mp_potential_step_object(target_pos[0], target_pos[1], WALK_SPEED, obj_brick)
+	if(follower != noone) {
+		follower.set_target_pos(x, y, target_pos[2])
+	}
 }
