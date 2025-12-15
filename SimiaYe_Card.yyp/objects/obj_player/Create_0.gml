@@ -14,6 +14,7 @@ stand_still_sprite =		noone
 arena = false
 // @desc	The array determining the x, y, and angle around their target this character wants to path to
 target_pos = [0, 0, 90]
+path = path_add()
 set_follow_target()
 
 /// @desc								Removes health from the player equal to damage_taken and
@@ -96,22 +97,73 @@ function set_follow_target() {
 	}
 }
 
-/// @desc							Sets the target_pos to define where this obj_player's pathing target
-/// @param {Real} target_x			The x coordinate this character paths towards
-/// @param {Real} target_y			The y coordinate this character paths towards
+/// @desc							Attempts to find an open place for this character to path towards,
+///										while moving the target_pos out of any collision objects
+/// @param {Real} x_intent			The x coordinate this character paths towards
+/// @param {Real} y_intent			The y coordinate this character paths towards
 /// @param {Real} angle				The angle in degrees around the targeted position for this character
-///										to target
-function set_target_pos(target_x, target_y, angle) {
-	target_pos[0] = target_x - ((sprite_width + SPACE_BETWEEN_FOLLOWERS) * dcos(angle))
-	target_pos[1] = target_y + ((sprite_height + SPACE_BETWEEN_FOLLOWERS) * dsin(angle))
-	target_pos[2] = angle
+///										to align to
+/// @param {Bool} add_x_spacing		Determines if this character should automatically add space between
+///										the x_intent and its final position. Defaults to true
+/// @param {Bool} add_y_spacing		Determines if this character should automatically add space between
+///										the y_intent and its final position. Defaults to true
+function set_target_pos(x_intent, y_intent, angle, add_x_spacing = true, add_y_spacing = true) {
+	var x_goal = x_intent
+	var y_goal = y_intent
+	if(add_x_spacing)
+		x_goal -= ((sprite_width + SPACE_BETWEEN_FOLLOWERS) * dcos(angle))
+	if(add_y_spacing)
+		y_goal += ((sprite_height + SPACE_BETWEEN_FOLLOWERS) * dsin(angle))
+	
+	var collision = collision_rectangle(x_goal - sprite_xoffset, y_goal - sprite_yoffset,
+										x_goal + sprite_xoffset, y_goal + sprite_yoffset,
+										obj_brick, false, false)
+	if(collision != noone) {
+		if(x_intent > x_goal && collision.bbox_right <= x_intent) {
+			//Move to right of collision's hitbox
+			x_goal = collision.bbox_right + (sprite_width / 2)
+			set_target_pos(x_goal, y_intent, angle, false, true)
+		}
+		else if(x_intent < x_goal && collision.bbox_left >= x_intent) {
+			//Move to left of collision's hitbox
+			x_goal = collision.bbox_left - (sprite_width / 2)
+			set_target_pos(x_goal, y_intent, angle, false, true)
+		}
+		else if(y_intent > y_goal && collision.bbox_bottom <= y_intent) {
+			//Move to bottom of collision's hitbox
+			y_goal = collision.bbox_bottom + (sprite_height / 2)
+			set_target_pos(x_goal, y_goal, angle, false, false)
+		}
+		else if(y_intent < y_goal && collision.bbox_top >= y_intent) {
+			//Move to top of collision's hitbox
+			y_goal = collision.bbox_top - (sprite_height / 2)
+			set_target_pos(x_goal, y_goal, angle, false, false)
+		}
+		else {
+			target_pos[0] = x_goal
+			target_pos[1] = y_goal
+			target_pos[2] = angle
+		}
+	}
+	else {
+		target_pos[0] = x_goal
+		target_pos[1] = y_goal
+		target_pos[2] = angle
+	}
 }
 
-/// @desc							Moves this character towards its target_pos so long as it's not
-///										controlled by the player
+/// @desc							Moves this character towards its target_pos, avoiding obstacles
+///										so long as it's not controlled by the player
 function chase_target() {
-	mp_potential_step_object(target_pos[0], target_pos[1], WALK_SPEED, obj_brick)
-	if(follower != noone) {
-		follower.set_target_pos(x, y, target_pos[2])
+	var dist_move_speed_modifier = (sqr(target_pos[0] - x) + sqr(target_pos[1] - y))
+									/ sqr(sprite_width / 2)
+	var move_speed = clamp(WALK_SPEED + dist_move_speed_modifier, WALK_SPEED, WALK_SPEED * 2)
+
+	mp_potential_settings(180, 30, 1, false)
+	if(mp_potential_path_object(path, target_pos[0], target_pos[1], move_speed, 4, obj_brick)) {
+		path_start(path, move_speed, path_action_stop, false)
+		if(follower != noone) {
+			follower.set_target_pos(x, y, target_pos[2])
+		}
 	}
 }
