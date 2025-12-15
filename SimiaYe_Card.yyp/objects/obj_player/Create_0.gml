@@ -38,8 +38,8 @@ function move_horizontally(x_movement) {
 	}
 	else if(x != collision.bbox_right + sprite_xoffset && x != collision.bbox_left - sprite_xoffset) {
 		x =  x_movement < 0 ?
-				collision.bbox_right + sprite_xoffset :
-				collision.bbox_left - sprite_xoffset
+				collision.bbox_right + sprite_xoffset + 1 :
+				collision.bbox_left - sprite_xoffset - 1
 	}
 }
 
@@ -54,8 +54,8 @@ function move_vertically(y_movement) {
 	}
 	else if(y != collision.bbox_top + sprite_yoffset && y != collision.bbox_bottom - sprite_yoffset) {
 		y =  y_movement > 0 ?
-				collision.bbox_top - sprite_yoffset :
-				collision.bbox_bottom + sprite_yoffset
+				collision.bbox_top - sprite_yoffset - 1 :
+				collision.bbox_bottom + sprite_yoffset + 1
 	}
 }
 
