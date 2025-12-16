@@ -30,8 +30,8 @@ function hit_by_enemy(damage_taken) {
 }
 
 /// @desc							Moves this character on the x axis and checks if moving would cause
-///										the character to collide with an obj_wall. If so it sets their
-///										x position to that object's edge
+///										the character to collide with an obj_wall. If so it moves this
+///										character to the edge of that wall
 /// @param {Real} x_movement		This characters rightward velocity (Negative for leftward movement)
 function move_horizontally(x_movement) {
 	for(var x_step = abs(x_movement); x_step > 0; x_step--) {
@@ -45,8 +45,8 @@ function move_horizontally(x_movement) {
 }
 
 /// @desc							Moves this character on the y axis and checks if moving would cause
-///										the character to collide with an obj_wall. If so it sets their
-///										y position to that object's edge
+///										the character to collide with an obj_wall. If so it moves this
+///										character to the edge of that wall
 /// @param {Real} y_movement		This characters upward velocity (Negative for downward movement)
 function move_vertically(y_movement) {
 	for(var y_step = abs(y_movement); y_step > 0; y_step--) {
@@ -176,13 +176,8 @@ function chase_target() {
 ///										position or this character's target_pos
 /// @param {Real} teleport_pos_x	Optional x coordinate to teleport to
 /// @param {Real} teleport_pos_y	Optional y coordinate to teleport to
-function teleport_character(teleport_pos_x = -1, teleport_pos_y = -1) {
-	if(teleport_pos_x != -1) {
-		target_pos[0] = teleport_pos_x
-	}
-	if(teleport_pos_y != -1) {
-		target_pos[1] = teleport_pos_y
-	}
+function teleport_character(teleport_pos_x = target_pos[0], teleport_pos_y = target_pos[1]) {
+	set_target_pos(teleport_pos_x, teleport_pos_y, target_pos[2])
 	if(follower != noone) {
 		follower.teleport_character(target_pos[0], target_pos[1])
 	}
