@@ -11,10 +11,12 @@ move_south_west_sprite =	noone
 move_west_sprite =			noone
 
 stand_still_sprite =		noone
+teleport_sprite =			noone
 arena = false
 // @desc	The array determining the x, y, and angle around their target this character wants to path to
 target_pos = [0, 0, 90]
 path = path_add()
+character_teleporting = false
 set_follow_target()
 
 /// @desc								Removes health from the player equal to damage_taken and
@@ -152,8 +154,9 @@ function set_target_pos(x_intent, y_intent, angle, add_x_spacing = true, add_y_s
 	}
 }
 
-/// @desc							Moves this character towards its target_pos, avoiding obstacles
-///										so long as it's not controlled by the player
+/// @desc							Moves this character towards its target_pos, avoiding obstacles,
+///										so long as it's not controlled by the player. If no path can
+///										be found it is teleported to the target_pos
 function chase_target() {
 	var dist_move_speed_modifier = (sqr(target_pos[0] - x) + sqr(target_pos[1] - y))
 									/ sqr(sprite_width / 2)
@@ -166,4 +169,25 @@ function chase_target() {
 			follower.set_target_pos(x, y, target_pos[2])
 		}
 	}
+	else {
+		teleport_character()
+	}
+}
+
+/// @desc							Plays an animation and teleports this player to either the given
+///										position or this character's target_pos
+/// @param {Real} teleport_pos_x	Optional x coordinate to teleport to
+/// @param {Real} teleport_pos_y	Optional y coordinate to teleport to
+function teleport_character(teleport_pos_x = -1, teleport_pos_y = -1) {
+	if(teleport_pos_x != -1) {
+		target_pos[0] = teleport_pos_x
+	}
+	if(teleport_pos_y != -1) {
+		target_pos[1] = teleport_pos_y
+	}
+	if(follower != noone) {
+		follower.teleport_character(target_pos[0], target_pos[1])
+	}
+	sprite_index = teleport_sprite
+	character_teleporting = true
 }

@@ -327,5 +327,6 @@
     {"name":"InputY","order":3,"path":"scripts/InputY/InputY.yy",},
     {"name":"spr_gilk_walkleft","order":1,"path":"sprites/spr_gilk_walkleft/spr_gilk_walkleft.yy",},
     {"name":"spr_gilk_walkright","order":2,"path":"sprites/spr_gilk_walkright/spr_gilk_walkright.yy",},
+    {"name":"spr_player_teleport","order":2,"path":"sprites/spr_player_teleport/spr_player_teleport.yy",},
   ],
 }

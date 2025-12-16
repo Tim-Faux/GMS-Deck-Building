@@ -16,7 +16,8 @@ if (!arena) {
 			follower.set_target_pos(x, y, InputDirection(0, INPUT_CLUSTER.NAVIGATION))	
 		}
 	}
-	else {
+	else if (!character_teleporting) {
 		chase_target()
 	}
+	
 }
