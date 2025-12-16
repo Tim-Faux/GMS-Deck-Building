@@ -34,14 +34,13 @@ function hit_by_enemy(damage_taken) {
 ///										x position to that object's edge
 /// @param {Real} x_movement		This characters rightward velocity (Negative for leftward movement)
 function move_horizontally(x_movement) {
-	var collision = instance_place(x + x_movement, y, obj_wall)
-	if (collision == noone) {
-		x += x_movement
-	}
-	else {
-		x =  x_movement < 0 ?
-				collision.bbox_right + sprite_xoffset + 1 :
-				collision.bbox_left - sprite_xoffset - 1
+	for(var x_step = abs(x_movement); x_step > 0; x_step--) {
+		var signed_x_step = x_movement < 0 ? -x_step : x_step
+		var collision = instance_place(x + signed_x_step, y, obj_wall)
+		if (collision == noone) {
+			x += signed_x_step
+			break
+		}
 	}
 }
 
@@ -50,14 +49,13 @@ function move_horizontally(x_movement) {
 ///										y position to that object's edge
 /// @param {Real} y_movement		This characters upward velocity (Negative for downward movement)
 function move_vertically(y_movement) {
-	var collision = instance_place(x, y + y_movement, obj_wall)
-	if (collision == noone) {
-		y += y_movement
-	}
-	else {
-		y =  y_movement > 0 ?
-				collision.bbox_top - sprite_yoffset - 1 :
-				collision.bbox_bottom + sprite_yoffset + 1
+	for(var y_step = abs(y_movement); y_step > 0; y_step--) {
+		var signed_y_step = y_movement < 0 ? -y_step : y_step
+		var collision = instance_place(x, y + signed_y_step, obj_wall)
+		if (collision == noone) {
+			y += signed_y_step
+			break
+		}
 	}
 }
 

@@ -1,10 +1,10 @@
 {
   "$GMSprite":"v2",
   "%Name":"spr_gilk_stand",
-  "bboxMode":0,
+  "bboxMode":1,
   "bbox_bottom":77,
   "bbox_left":0,
-  "bbox_right":42,
+  "bbox_right":56,
   "bbox_top":0,
   "collisionKind":1,
   "collisionTolerance":0,
@@ -75,7 +75,7 @@
     ],
     "visibleRange":null,
     "volume":1.0,
-    "xorigin":21,
+    "xorigin":28,
     "yorigin":39,
   },
   "swatchColours":null,
@@ -86,5 +86,5 @@
   },
   "type":0,
   "VTile":false,
-  "width":43,
+  "width":57,
 }
