@@ -237,6 +237,7 @@ function chase_target() {
 		}
 	}
 	else {
+		path_end()
 		teleport_character()
 	}
 }
