@@ -13,7 +13,7 @@ if (!arena) {
 		}
 		set_movement_sprite(x_movement, y_movement)
 		if(follower != noone && (x_movement != 0 || y_movement != 0)) {
-			follower.set_target_pos(x, y, InputDirection(0, INPUT_CLUSTER.NAVIGATION))	
+			follower.set_target_pos(x, y, InputDirection(0, INPUT_CLUSTER.NAVIGATION))
 		}
 	}
 	else if (!character_teleporting) {
