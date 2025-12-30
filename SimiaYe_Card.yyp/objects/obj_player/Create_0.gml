@@ -1,4 +1,5 @@
 #macro WALK_SPEED 6
+#macro MAX_SPRITE_SCALE_FRAME_INDEX 14
 
 move_north_west_sprite =	noone
 move_north_sprite =			noone
@@ -10,13 +11,15 @@ move_south_west_sprite =	noone
 move_west_sprite =			noone
 
 stand_still_sprite =		noone
-teleport_sprite =			noone
+teleport_sprite =			spr_player_teleport_effect
 
 arena = false
 target_pos = new character_position_target(x, y, 0, sprite_width, sprite_height)
 path = path_add()
 character_teleporting = false
 set_follow_target()
+teleport_effect_subimage = 0
+character_teleported = true
 
 /// @desc								Removes health from the player equal to damage_taken and
 ///											check if player is still alive
@@ -250,6 +253,44 @@ function teleport_character(teleport_pos_x = target_pos.x, teleport_pos_y = targ
 	if(follower != noone) {
 		follower.set_target_pos(teleport_pos_x, teleport_pos_y, target_pos.angle)
 	}
-	sprite_index = teleport_sprite
+	sprite_index = stand_still_sprite
+	teleport_effect_subimage = 0
 	character_teleporting = true
+	character_teleported = false
+}
+
+/// @desc							Scales the current sprite based on which subimage the teleport effect is at,
+///										and moves this character to their target position after the teleport
+///										effect finishes the first time
+function scale_sprite_for_teleport() {
+	if(!character_teleported){
+		if(teleport_effect_subimage >= sprite_get_number(teleport_sprite)) {
+			x = target_pos.x
+			y = target_pos.y
+			teleport_effect_subimage = 0
+			character_teleported = true
+		}
+		else if(teleport_effect_subimage >= sprite_get_number(teleport_sprite) / 2 &&
+				teleport_effect_subimage < MAX_SPRITE_SCALE_FRAME_INDEX) {
+			var sprite_shrink_scale = clamp(1 - power(teleport_effect_subimage / 
+														MAX_SPRITE_SCALE_FRAME_INDEX, 8), 0, 1)
+			image_xscale = sprite_shrink_scale
+			image_yscale = sprite_shrink_scale
+		}
+	}
+	else {
+		if(teleport_effect_subimage <= sprite_get_number(teleport_sprite) / 2) {
+			var sprite_growth_scale = clamp(power((teleport_effect_subimage / 
+													MAX_SPRITE_SCALE_FRAME_INDEX) + 0.5, 8), 0, 1)
+			image_xscale = sprite_growth_scale
+			image_yscale = sprite_growth_scale
+		}
+		else if(teleport_effect_subimage >= sprite_get_number(teleport_sprite)) {
+			image_xscale = 1
+			image_yscale = 1
+			teleport_effect_subimage = 0
+			character_teleporting = false
+			character_teleported = false
+		}
+	}
 }

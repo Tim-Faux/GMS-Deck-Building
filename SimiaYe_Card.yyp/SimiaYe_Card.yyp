@@ -455,7 +455,7 @@
     {"id":{"name":"spr_player_deck_header_background","path":"sprites/spr_player_deck_header_background/spr_player_deck_header_background.yy",},},
     {"id":{"name":"spr_player_deck_scroll_container","path":"sprites/spr_player_deck_scroll_container/spr_player_deck_scroll_container.yy",},},
     {"id":{"name":"spr_player_deck_scroll_thumb","path":"sprites/spr_player_deck_scroll_thumb/spr_player_deck_scroll_thumb.yy",},},
-    {"id":{"name":"spr_player_teleport","path":"sprites/spr_player_teleport/spr_player_teleport.yy",},},
+    {"id":{"name":"spr_player_teleport_effect","path":"sprites/spr_player_teleport_effect/spr_player_teleport_effect.yy",},},
     {"id":{"name":"spr_player","path":"sprites/spr_player/spr_player.yy",},},
   ],
   "resourceType":"GMProject",

@@ -19,5 +19,9 @@ if (!arena) {
 	else if (!character_teleporting) {
 		chase_target()
 	}
+	else if (character_teleporting) {
+		var frames_between_subimages = game_get_speed(gamespeed_fps) / sprite_get_speed(teleport_sprite)
+		teleport_effect_subimage += 1 / frames_between_subimages
+	}
 	
 }
