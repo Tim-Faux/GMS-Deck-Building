@@ -1,5 +1,6 @@
 #macro WALK_SPEED 6
 #macro MAX_SPRITE_SCALE_FRAME_INDEX 14
+#macro MIN_DIST_FOR_ALLIES_TO_MOVE 3
 
 move_north_west_sprite =	noone
 move_north_sprite =			noone
@@ -20,6 +21,7 @@ character_teleporting = false
 set_follow_target()
 teleport_effect_subimage = 0
 character_teleported = true
+character_moving = false
 
 /// @desc								Removes health from the player equal to damage_taken and
 ///											check if player is still alive
@@ -62,15 +64,14 @@ function move_vertically(y_movement) {
 }
 
 /// @desc							Updates the character's sprite based on their movement direction
-/// @param {Real} x_movement		This characters rightward velocity (Negative for leftward movement)
-/// @param {Real} y_movement		This characters upward velocity (Negative for downward movement)
-function set_movement_sprite(x_movement, y_movement) {
-	var y_sprite_index = y_movement == 0 ?
-							1 :
-							1 + (y_movement / abs(y_movement))
-	var x_sprite_index = x_movement == 0 ? 
-							1 :
-							1 + (x_movement / abs(x_movement))
+/// @param {Real} movement_angle	The angle this character is moving towards
+function set_movement_sprite(movement_angle) {
+	var y_sprite_index = 1
+	var x_sprite_index = 1
+	if(character_moving) {
+		y_sprite_index = round(-dsin(movement_angle)) + 1
+		x_sprite_index = round(dcos(movement_angle)) + 1
+	}
 	var movement_sprites = get_movement_sprites_array()
 	sprite_index = movement_sprites[y_sprite_index][x_sprite_index]
 }
@@ -205,6 +206,7 @@ function character_position_target(_x_intent, _y_intent, _angle, _sprite_width, 
 /// @param {Real} angle				The angle in degrees around the targeted position for this character
 ///										to align itself to
 function set_target_pos(leader_x, leader_y, angle) {
+	character_moving = true
 	target_pos.update_target_pos(leader_x, leader_y, angle, sprite_height, sprite_width)
 	var num_open_space_attempts = 0
 	while(true) {
@@ -228,20 +230,24 @@ function set_target_pos(leader_x, leader_y, angle) {
 ///										so long as it's not controlled by the player. If no path can
 ///										be found it is teleported to the target_pos
 function chase_target() {
-	var dist_move_speed_modifier = (sqr(target_pos.x - x) + sqr(target_pos.y - y))
-									/ sqr(sprite_width / 2)
-	var move_speed = clamp(WALK_SPEED + dist_move_speed_modifier, WALK_SPEED, WALK_SPEED * 2)
+	var dist_to_target_pos_squared = sqr(target_pos.x - x) + sqr(target_pos.y - y)
+	if(dist_to_target_pos_squared > sqr(MIN_DIST_FOR_ALLIES_TO_MOVE)) {
+		var dist_move_speed_modifier = dist_to_target_pos_squared / sqr(sprite_width / 2)
+		var move_speed = clamp(WALK_SPEED + dist_move_speed_modifier, WALK_SPEED, WALK_SPEED * 2)
 
-	mp_potential_settings(180, 30, 1, false)
-	if(mp_potential_path_object(path, target_pos.x, target_pos.y, move_speed, 4, obj_brick)) {
-		path_start(path, move_speed, path_action_stop, false)
-		if(follower != noone) {
-			follower.set_target_pos(x, y, target_pos.angle)
+		mp_potential_settings(180, 30, 1, false)
+		if(mp_potential_path_object(path, target_pos.x, target_pos.y, move_speed, 4, obj_brick)) {
+			path_start(path, move_speed, path_action_stop, false)
+
+			if(follower != noone) {
+				follower.set_target_pos(x, y, target_pos.angle)
+			}
 		}
-	}
-	else {
-		path_end()
-		teleport_character()
+		else {
+			path_end()
+			character_moving = false
+			teleport_character()
+		}
 	}
 }
 
