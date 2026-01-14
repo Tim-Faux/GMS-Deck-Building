@@ -8,6 +8,9 @@ function end_player_turn() {
 	if(instance_exists(ui_player_hand) && ui_player_hand.is_hand_visible) {
 		ui_player_hand.empty_player_hand(start_enemy_turn)
 	}
+	if(variable_global_exists("add_energy_on_card_draw") ) {
+		global.add_energy_on_card_draw = 0
+	}
 }
 
 /// @desc			Finds all the enemies that currently exist and allows them to take their turn

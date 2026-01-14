@@ -61,6 +61,9 @@ function draw_card() {
 	}
 	var drawn_card = global.player_current_deck[0]
 	remove_card_from_player_current_deck(0)
+	if(variable_global_exists("add_energy_on_card_draw") && object_exists(ui_player_energy)) {
+		ui_player_energy.add_to_player_current_energy(global.add_energy_on_card_draw)
+	}
 	return drawn_card
 }
 

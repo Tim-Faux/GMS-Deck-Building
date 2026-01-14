@@ -86,7 +86,6 @@ function play_card() {
 			target_selection_layer = layer_create(depth - 100)
 		}
 		
-		
 		instance_create_layer(x, y, target_selection_layer, obj_target_selection_handler, 
 		{
 			num_chara_to_select,
