@@ -1,3 +1,4 @@
 enum card_buff_effects{
-	Strength
+	Strength,
+	Gain_Strength_On_Any_Attack
 }

@@ -6,11 +6,29 @@ button_can_be_pressed = true
 /// @desc			Controls the end of a players turn, filling the player's hand with cards
 function end_player_turn() {
 	if(instance_exists(ui_player_hand) && ui_player_hand.is_hand_visible) {
-		ui_player_hand.empty_player_hand(start_enemy_turn)
+		ui_player_hand.empty_player_hand(trigger_player_end_of_turn_effects)
 	}
+}
+
+/// @desc			Triggers the end of turn effects and end of turn buffs on each player character
+function trigger_player_end_of_turn_effects() {
 	if(variable_global_exists("add_energy_on_card_draw") ) {
 		global.add_energy_on_card_draw = 0
 	}
+	
+	var num_player_charas = instance_number(obj_player)
+	var player_charas = array_create(num_player_charas)
+	for(var chara_index = 0; chara_index < num_player_charas; chara_index++) {
+		player_charas[chara_index] = instance_find(obj_player, chara_index)
+	}
+	
+	array_sort(player_charas, sort_players)
+	
+	for(var chara_index = 0; chara_index < num_player_charas; chara_index++) {
+		player_charas[chara_index].trigger_end_of_turn_buffs()
+	}
+	
+	start_enemy_turn()
 }
 
 /// @desc			Finds all the enemies that currently exist and allows them to take their turn
@@ -57,6 +75,11 @@ function end_enemy_turn() {
 			handle_mouse_enter()
 		}
 	}
+}
+
+/// @desc			Basic player sorting algorithm to determine the farthest left player chara
+function sort_players(chara1, chara2) {
+	return chara1.x - chara2.x
 }
 
 /// @desc			Basic enemy sorting algorithm to determine the farthest left enemy

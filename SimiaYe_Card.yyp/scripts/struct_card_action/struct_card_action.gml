@@ -8,11 +8,24 @@ function struct_card_action(_selected_chara, _selected_cards, _selected_enemies)
 	///													attack_multiplier
 	/// @param {Real} attack_multiplier				How much each character's attack is muliplied by
 	static charas_attack_enemies = function(attack_multiplier) {
-		for (var enemy_index = 0; enemy_index < array_length(selected_enemies); enemy_index++) {
-			for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
+		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
+			activate_on_attack_buffs()
+			for (var enemy_index = 0; enemy_index < array_length(selected_enemies); enemy_index++) {
 				selected_enemies[enemy_index].hit_by_player(selected_chara[chara_index], attack_multiplier)
 			}
 		}	
+	}
+	
+	/// @description								Triggers the Gain_Strength_On_Any_Attack effect,
+	///													giving the character strength
+	static activate_on_attack_buffs = function() {
+		for(var chara_index = 0; chara_index < instance_number(obj_player); chara_index++) {
+			var chara = instance_find(obj_player, chara_index)
+			if(chara.active_buffs[$ card_buff_effects.Gain_Strength_On_Any_Attack] != undefined &&
+				chara.active_buffs[$ card_buff_effects.Gain_Strength_On_Any_Attack] > 0) {
+					chara.apply_buff(card_buff_effects.Strength, 1)
+				}
+		}
 	}
 	
 	/// @description								Loops through each selected character and hit each

@@ -118,6 +118,9 @@ function apply_buff(buff_type, buff_amount) {
 		case card_buff_effects.Strength:
 			array_push(effect_to_display, [active_buffs[$ buff_type], c_maroon])
 			break;
+		case card_buff_effects.Gain_Strength_On_Any_Attack:
+			array_push(effect_to_display, [active_buffs[$ buff_type], c_fuchsia])
+			break;
 	}
 }
 
@@ -135,5 +138,21 @@ function multiply_buff(buff_type, amount_multiplied) {
 		case card_buff_effects.Strength:
 			array_push(effect_to_display, [active_buffs[$ buff_type], c_maroon])
 			break;
+		case card_buff_effects.Gain_Strength_On_Any_Attack:
+			array_push(effect_to_display, [active_buffs[$ buff_type], c_fuchsia])
+			break;
 	}
+}
+
+/// @desc										Loops through each buff for this player and handles
+///													what should happen with it at the end of the
+///													player's turn
+function trigger_end_of_turn_buffs() {
+	struct_foreach(active_buffs, function (debuff_name, debuff_amount) {
+		switch (debuff_name) {
+			case card_buff_effects.Gain_Strength_On_Any_Attack:
+				struct_remove(active_buffs, debuff_name)
+				break
+		}
+	})
 }
