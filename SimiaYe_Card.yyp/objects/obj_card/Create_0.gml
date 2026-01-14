@@ -9,6 +9,7 @@ card_start_x_position = x
 card_start_y_position = y
 show_energy_error = false
 is_selected = false
+card_played = false
 
 #region THIS NEED TO BE IMPLEMENTED IN EACH CARD
 //Be sure to check the Variable Definitions, there are many variables to manipulate there
@@ -22,6 +23,17 @@ card_action = function (card_action_struct) {
 
 card_drawn_action = function () {
 	// Only implement this function if a card has an on draw effect
+}
+
+/// @description									The unique action of the card when it is discarded
+/// @param {Function} on_card_discard				The call back function for after the card is discarded
+/// @param {Array} on_card_discard_args				The argurments for the on_card_discard function
+card_discard_action = function (on_card_discard, on_card_discard_args) {
+	// Only implement this function if a card has an on discard effect
+	// NOTE: The following lines must be implemented to allow the card to be properly discarded
+	if(on_card_discard != undefined && is_method(on_card_discard))
+		method_call(on_card_discard, on_card_discard_args)
+	ui_player_hand.remove_card(id)	
 }
 #endregion
 
@@ -41,10 +53,13 @@ function select_card() {
 }
 
 /// @description							Removes this card from the player's hand and destroy it
-function discard_card() {
-	add_card_to_discard_deck(object_index)
-	ui_player_hand.remove_card(id)
-	instance_destroy()
+/// @param {Function} on_card_discard		The optional call back function for after the card
+///												is discarded
+/// @param {Array} on_card_discard_args		The optional argurments for the on_card_discard function
+function discard_card(on_card_discard = undefined, on_card_discard_args = []) {
+	if(!card_played)
+		add_card_to_discard_deck(object_index)	
+	card_discard_action(on_card_discard, on_card_discard_args)
 }
 
 /// @description							Handles the card being played. Allowing the player to
@@ -56,7 +71,22 @@ function play_card() {
 		reset_card()
 	}
 	else {
-		var target_selection_layer = layer_create(depth - 100)
+		var target_selection_layer = layer
+		if(instance_number(obj_target_selection_handler) > 0) {
+			var selection_layer_depth = depth
+			for(var target_selection_index = 0; target_selection_index < instance_number(obj_target_selection_handler); target_selection_index++) {
+				var target_selection_handler = instance_find(obj_target_selection_handler, target_selection_index)
+				if (target_selection_handler.depth < selection_layer_depth) {
+					selection_layer_depth = target_selection_handler.depth
+				}
+			}
+			target_selection_layer = layer_create(selection_layer_depth - 100)
+		}
+		else {
+			target_selection_layer = layer_create(depth - 100)
+		}
+		
+		
 		instance_create_layer(x, y, target_selection_layer, obj_target_selection_handler, 
 		{
 			num_chara_to_select,

@@ -6,7 +6,7 @@ button_can_be_pressed = true
 /// @desc			Controls the end of a players turn, filling the player's hand with cards
 function end_player_turn() {
 	if(instance_exists(ui_player_hand) && ui_player_hand.is_hand_visible) {
-		ui_player_hand.empty_player_hand()
+		ui_player_hand.empty_player_hand(start_enemy_turn)
 	}
 }
 
@@ -45,7 +45,6 @@ function end_enemy_turn() {
 	if(skip_players_next_turn) {
 		skip_players_next_turn = false
 		end_player_turn()
-		start_enemy_turn()
 	}
 	else {
 		button_can_be_pressed = true

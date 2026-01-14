@@ -64,6 +64,7 @@
     {"id":{"name":"obj_battack","path":"objects/obj_battack/obj_battack.yy",},},
     {"id":{"name":"obj_brick","path":"objects/obj_brick/obj_brick.yy",},},
     {"id":{"name":"obj_card_10","path":"objects/obj_card_10/obj_card_10.yy",},},
+    {"id":{"name":"obj_card_12","path":"objects/obj_card_12/obj_card_12.yy",},},
     {"id":{"name":"obj_card_14","path":"objects/obj_card_14/obj_card_14.yy",},},
     {"id":{"name":"obj_card_15","path":"objects/obj_card_15/obj_card_15.yy",},},
     {"id":{"name":"obj_card_16","path":"objects/obj_card_16/obj_card_16.yy",},},

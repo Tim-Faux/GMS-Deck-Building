@@ -3,5 +3,4 @@ if(is_top_layer(layer) && button_clicked && button_can_be_pressed) {
 	button_can_be_pressed = false
 	image_alpha = 1
 	end_player_turn()
-	start_enemy_turn()
 }

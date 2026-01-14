@@ -74,8 +74,7 @@ function struct_card_action(_selected_chara, _selected_cards, _selected_enemies)
 	///													puts them in the discard pile
 	static discard_selected_cards = function () {
 		for (var card_index = 0; card_index < array_length(selected_cards); card_index++) {
-			add_card_to_discard_deck(selected_cards[card_index].object_index)
-			ui_player_hand.remove_card(selected_cards[card_index])
+			selected_cards[card_index].discard_card()
 		}
 	}
 	

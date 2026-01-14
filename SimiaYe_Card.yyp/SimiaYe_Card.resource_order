@@ -39,6 +39,7 @@
     {"name":"fnt_energy","order":1,"path":"fonts/fnt_energy/fnt_energy.yy",},
     {"name":"obj_brick","order":1,"path":"objects/obj_brick/obj_brick.yy",},
     {"name":"obj_card_10","order":3,"path":"objects/obj_card_10/obj_card_10.yy",},
+    {"name":"obj_card_12","order":5,"path":"objects/obj_card_12/obj_card_12.yy",},
     {"name":"obj_card_15","order":1,"path":"objects/obj_card_15/obj_card_15.yy",},
     {"name":"obj_card_16","order":2,"path":"objects/obj_card_16/obj_card_16.yy",},
     {"name":"obj_card_17","order":4,"path":"objects/obj_card_17/obj_card_17.yy",},

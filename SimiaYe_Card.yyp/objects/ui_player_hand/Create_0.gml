@@ -43,14 +43,22 @@ function fill_player_hand() {
 	}
 }
 
-/// @desc							Removes all cards from the player's hand, puts them in the
-///										discard deck, and destroys their instnace
-function empty_player_hand() {
-	array_foreach(cards_in_hand, function(card, card_index) {
-		add_card_to_discard_deck(card.object_index)
-		instance_destroy(card)
-	})
-	array_resize(cards_in_hand, 0)
+/// @desc								Removes all cards from the player's hand one at a time
+///											allowing the discard to finish before using this
+///											function as a call back to discard the next card
+/// @param {function} on_hand_emptied	Call back function triggered when the last card in the
+///											player's hand is discarded
+/// @param {Real} card_index			The current cards_in_hand card index
+function empty_player_hand(on_hand_emptied, card_index = array_length(cards_in_hand) - 1) {
+	if(card_index >= 0) {
+		cards_in_hand[card_index].discard_card(
+			method(self, empty_player_hand),
+			[on_hand_emptied, --card_index])
+	}
+	else {
+		if(on_hand_emptied != undefined && is_method(on_hand_emptied))
+			method_call(on_hand_emptied, [])
+	}
 }
 
 /// @desc							Finds all the cards in the player's current hand
