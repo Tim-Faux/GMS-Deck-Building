@@ -118,6 +118,11 @@ function chara_selected(chara_instance) {
 		array_push(selected_chara, chara_instance)
 	}
 	
+	if(card_played != noone && card_played.chara_selected_action != undefined) {
+		card_played.chara_selected_action(chara_instance)
+		defender_selection_type = card_played.defender_selection_type
+	}
+	
 	if(num_chara_selected >= num_chara_to_select || num_chara_to_select == 0) {
 		layer_destroy_instances(highlighed_chara_layer)
 		select_target_card()

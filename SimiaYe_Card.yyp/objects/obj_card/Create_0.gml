@@ -35,6 +35,12 @@ card_discard_action = function (on_card_discard, on_card_discard_args) {
 		method_call(on_card_discard, on_card_discard_args)
 	ui_player_hand.remove_card(id)	
 }
+
+/// @description									The action of the card when a character is selected
+/// @param {Id.Instance} selected_chara				The character selected
+chara_selected_action = function (selected_chara) {
+// Only implement this function if a card has an on chara select effect
+}
 #endregion
 
 /// @description							Checks to see if no other cards are selected then allows this
