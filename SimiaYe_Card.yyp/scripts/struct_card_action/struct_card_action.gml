@@ -91,6 +91,14 @@ function struct_card_action(_selected_chara, _selected_cards, _selected_enemies)
 		}
 	}
 	
+	/// @description								Removes all selected cards from the player's hand and
+	///													puts them in the exhaust pile
+	static exhaust_selected_cards = function () {
+		for (var card_index = 0; card_index < array_length(selected_cards); card_index++) {
+			selected_cards[card_index].exhaust_card()
+		}
+	}
+	
 	/// @description								Draws cards from the player's deck one at a time and
 	///													adds it to their hand
 	/// @param {Real} num_card_to_draw				How many cards should be drawn
@@ -111,6 +119,13 @@ function struct_card_action(_selected_chara, _selected_cards, _selected_enemies)
 	/// @param {Real} mult_amount					The amount of energy added to the player's energy pool
 	static add_energy = function (energy_amount) {
 		ui_player_energy.add_to_player_current_energy(energy_amount)
+	}
+	
+	/// @description								Multiplies the player's current energy
+	/// @param {Real} mult_amount					The amount the the player's current energy
+	///													is being muliplied by
+	static mult_energy = function (energy_mult_amount) {
+		ui_player_energy.multiply_player_current_energy(energy_mult_amount)
 	}
 	
 	/// @description								Informs the ui_end_turn_button that the player's next

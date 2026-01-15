@@ -36,6 +36,17 @@ card_discard_action = function (on_card_discard, on_card_discard_args) {
 	ui_player_hand.remove_card(id)	
 }
 
+/// @description									The unique action of the card when it is exhausted
+/// @param {Function} on_card_exhaust				The call back function for after the card is exhausted
+/// @param {Array} on_card_exhaust_args				The argurments for the on_card_exhaust function
+card_exhaust_action = function (on_card_exhaust, on_card_exhaust_args) {
+	// Only implement this function if a card has an on exhaust effect
+	// NOTE: The following lines must be implemented to allow the card to be properly exhausted
+	if(on_card_exhaust != undefined && is_method(on_card_exhaust))
+		method_call(on_card_exhaust, on_card_exhaust_args)
+	ui_player_hand.remove_card(id)	
+}
+
 /// @description									The action of the card when a character is selected
 /// @param {Id.Instance} selected_chara				The character selected
 chara_selected_action = function (selected_chara) {
@@ -66,6 +77,15 @@ function discard_card(on_card_discard = undefined, on_card_discard_args = []) {
 	if(!card_played)
 		add_card_to_discard_deck(object_index)	
 	card_discard_action(on_card_discard, on_card_discard_args)
+}
+
+/// @description							Removes this card from the player's hand and exhausts it
+/// @param {Function} on_card_exhaust		The optional call back function for after the card
+///												is exhausted
+/// @param {Array} on_card_exhaust_args		The optional argurments for the on_card_exhaust function
+function exhaust_card(on_card_exhaust = undefined, on_card_exhaust_args = []) {
+	add_card_to_exhaust_deck(object_index)
+	card_exhaust_action(on_card_exhaust, on_card_exhaust_args)
 }
 
 /// @description							Handles the card being played. Allowing the player to
@@ -128,7 +148,12 @@ function card_has_been_played(selected_chara, selected_cards, enemy_instance) {
 	ui_player_energy.remove_from_player_current_energy(energy_cost)
 	var card_action_struct = new struct_card_action(selected_chara, selected_cards, enemy_instance)
 	card_action(card_action_struct)
-	discard_card()
+	if(card_is_discarded_when_played) {
+		discard_card()
+	}
+	else {
+		exhaust_card()
+	}
 }
 
 /// @description							The callback function for obj_target_selection_handler,

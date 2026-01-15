@@ -27,6 +27,12 @@ function add_to_player_current_energy(num_energy) {
 	player_current_energy += num_energy
 }
 
+/// @desc							Multiplies the player's energy by the given amount
+/// @param {Real} energy_mult		The amount the player's energy is multiplied by
+function multiply_player_current_energy(energy_mult) {
+	player_current_energy *= energy_mult
+}
+
 /// @desc							Resets the player's current energy to their total energy
 function reset_player_current_energy() {
 	player_current_energy = global.player_total_energy

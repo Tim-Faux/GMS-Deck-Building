@@ -157,6 +157,11 @@ function select_target_card() {
 		array_copy(selected_cards, 0, cards_in_hand, 0, num_cards_selected)
 		select_target_enemy()
 	}
+	else if(card_selection_type == card_select_target_card.played_card) {
+		if(card_played != noone)
+			num_cards_selected = [card_played]
+		select_target_enemy()
+	}
 }
 
 /// @desc										Determines which cards can be selected for this card action,
