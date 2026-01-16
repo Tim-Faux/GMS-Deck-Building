@@ -53,6 +53,7 @@
         "card_select_target_card.whole_hand",
         "card_select_target_card.none",
         "card_select_target_card.played_card",
+        "card_select_target_card.num_chara_selected",
       ],"multiselect":false,"name":"card_selection_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"card_select_target_card.none","varType":6,},
     {"$GMObjectProperty":"v2","%Name":"allowed_classes","filters":[],"listItems":[
         "chara_class.all_chara",

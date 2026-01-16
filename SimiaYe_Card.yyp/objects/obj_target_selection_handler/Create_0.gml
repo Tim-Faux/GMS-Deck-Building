@@ -151,6 +151,10 @@ function select_target_card() {
 	else if(card_selection_type == card_select_target_card.in_hand) {
 		create_card_selection(find_allowed_cards())
 	}
+	else if(card_selection_type == card_select_target_card.num_chara_selected) {
+		num_cards_to_select = num_chara_selected
+		create_card_selection(find_allowed_cards())
+	}
 	else if(card_selection_type == card_select_target_card.whole_hand) {
 		var cards_in_hand = find_allowed_cards()
 		num_cards_selected = array_length(cards_in_hand)
@@ -169,7 +173,8 @@ function select_target_card() {
 /// @returns {array<Id.Instance>}				The cards which can be select for the card action
 function find_allowed_cards() {
 	if(card_selection_type == card_select_target_card.in_hand ||
-		card_selection_type == card_select_target_card.whole_hand) {
+		card_selection_type == card_select_target_card.whole_hand ||
+		card_selection_type == card_select_target_card.num_chara_selected) {
 		var cards_in_hand = ui_player_hand.get_player_current_hand()
 		var allowed_cards = array_filter(cards_in_hand, 
 								function(element, index) { return element != card_played })
@@ -390,7 +395,8 @@ function find_back_button_return_fuction() {
 		}
 	}
 	else if(current_selection_target == selection_target.enemy) {
-		if(card_selection_type == card_select_target_card.in_hand) {
+		if(card_selection_type == card_select_target_card.in_hand ||
+			card_selection_type == card_select_target_card.num_chara_selected) {
 			return method(id, select_target_card)
 		}
 		else if(attacker_selection_type == card_selection_target.any_class ||
