@@ -8,4 +8,5 @@ card_description = "Deal 0.2 dmg and apply 1 Weakness."
 card_action = function (card_action_struct) {
 	card_action_struct.apply_debuff_to_enemies(card_debuff_effects.Weakness, 1)
 	card_action_struct.charas_attack_enemies(0.2)
+	card_action_struct.end_card_action()
 }

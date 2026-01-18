@@ -11,4 +11,5 @@ card_action = function (card_action_struct) {
 	card_action_struct.draw_num_cards(5)
 	card_action_struct.add_energy(6)
 	card_action_struct.skip_next_turn()
+	card_action_struct.end_card_action()
 }

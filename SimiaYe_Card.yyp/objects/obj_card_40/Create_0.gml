@@ -7,4 +7,5 @@ card_description = "Choose a chara. Each time you attack this turn they gain 1 s
 /// @param {struct_card_action} card_action_struct	The struct that contains all card actions
 card_action = function (card_action_struct) {
 	card_action_struct.add_buff_to_charas(card_buff_effects.Gain_Strength_On_Any_Attack, 1)
+	card_action_struct.end_card_action()
 }

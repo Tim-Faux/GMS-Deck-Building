@@ -8,6 +8,7 @@ card_description = "Deal 1 dmg. This card costs 1 less for each Science characte
 /// @param {struct_card_action} card_action_struct	The struct that contains all card actions
 card_action = function (card_action_struct) {
 	card_action_struct.charas_attack_enemies(1)
+	card_action_struct.end_card_action()
 }
 
 /// @desc					Reduces the cost of the card by 1 for each Science character in the party

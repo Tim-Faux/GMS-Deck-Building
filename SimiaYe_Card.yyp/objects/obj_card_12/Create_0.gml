@@ -9,6 +9,7 @@ on_card_discard_args = []
 /// @param {struct_card_action} card_action_struct	The struct that contains all card actions
 card_action = function (card_action_struct) {
 	card_action_struct.charas_attack_enemies(1)
+	card_action_struct.end_card_action()
 }
 
 /// @description								Allows the player to select a target to attack when

@@ -8,4 +8,5 @@ card_description = "Discard 2 cards, gain 1 energy."
 card_action = function (card_action_struct) {
 	card_action_struct.discard_selected_cards()
 	card_action_struct.add_energy(1)
+	card_action_struct.end_card_action()
 }

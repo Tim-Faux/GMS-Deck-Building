@@ -13,4 +13,5 @@ card_action = function (card_action_struct) {
 	else {
 		global.add_energy_on_card_draw = 1	
 	}
+	card_action_struct.end_card_action()
 }

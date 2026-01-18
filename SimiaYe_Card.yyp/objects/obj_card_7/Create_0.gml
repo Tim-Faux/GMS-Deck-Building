@@ -8,4 +8,5 @@ card_description = "Discard 1 card, Draw 1 card"
 card_action = function (card_action_struct) {
 	card_action_struct.discard_selected_cards()
 	card_action_struct.draw_num_cards(1)
+	card_action_struct.end_card_action()
 }

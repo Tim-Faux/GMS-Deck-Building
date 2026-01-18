@@ -9,4 +9,5 @@ card_description = "For each character selected deal 1 dmg and discard a card"
 card_action = function (card_action_struct) {
 	card_action_struct.charas_attack_enemies(1)
 	card_action_struct.discard_selected_cards()
+	card_action_struct.end_card_action()
 }

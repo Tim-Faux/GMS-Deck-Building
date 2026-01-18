@@ -18,7 +18,8 @@ card_description = "This is example text of the card's description"
 /// @description									The unique action of the card when it is played
 /// @param {struct_card_action} card_action_struct	The struct that contains all card actions
 card_action = function (card_action_struct) {
-	card_action_struct.charas_attack_enemies(1)
+	// NOTE: The following line must be implemented to allow the card to complete
+	card_action_struct.end_card_action()
 }
 
 card_drawn_action = function () {
@@ -146,14 +147,13 @@ function show_not_enough_energy_error() {
 /// @param {Id.Instance} enemy_instance			The enemy selected to take damage
 function card_has_been_played(selected_chara, selected_cards, enemy_instance) {
 	ui_player_energy.remove_from_player_current_energy(energy_cost)
-	var card_action_struct = new struct_card_action(selected_chara, selected_cards, enemy_instance)
-	card_action(card_action_struct)
+	
+	var on_card_action_complete = method(self, exhaust_card)
 	if(card_is_discarded_when_played) {
-		discard_card()
+		on_card_action_complete = method(self, discard_card)
 	}
-	else {
-		exhaust_card()
-	}
+	var card_action_struct = new struct_card_action(selected_chara, selected_cards, enemy_instance, on_card_action_complete)
+	card_action(card_action_struct)
 }
 
 /// @description							The callback function for obj_target_selection_handler,

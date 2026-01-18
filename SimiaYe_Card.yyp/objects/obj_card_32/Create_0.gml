@@ -6,6 +6,7 @@ card_description = "If selected chara has shield half it and deal 1.25 dmg. Othe
 /// @param {struct_card_action} card_action_struct	The struct that contains all card actions
 card_action = function (card_action_struct) {
 	card_action_struct.charas_attack_enemies(1.25)
+	card_action_struct.end_card_action()
 }
 
 /// @description					Halves the characters shield and sets the defender selection type to

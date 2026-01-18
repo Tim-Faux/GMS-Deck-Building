@@ -7,4 +7,5 @@ card_description = "Deal 0.5 dmg twice."
 card_action = function (card_action_struct) {
 	card_action_struct.charas_attack_enemies(0.5)
 	card_action_struct.charas_attack_enemies(0.5)
+	card_action_struct.end_card_action()
 }

@@ -6,6 +6,7 @@ card_description = "Deal 0.1 dmg. Add a copy of this card to hand when drawn."
 /// @param {struct_card_action} card_action_struct	The struct that contains all card actions
 card_action = function (card_action_struct) {
 	card_action_struct.charas_attack_enemies(0.1)
+	card_action_struct.end_card_action()
 }
 
 /// @desc											Add a copy of this card to the player's hand

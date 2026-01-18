@@ -8,6 +8,7 @@ card_description = "Deal 0.2 dmg per Ability card you have in hand."
 card_action = function (card_action_struct) {
 	var num_ability_cards = get_num_ability_cards_in_hand()
 	card_action_struct.charas_attack_enemies(num_ability_cards * 0.2)
+	card_action_struct.end_card_action()
 }
 
 /// @desc											Loops through all cards in the player's hand to find the

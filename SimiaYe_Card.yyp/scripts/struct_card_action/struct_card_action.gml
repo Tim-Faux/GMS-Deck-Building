@@ -1,7 +1,19 @@
-function struct_card_action(_selected_chara, _selected_cards, _selected_enemies) constructor {
+function struct_card_action(_selected_chara, _selected_cards, _selected_enemies,
+							_on_card_action_complete = undefined, _on_card_action_complete_args = []) constructor {
 	selected_chara = _selected_chara
 	selected_cards = _selected_cards
 	selected_enemies = _selected_enemies
+	on_card_action_complete = _on_card_action_complete
+	on_card_action_complete_args = _on_card_action_complete_args
+	
+	/// @description								Runs the call back function that allows the card
+	///													execution to continue. NOTE: This function
+	///													must be run at the end of the card_action
+	///													or it will not work correctly
+	static end_card_action = function() {
+		if(on_card_action_complete != undefined && is_method(on_card_action_complete))
+			method_call(on_card_action_complete, on_card_action_complete_args)	
+	}
 	
 	/// @description								Loops through each selected character and hit each
 	///													selected enemy with their attack multiplied by

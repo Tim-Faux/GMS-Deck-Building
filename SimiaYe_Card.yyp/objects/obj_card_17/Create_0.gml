@@ -11,4 +11,5 @@ card_action = function (card_action_struct) {
 	card_action_struct.discard_selected_cards()
 	card_action_struct.draw_num_cards(4)
 	card_action_struct.add_energy(10)
+	card_action_struct.end_card_action()
 }

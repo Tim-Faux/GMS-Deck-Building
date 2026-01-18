@@ -8,4 +8,5 @@ card_action = function (card_action_struct) {
 	repeat(4) {
 		card_action_struct.charas_attack_enemies(0.25)
 	}
+	card_action_struct.end_card_action()
 }
