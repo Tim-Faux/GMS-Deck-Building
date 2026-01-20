@@ -1,0 +1,6 @@
+draw_set_colour(c_black)
+draw_set_alpha(BACKGROUND_ALPHA)
+var screen_width = display_get_gui_width()
+var screen_height = display_get_gui_height()
+draw_rectangle(0, 0, screen_width, screen_height, false)
+draw_set_alpha(1)	

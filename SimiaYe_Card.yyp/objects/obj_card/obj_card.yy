@@ -54,6 +54,7 @@
         "card_select_target_card.none",
         "card_select_target_card.played_card",
         "card_select_target_card.num_chara_selected",
+        "card_select_target_card.top_of_deck",
       ],"multiselect":false,"name":"card_selection_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"card_select_target_card.none","varType":6,},
     {"$GMObjectProperty":"v2","%Name":"allowed_classes","filters":[],"listItems":[
         "chara_class.all_chara",
@@ -70,8 +71,12 @@
         "GMFont",
       ],"listItems":[],"multiselect":false,"name":"not_enough_energy_error_font","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resource":{"name":"fnt_button_font","path":"fonts/fnt_button_font/fnt_button_font.yy",},"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"fnt_button_font","varType":5,},
     {"$GMObjectProperty":"v2","%Name":"not_enough_energy_error_color","filters":[],"listItems":[],"multiselect":false,"name":"not_enough_energy_error_color","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"$FF0000B2","varType":7,},
-    {"$GMObjectProperty":"v2","%Name":"is_display_card","filters":[],"listItems":[],"multiselect":false,"name":"is_display_card","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"False","varType":3,},
-    {"$GMObjectProperty":"v2","%Name":"is_selectable_card","filters":[],"listItems":[],"multiselect":false,"name":"is_selectable_card","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"False","varType":3,},
+    {"$GMObjectProperty":"v2","%Name":"interaction_type","filters":[],"listItems":[
+        "card_interaction_type.default_card",
+        "card_interaction_type.expandable_card",
+        "card_interaction_type.display_card",
+        "card_interaction_type.selectable_card",
+      ],"multiselect":true,"name":"interaction_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"card_interaction_type.default_card","varType":6,},
   ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",

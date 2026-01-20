@@ -10,6 +10,11 @@ card_start_y_position = y
 show_energy_error = false
 is_selected = false
 card_played = false
+card_can_be_moved = array_all(interaction_type,
+						function(_val, _ind) { 
+							return _val != card_interaction_type.display_card &&
+									_val != card_interaction_type.selectable_card 
+						})
 
 #region THIS NEED TO BE IMPLEMENTED IN EACH CARD
 //Be sure to check the Variable Definitions, there are many variables to manipulate there
@@ -61,7 +66,7 @@ function select_card() {
 	if(!card_selected && !global.object_being_clicked && visible && is_top_layer(layer)) {
 		global.object_being_clicked	= true
 		card_selected = true
-		if(!is_display_card && !is_selectable_card) {
+		if(card_can_be_moved) {
 			card_start_x_position = x
 			card_start_y_position = y
 			x = mouse_x - (sprite_width / 2)
@@ -179,7 +184,6 @@ function create_expanded_card() {
 		image_xscale : sprite_size_scale,
 		image_yscale : sprite_size_scale,
 		flexpanels : new_flexpanels,
-		card_expanded : true,
 		energy_cost,
 		attacker_selection_type,
 		allowed_classes,

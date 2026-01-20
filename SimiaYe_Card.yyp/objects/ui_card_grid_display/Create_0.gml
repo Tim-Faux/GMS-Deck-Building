@@ -56,7 +56,7 @@ function create_card_grid_view() {
 
 			var display_card = instance_create_layer(card_x_pos, card_y_pos, card_display_instance_id, cards_to_display[card_index], {
 				flexpanels,
-				is_display_card : true
+				interaction_type : [card_interaction_type.display_card, card_interaction_type.expandable_card]
 			})
 			display_cards[card_index] = display_card
 		}

@@ -166,6 +166,11 @@ function select_target_card() {
 			num_cards_selected = [card_played]
 		select_target_enemy()
 	}
+	else if(card_selection_type == card_select_target_card.top_of_deck) {
+		array_copy(selected_cards, 0, get_player_current_deck(), 0, num_cards_to_select)
+		num_cards_selected = array_length(selected_cards)
+		select_target_enemy()
+	}
 }
 
 /// @desc										Determines which cards can be selected for this card action,
@@ -203,7 +208,7 @@ function create_card_selection(allowed_cards) {
 	var ypos = (display_get_gui_height() - allowed_cards[0].sprite_height) / 2
 	for (var card_index = 0; card_index < numCards; card_index++) {
 		var selectable_card_instance = instance_create_layer(xpos, ypos, highlighed_cards_layer, allowed_cards[card_index].object_index, {
-			is_selectable_card : true
+			interaction_type : [card_interaction_type.selectable_card]
 		})
 		selectable_to_hand_card_struct[$ selectable_card_instance] = allowed_cards[card_index]
 		xpos += allowed_cards[card_index].sprite_width + spacing_between_cards

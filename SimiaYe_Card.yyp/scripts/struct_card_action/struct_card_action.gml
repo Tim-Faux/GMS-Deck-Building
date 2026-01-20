@@ -15,6 +15,53 @@ function struct_card_action(_selected_chara, _selected_cards, _selected_enemies,
 			method_call(on_card_action_complete, on_card_action_complete_args)	
 	}
 	
+	/// @description								Shows the selected cards in a line with a confirmation
+	///													button below that destroys the shown cards and
+	///													runs the on_card_closed function
+	/// @param {String, Id.Layer} layer_id			The layer the cards will be displayed on
+	/// @param {function} on_card_closed			The call back function when the card display is closed
+	/// @param {Array} on_card_closed_args			The arguments array for on_card_closed
+	static show_selected_cards = function(layer_id, on_card_closed, on_card_closed_args) {
+		var numCards = array_length(selected_cards)
+		if(numCards > 0) {
+			var background_dimmer_layer = layer_create(layer_get_depth(layer_id) + 9)
+			instance_create_layer(0, 0, background_dimmer_layer, ui_background_dimmer)
+			
+			create_card_lineup(layer_id)
+			
+			var confirmation_x = display_get_gui_width() / 2
+			var confirmation_y = (display_get_gui_height() + sprite_get_height(object_get_sprite(selected_cards[0])) + 
+									sprite_get_height(object_get_sprite(ui_confirm_button)) + 175) / 2
+			instance_create_layer(confirmation_x, confirmation_y, layer_id, ui_confirm_button, {
+				on_confirm_function : on_card_closed,
+				on_confirm_function_args : on_card_closed_args
+			})
+		}
+		else {
+			if(on_card_closed != undefined && is_method(on_card_closed))
+				method_call(on_card_closed, on_card_closed_args)
+			find_and_delete_related_layers(layer_id)
+		}
+	}
+	
+	/// @description								Creates a line of evenly spaced display cards
+	/// @param {String, Id.Layer} layer_id			The layer the cards will be displayed on
+	static create_card_lineup = function(layer_id) {
+		var numCards = array_length(selected_cards)
+		var card_sprite = object_get_sprite(selected_cards[0])
+		var spacing_between_cards = 100 / numCards
+		var total_width_of_card_selection = ((sprite_get_width(card_sprite) + spacing_between_cards) * numCards) - spacing_between_cards
+		
+		var xpos = (display_get_gui_width() - total_width_of_card_selection) / 2
+		var ypos = (display_get_gui_height() - sprite_get_height(card_sprite)) / 2
+		for (var card_index = 0; card_index < numCards; card_index++) {
+			instance_create_layer(xpos, ypos, layer_id, selected_cards[card_index], {
+				interaction_type : [card_interaction_type.display_card]
+			})
+			xpos += sprite_get_width(card_sprite) + spacing_between_cards
+		}
+	}
+	
 	/// @description								Loops through each selected character and hit each
 	///													selected enemy with their attack multiplied by
 	///													attack_multiplier
