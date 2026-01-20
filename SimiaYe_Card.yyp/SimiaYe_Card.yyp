@@ -146,6 +146,7 @@
     {"id":{"name":"enum_card_selection_target","path":"scripts/enum_card_selection_target/enum_card_selection_target.yy",},},
     {"id":{"name":"enum_card_type","path":"scripts/enum_card_type/enum_card_type.yy",},},
     {"id":{"name":"enum_chara_class","path":"scripts/enum_chara_class/enum_chara_class.yy",},},
+    {"id":{"name":"enum_selection_target","path":"scripts/enum_selection_target/enum_selection_target.yy",},},
     {"id":{"name":"find_and_delete_related_layers","path":"scripts/find_and_delete_related_layers/find_and_delete_related_layers.yy",},},
     {"id":{"name":"player_deck","path":"scripts/player_deck/player_deck.yy",},},
     {"id":{"name":"player_discard_deck","path":"scripts/player_discard_deck/player_discard_deck.yy",},},

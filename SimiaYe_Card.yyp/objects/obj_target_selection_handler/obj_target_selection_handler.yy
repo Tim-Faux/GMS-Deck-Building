@@ -40,6 +40,11 @@
     {"$GMObjectProperty":"v2","%Name":"defender_selection_type","filters":[],"listItems":[],"multiselect":false,"name":"defender_selection_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"0","varType":1,},
     {"$GMObjectProperty":"v2","%Name":"card_selection_type","filters":[],"listItems":[],"multiselect":false,"name":"card_selection_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"0","varType":1,},
     {"$GMObjectProperty":"v2","%Name":"allowed_classes","filters":[],"listItems":[],"multiselect":false,"name":"allowed_classes","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"[chara_class.all_chara]","varType":4,},
+    {"$GMObjectProperty":"v2","%Name":"target_selection_order","filters":[],"listItems":[
+        "selection_target.character",
+        "selection_target.card",
+        "selection_target.enemy",
+      ],"multiselect":true,"name":"target_selection_order","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"selection_target.character, selection_target.card, selection_target.enemy","varType":6,},
   ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",

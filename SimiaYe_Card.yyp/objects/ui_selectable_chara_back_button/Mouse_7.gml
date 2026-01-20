@@ -3,7 +3,7 @@ if(button_clicked && is_top_layer(layer)) {
 	global.object_being_clicked = false
 	
 	layer_destroy_instances(layer)
-	if(is_method(back_return_fuction)) {
-		back_return_fuction()	
+	if(is_method(back_return_fuction) && back_return_fuction != undefined) {
+		method_call(back_return_fuction, [])
 	}
 }

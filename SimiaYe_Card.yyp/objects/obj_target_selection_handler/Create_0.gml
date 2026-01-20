@@ -10,14 +10,24 @@ selected_chara = []
 selected_cards = []
 num_chara_selected = 0
 num_cards_selected = 0
-current_selection_target = selection_target.character
+selection_target_index = 0
 
-select_target_attacker()
+find_target_selection_function(selection_target_index)
 
-enum selection_target {
-	character,
-	card,
-	enemy
+function find_target_selection_function(step_num) {
+	if (step_num > -1 && array_length(target_selection_order) > step_num) {
+		if(target_selection_order[step_num] == selection_target.character)
+			select_target_attacker()
+		else if(target_selection_order[step_num] == selection_target.card)
+			select_target_card()
+		else if(target_selection_order[step_num] == selection_target.enemy)
+			select_target_enemy()
+		else 
+			find_and_delete_related_layers(layer)
+	}
+	else {
+		find_and_delete_related_layers(layer)	
+	}
 }
 
 #region Attacker Selection
@@ -26,20 +36,22 @@ enum selection_target {
 ///									selection is needed
 function select_target_attacker() {
 	show_enemy_sprites()
-	current_selection_target = selection_target.character
 	selected_chara = []
 	num_chara_selected = 0
+	selection_target_index = array_get_index(target_selection_order, selection_target.character)
 	if(attacker_selection_type == card_selection_target.all_players) {
 		selected_chara = find_allowed_attackers()
 		num_chara_selected = array_length(selected_chara)
-		select_target_card()
+		selection_target_index++
+		find_target_selection_function(selection_target_index)
 	}
 	else if(attacker_selection_type == card_selection_target.random_chara) {
 		var allowed_attackers =  find_allowed_attackers()
 		var random_attacker = irandom(array_length(allowed_attackers) - 1)
 		selected_chara = [allowed_attackers[random_attacker]]
 		num_chara_selected = 1
-		select_target_card()
+		selection_target_index++
+		find_target_selection_function(selection_target_index)
 	}
 	else if(attacker_selection_type == card_selection_target.any_class) {
 		create_attacker_selection()
@@ -50,7 +62,8 @@ function select_target_attacker() {
 	else if(attacker_selection_type == card_selection_target.no_chara) {
 		selected_chara = []
 		num_chara_selected = 0
-		select_target_card()
+		selection_target_index++
+		find_target_selection_function(selection_target_index)
 	}
 }
 
@@ -89,7 +102,7 @@ function create_attacker_selection(allowed_chara_classes = [chara_class.all_char
 		})
 		all_allowed_attackers[chara_index].visible = false
 	}
-	create_back_and_cancel_buttons()
+	create_back_and_cancel_buttons(highlighed_chara_layer)
 }
 
 /// @desc											Shows the given or all of the character sprites
@@ -125,7 +138,8 @@ function chara_selected(chara_instance) {
 	
 	if(num_chara_selected >= num_chara_to_select || num_chara_to_select == 0) {
 		layer_destroy_instances(highlighed_chara_layer)
-		select_target_card()
+		selection_target_index++
+		find_target_selection_function(selection_target_index)
 	}
 }
 
@@ -142,11 +156,18 @@ function chara_deselected(chara_instance) {
 #endregion
 
 #region Card Selection
+
 /// @desc										Determines the cards that can be selected based on the
 ///													card's card_selection_type
 function select_target_card() {
+	show_chara_sprites()
+	show_enemy_sprites()
+	selected_cards = []
+	num_cards_selected = 0
+	selection_target_index = array_get_index(target_selection_order, selection_target.card)
 	if(card_selection_type == card_select_target_card.none) {
-		select_target_enemy()
+		selection_target_index++
+		find_target_selection_function(selection_target_index)
 	}
 	else if(card_selection_type == card_select_target_card.in_hand) {
 		create_card_selection(find_allowed_cards())
@@ -159,17 +180,20 @@ function select_target_card() {
 		var cards_in_hand = find_allowed_cards()
 		num_cards_selected = array_length(cards_in_hand)
 		array_copy(selected_cards, 0, cards_in_hand, 0, num_cards_selected)
-		select_target_enemy()
+		selection_target_index++
+		find_target_selection_function(selection_target_index)
 	}
 	else if(card_selection_type == card_select_target_card.played_card) {
 		if(card_played != noone)
 			num_cards_selected = [card_played]
-		select_target_enemy()
+		selection_target_index++
+		find_target_selection_function(selection_target_index)
 	}
 	else if(card_selection_type == card_select_target_card.top_of_deck) {
 		array_copy(selected_cards, 0, get_player_current_deck(), 0, num_cards_to_select)
 		num_cards_selected = array_length(selected_cards)
-		select_target_enemy()
+		selection_target_index++
+		find_target_selection_function(selection_target_index)
 	}
 }
 
@@ -194,7 +218,6 @@ function find_allowed_cards() {
 function create_card_selection(allowed_cards) {
 	show_chara_sprites()
 	show_enemy_sprites()
-	current_selection_target = selection_target.card
 	selected_cards = []
 	num_cards_selected = 0
 	
@@ -213,7 +236,7 @@ function create_card_selection(allowed_cards) {
 		selectable_to_hand_card_struct[$ selectable_card_instance] = allowed_cards[card_index]
 		xpos += allowed_cards[card_index].sprite_width + spacing_between_cards
 	}
-	create_back_and_cancel_buttons()
+	create_back_and_cancel_buttons(highlighed_cards_layer)
 }
 
 /// @desc									Handles when a card is selected for the card action by
@@ -231,7 +254,8 @@ function card_selected(card_instance) {
 	
 	if(num_cards_selected >= num_cards_to_select || num_cards_to_select == 0) {
 		layer_destroy_instances(highlighed_cards_layer)
-		select_target_enemy()
+		selection_target_index++
+		find_target_selection_function(selection_target_index)
 	}
 }
 
@@ -252,7 +276,8 @@ function card_deselected(card_instance) {
 ///												given card target
 function select_target_enemy() {
 	show_chara_sprites()
-	current_selection_target = selection_target.enemy
+	
+	selection_target_index = array_get_index(target_selection_order, selection_target.enemy)
 	if(defender_selection_type == card_attack_target.all_enemies) {
 		all_enemies_selected()
 	}
@@ -264,7 +289,8 @@ function select_target_enemy() {
 			card_played.card_has_been_played(selected_chara, selected_cards, [])
 		}
 		
-		find_and_delete_related_layers(layer)
+		selection_target_index++
+		find_target_selection_function(selection_target_index)
 	}
 }
 
@@ -276,7 +302,8 @@ function all_enemies_selected() {
 	if(card_played != noone) {
 		card_played.card_has_been_played(selected_chara, selected_cards, enemy_instances)
 	}
-	find_and_delete_related_layers(layer)
+	selection_target_index++
+	find_target_selection_function(selection_target_index)
 }
 
 /// @desc									Creates obj_selectable_chara for each enemy that can be targeted
@@ -292,7 +319,7 @@ function create_defender_selection() {
 		})
 		all_allowed_enemies[enemy_index].visible = false
 	}
-	create_back_and_cancel_buttons()
+	create_back_and_cancel_buttons(highlighed_enemies_layer)
 }
 
 /// @desc									Finds all obj_enemy instances that can be targeted by an attack
@@ -319,7 +346,8 @@ function enemy_selected(enemy_instance) {
 			card_played.card_has_been_played(selected_chara, selected_cards, [enemy_instance])
 		}
 		
-		find_and_delete_related_layers(layer)
+		selection_target_index++
+		find_target_selection_function(selection_target_index)
 	}
 }
 
@@ -337,80 +365,73 @@ function show_enemy_sprites(sprites_to_show = []) {
 #endregion
 
 #region Target Selection UI
-/// @desc									Creates the back and cancel buttons for the target selection
-function create_back_and_cancel_buttons() {
-	var layer_id = highlighed_chara_layer
-	if(current_selection_target == selection_target.card) {
-		layer_id = highlighed_cards_layer
-	}
-	else if (current_selection_target == selection_target.enemy) {
-		layer_id = highlighed_enemies_layer
-	}
+
+/// @desc									Determines if a back button is needed and where it should
+///												land. Then creates the back and cancel buttons
+/// @param {String, Id.Layer} layer_id		The target selection layer to put the buttons on
+function create_back_and_cancel_buttons(layer_id) {
+	var back_button_needed = false
+	var back_button_function = undefined
 	
-	if(current_selection_target == selection_target.character && 
-		(card_selection_type == card_select_target_card.in_hand ||
-		defender_selection_type == card_attack_target.single_enemy)) {
-		create_back_button(layer_id)
-		create_cancel_button(layer_id, true)
+	for(var selection_step_to_check = array_length(target_selection_order) - 1; selection_step_to_check >= 0; selection_step_to_check--) {
+		var found_back_button_function = find_back_button_function(selection_step_to_check)
+		
+		if(found_back_button_function != undefined){
+			if(selection_step_to_check > selection_target_index) {
+				back_button_needed = true
+			}
+			else if(selection_step_to_check < selection_target_index) {
+				back_button_needed = true
+				back_button_function = found_back_button_function
+				break
+			}
+		}
 	}
-	else if (current_selection_target == selection_target.card && 
-				(attacker_selection_type == card_selection_target.any_class ||
-				attacker_selection_type == card_selection_target.selected_class ||
-				defender_selection_type == card_attack_target.single_enemy)) {
-		create_back_button(layer_id)
-		create_cancel_button(layer_id, true)
+
+	if(back_button_needed)
+		create_back_button(layer_id, back_button_function)
+	create_cancel_button(layer_id, back_button_needed)
+}
+
+/// @desc									Finds what call back function should be used for the back
+///												button based on the target_selection_order index
+/// @param {Real} selection_step_to_check	The target_selection_order index to find the call back
+///												function for
+/// @returns {function}						The method to be run when the back button is pressed or
+///												undefined if the player doesnt select during that step
+function find_back_button_function(selection_step_to_check){
+	if(target_selection_order[selection_step_to_check] == selection_target.character && 
+		(attacker_selection_type == card_selection_target.any_class ||
+		attacker_selection_type == card_selection_target.selected_class)) {
+		return method(self, select_target_attacker)
 	}
-	else if (current_selection_target == selection_target.enemy && 
-				(card_selection_type == card_select_target_card.in_hand ||
-				attacker_selection_type == card_selection_target.any_class ||
-				attacker_selection_type == card_selection_target.selected_class)) {
-		create_back_button(layer_id)
-		create_cancel_button(layer_id, true)
+	else if(target_selection_order[selection_step_to_check] == selection_target.card &&
+			(card_selection_type == card_select_target_card.in_hand ||
+			card_selection_type == card_select_target_card.num_chara_selected)) {
+		return method(self, select_target_card)
+	}
+	else if (target_selection_order[selection_step_to_check] == selection_target.enemy &&
+			(defender_selection_type == card_attack_target.single_enemy)) {
+		return method(self, select_target_enemy)
 	}
 	else {
-		create_cancel_button(layer_id, false)
+		return undefined
 	}
 }
 
 /// @desc								Determines the position and return method of the target selection's 
 ///											back button and creates the button in the given layer
 /// @param {String, Id.Layer} layer_id	The target selection layer to put the back button on
-function create_back_button(layer_id) {
+function create_back_button(layer_id, back_function) {
 	var back_button_x = SELECTABLE_CHARA_BACK_BUTTON_PADDING + (sprite_get_width(object_get_sprite(ui_selectable_chara_back_button)) / 2)
 	var back_button_y = display_get_gui_height() / 2 - SELECTABLE_CHARA_BACK_BUTTON_PADDING -
 							(sprite_get_height(object_get_sprite(ui_selectable_chara_back_button)) / 2)
 	
-	var back_function = find_back_button_return_fuction()
 	instance_create_layer(back_button_x, back_button_y, layer_id, ui_selectable_chara_back_button, {
 		back_return_fuction : back_function
 	})
 }
 
-/// @desc									Finds the method that the player should return to after the
-///												back button is pressed
-/// @returns								The method to be run when the back button is pressed or undefined
-function find_back_button_return_fuction() {
-	if(current_selection_target == selection_target.character) {
-		return undefined
-	}
-	if(current_selection_target == selection_target.card) {
-		if(attacker_selection_type == card_selection_target.any_class ||
-			attacker_selection_type == card_selection_target.selected_class) {
-			return method(id, select_target_attacker)
-		}
-	}
-	else if(current_selection_target == selection_target.enemy) {
-		if(card_selection_type == card_select_target_card.in_hand ||
-			card_selection_type == card_select_target_card.num_chara_selected) {
-			return method(id, select_target_card)
-		}
-		else if(attacker_selection_type == card_selection_target.any_class ||
-			attacker_selection_type == card_selection_target.selected_class) {
-			return method(id, select_target_attacker)
-		}
-	}
-	return undefined
-}
 
 /// @desc								Determines the position of the target selection's cancel button
 ///											and creates the button in the given layer
@@ -459,7 +480,7 @@ function draw_target_selection_background() {
 ///												work correctly
 function draw_number_of_targets_to_select_prompt() {
 	var number_of_targets_to_select_text = $"Select your targets"
-	if (current_selection_target == selection_target.character) {
+	if (target_selection_order[selection_target_index] == selection_target.character) {
 		var number_of_attackers_remaining = num_chara_to_select - num_chara_selected
 		if(number_of_attackers_remaining > 1) {
 			if(num_chara_selected > 0) {
@@ -478,7 +499,7 @@ function draw_number_of_targets_to_select_prompt() {
 			}
 		}
 	}
-	else if (current_selection_target == selection_target.card) {
+	else if (target_selection_order[selection_target_index] == selection_target.card) {
 		var number_of_cards_remaining = num_cards_to_select - num_cards_selected
 		if(number_of_cards_remaining > 1) {
 			if(num_cards_selected > 0) {
@@ -514,10 +535,10 @@ function draw_number_of_targets_to_select_prompt() {
 /// @desc						The call back function for the obj_selectable_chara and obj_card, 
 ///									that determines what was being selected and forwards the action
 function target_selected(selected_target) {
-	if (current_selection_target == selection_target.character) {
+	if (target_selection_order[selection_target_index] == selection_target.character) {
 		chara_selected(selected_target)
 	}
-	else if(current_selection_target == selection_target.card) {
+	else if(target_selection_order[selection_target_index] == selection_target.card) {
 		card_selected(selected_target)
 	}
 	else {
@@ -528,10 +549,10 @@ function target_selected(selected_target) {
 /// @desc						The call back function for the obj_selectable_chara and obj_card. Handles
 ///									deselecting a target, cleaning up any references to their selection
 function target_deselected(selected_target) {
-	if (current_selection_target == selection_target.character) {
+	if (target_selection_order[selection_target_index] == selection_target.character) {
 		chara_deselected(selected_target)
 	}
-	else if(current_selection_target == selection_target.card) {
+	else if(target_selection_order[selection_target_index] == selection_target.card) {
 		card_deselected(selected_target)
 	}
 }

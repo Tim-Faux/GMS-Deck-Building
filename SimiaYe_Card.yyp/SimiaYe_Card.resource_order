@@ -109,6 +109,7 @@
     {"name":"enum_card_selection_target","order":2,"path":"scripts/enum_card_selection_target/enum_card_selection_target.yy",},
     {"name":"enum_card_type","order":3,"path":"scripts/enum_card_type/enum_card_type.yy",},
     {"name":"enum_chara_class","order":2,"path":"scripts/enum_chara_class/enum_chara_class.yy",},
+    {"name":"enum_selection_target","order":5,"path":"scripts/enum_selection_target/enum_selection_target.yy",},
     {"name":"find_and_delete_related_layers","order":4,"path":"scripts/find_and_delete_related_layers/find_and_delete_related_layers.yy",},
     {"name":"player_deck","order":1,"path":"scripts/player_deck/player_deck.yy",},
     {"name":"player_discard_deck","order":3,"path":"scripts/player_discard_deck/player_discard_deck.yy",},
