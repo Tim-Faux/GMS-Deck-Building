@@ -7,6 +7,7 @@ display_next_effect_text = true
 effect_to_display = []
 chara_shield = 0
 player_current_health = player_max_health
+turns_since_gain_strength_on_attack = 1
 
 /// @desc								Handles the character being hit and check if player is
 ///											still alive
@@ -120,6 +121,7 @@ function apply_buff(buff_type, buff_amount) {
 			break;
 		case card_buff_effects.Gain_Strength_On_Any_Attack:
 			array_push(effect_to_display, [active_buffs[$ buff_type], c_fuchsia])
+			turns_since_gain_strength_on_attack = 1
 			break;
 	}
 }
@@ -152,6 +154,7 @@ function trigger_end_of_turn_buffs() {
 		switch (debuff_name) {
 			case card_buff_effects.Gain_Strength_On_Any_Attack:
 				struct_remove(active_buffs, debuff_name)
+				turns_since_gain_strength_on_attack = 1
 				break
 		}
 	})

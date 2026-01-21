@@ -82,7 +82,13 @@ function struct_card_action(_selected_chara, _selected_cards, _selected_enemies,
 			var chara = instance_find(obj_player, chara_index)
 			if(chara.active_buffs[$ card_buff_effects.Gain_Strength_On_Any_Attack] != undefined &&
 				chara.active_buffs[$ card_buff_effects.Gain_Strength_On_Any_Attack] > 0) {
-					chara.apply_buff(card_buff_effects.Strength, 1)
+					if(chara.turns_since_gain_strength_on_attack % 2 == 0) {
+						chara.apply_buff(card_buff_effects.Strength, 1)
+						chara.turns_since_gain_strength_on_attack = 1
+					}
+					else {
+						chara.turns_since_gain_strength_on_attack++
+					}
 				}
 		}
 	}

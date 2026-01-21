@@ -1,7 +1,7 @@
 // Inherit the parent event
 event_inherited();
 
-card_description = "Choose a chara. Each time you attack this turn they gain 1 strength"
+card_description = "Choose a chara. Every 2 times you attack this turn they gain 1 strength"
 
 /// @desc											Adds 1 Gain_Strength_On_Any_Attack buff to the character
 /// @param {struct_card_action} card_action_struct	The struct that contains all card actions
