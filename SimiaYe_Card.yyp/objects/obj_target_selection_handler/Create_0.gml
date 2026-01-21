@@ -2,9 +2,9 @@
 #macro SELECTABLE_CHARA_CANCEL_BUTTON_PADDING 10
 #macro NUMBER_OF_TARGETS_TEXT_PADDING 25
 
-highlighed_chara_layer = layer_create(depth - 1, "highlighed_chara_layer")
-highlighed_cards_layer = layer_create(depth - 1, "highlighed_cards_layer")
-highlighed_enemies_layer = layer_create(depth - 1, "highlighed_enemies_layer")
+highlighed_chara_layer = layer_create(depth - 100, "highlighed_chara_layer")
+highlighed_cards_layer = layer_create(depth - 100, "highlighed_cards_layer")
+highlighed_enemies_layer = layer_create(depth - 100, "highlighed_enemies_layer")
 selectable_to_hand_card_struct = {}
 selected_chara = []
 selected_cards = []
@@ -14,18 +14,46 @@ selection_target_index = 0
 
 find_target_selection_function(selection_target_index)
 
+/// @desc										Determines and runs the target selection function at the
+///													given step index in target_selection_order, or deletes
+///													the target selection layers if no step could be found
+/// @param {Real} step_num						The index of target_selection_order to determine which
+///													target selection step to run. NOTE: This will often
+///													be selection_target_index
 function find_target_selection_function(step_num) {
 	if (step_num > -1 && array_length(target_selection_order) > step_num) {
-		if(target_selection_order[step_num] == selection_target.character)
+		if(target_selection_order[step_num] == selection_target.character) {
 			select_target_attacker()
-		else if(target_selection_order[step_num] == selection_target.card)
+		}
+		else if(target_selection_order[step_num] == selection_target.card) {
 			select_target_card()
-		else if(target_selection_order[step_num] == selection_target.enemy)
+		}
+		else if(target_selection_order[step_num] == selection_target.enemy) {
 			select_target_enemy()
-		else 
+		}
+		else {
+			if(layer_exists(highlighed_chara_layer)) {
+				find_and_delete_related_layers(highlighed_chara_layer)	
+			}
+			if(layer_exists(highlighed_cards_layer)) {
+				find_and_delete_related_layers(highlighed_cards_layer)	
+			}
+			if(layer_exists(highlighed_enemies_layer)) {
+				find_and_delete_related_layers(highlighed_enemies_layer)	
+			}
 			find_and_delete_related_layers(layer)
+		}
 	}
 	else {
+		if(layer_exists(highlighed_chara_layer)) {
+			find_and_delete_related_layers(highlighed_chara_layer)	
+		}
+		if(layer_exists(highlighed_cards_layer)) {
+			find_and_delete_related_layers(highlighed_cards_layer)	
+		}
+		if(layer_exists(highlighed_enemies_layer)) {
+			find_and_delete_related_layers(highlighed_enemies_layer)	
+		}
 		find_and_delete_related_layers(layer)	
 	}
 }
@@ -93,6 +121,8 @@ function find_allowed_attackers(allowed_class = [chara_class.all_chara]) {
 /// @param {Array<Real>} allowed_chara_classes		The classes allowed to attack, defaulting to all_chara
 function create_attacker_selection(allowed_chara_classes = [chara_class.all_chara]) {
 	var all_allowed_attackers = find_allowed_attackers(allowed_chara_classes)
+	if(!layer_exists(highlighed_chara_layer))
+		highlighed_chara_layer = layer_create(depth - 100, "highlighed_chara_layer")
 
 	for(var chara_index = 0; chara_index < array_length(all_allowed_attackers); chara_index++) {
 		var sprite = all_allowed_attackers[chara_index].sprite_index
@@ -124,7 +154,7 @@ function show_chara_sprites(sprites_to_show = []) {
 function chara_selected(chara_instance) {
 	if(chara_instance == noone) {
 		show_chara_sprites()
-		layer_destroy_instances(highlighed_chara_layer)
+		find_and_delete_related_layers(highlighed_chara_layer)
 	}
 	else if (!array_contains(selected_chara, chara_instance)) {
 		num_chara_selected++
@@ -137,7 +167,7 @@ function chara_selected(chara_instance) {
 	}
 	
 	if(num_chara_selected >= num_chara_to_select || num_chara_to_select == 0) {
-		layer_destroy_instances(highlighed_chara_layer)
+		find_and_delete_related_layers(highlighed_chara_layer)
 		selection_target_index++
 		find_target_selection_function(selection_target_index)
 	}
@@ -195,6 +225,9 @@ function select_target_card() {
 		selection_target_index++
 		find_target_selection_function(selection_target_index)
 	}
+	else if(card_selection_type == card_select_target_card.discard_deck) {
+		create_deck_card_selection(find_allowed_cards())
+	}
 }
 
 /// @desc										Determines which cards can be selected for this card action,
@@ -209,6 +242,9 @@ function find_allowed_cards() {
 								function(element, index) { return element != card_played })
 		return allowed_cards
 	}
+	else if(card_selection_type == card_select_target_card.discard_deck) {
+		return get_player_discard_deck()	
+	}
 	return []
 }
 
@@ -220,6 +256,8 @@ function create_card_selection(allowed_cards) {
 	show_enemy_sprites()
 	selected_cards = []
 	num_cards_selected = 0
+	if(!layer_exists(highlighed_cards_layer))
+		highlighed_cards_layer = layer_create(depth - 100, "highlighed_cards_layer")
 	
 	var numCards = array_length(allowed_cards)
 	if(num_cards_to_select > numCards) {
@@ -239,21 +277,44 @@ function create_card_selection(allowed_cards) {
 	create_back_and_cancel_buttons(highlighed_cards_layer)
 }
 
+/// @desc										Creates a screen that allows the player to select cards
+///													from a deck view
+/// @param {Array<Id.Instance>} allowed_cards	The cards that the player can select from
+function create_deck_card_selection(allowed_cards) {
+	if(!layer_exists(highlighed_cards_layer))
+		highlighed_cards_layer = layer_create(depth - 100, "highlighed_cards_layer")
+	var back_function = find_back_button_function(selection_target_index) ??
+							method(self, cancel_target_selection)
+	instance_create_layer(x, y, highlighed_cards_layer, ui_card_grid_display, {
+		cards_to_display : allowed_cards,
+		cards_are_selectable : true,
+		on_deck_view_closed : back_function,
+		on_deck_view_closed_args : []
+	})
+}
+
 /// @desc									Handles when a card is selected for the card action by
 ///												tracking how many cards have been selected before
 ///												allowing the enemy target to be selected
 /// @param {Id.Instance} card_instance		The card selected for the card action
 function card_selected(card_instance) {
-	if(!struct_exists(selectable_to_hand_card_struct, card_instance)) {
-		layer_destroy_instances(highlighed_cards_layer)
+	if(card_selection_type == card_select_target_card.in_hand || 
+	card_selection_type == card_select_target_card.num_chara_selected) {
+		if(!struct_exists(selectable_to_hand_card_struct, card_instance)) {
+			find_and_delete_related_layers(highlighed_cards_layer)
+		}
+		card_instance = selectable_to_hand_card_struct[$ card_instance]
 	}
-	else if (!array_contains(selected_cards, selectable_to_hand_card_struct[$ card_instance])) {
+	if (!array_contains(selected_cards, card_instance)) {
 		num_cards_selected++
-		array_push(selected_cards, selectable_to_hand_card_struct[$ card_instance])
+		if(card_selection_type == card_select_target_card.discard_deck)
+			array_push(selected_cards, card_instance.object_index)
+		else
+			array_push(selected_cards, card_instance)
 	}
 	
 	if(num_cards_selected >= num_cards_to_select || num_cards_to_select == 0) {
-		layer_destroy_instances(highlighed_cards_layer)
+		find_and_delete_related_layers(highlighed_cards_layer)
 		selection_target_index++
 		find_target_selection_function(selection_target_index)
 	}
@@ -310,6 +371,8 @@ function all_enemies_selected() {
 ///												by the played attack
 function create_defender_selection() {
 	var all_allowed_enemies = find_allowed_enemies()
+	if(!layer_exists(highlighed_enemies_layer))
+		highlighed_enemies_layer = layer_create(depth - 100, "highlighed_enemies_layer")
 
 	for(var enemy_index = 0; enemy_index < array_length(all_allowed_enemies); enemy_index++) {
 		var sprite = all_allowed_enemies[enemy_index].sprite_index
@@ -407,7 +470,8 @@ function find_back_button_function(selection_step_to_check){
 	}
 	else if(target_selection_order[selection_step_to_check] == selection_target.card &&
 			(card_selection_type == card_select_target_card.in_hand ||
-			card_selection_type == card_select_target_card.num_chara_selected)) {
+			card_selection_type == card_select_target_card.num_chara_selected ||
+			card_selection_type == card_select_target_card.discard_deck)) {
 		return method(self, select_target_card)
 	}
 	else if (target_selection_order[selection_step_to_check] == selection_target.enemy &&
@@ -458,7 +522,16 @@ function cancel_target_selection() {
 	if(card_played != noone) {
 		card_played.reset_card()
 	}
-		
+	
+	if(layer_exists(highlighed_chara_layer)) {
+		find_and_delete_related_layers(highlighed_chara_layer)	
+	}
+	if(layer_exists(highlighed_cards_layer)) {
+		find_and_delete_related_layers(highlighed_cards_layer)	
+	}
+	if(layer_exists(highlighed_enemies_layer)) {
+		find_and_delete_related_layers(highlighed_enemies_layer)	
+	}
 	find_and_delete_related_layers(layer)
 }
 

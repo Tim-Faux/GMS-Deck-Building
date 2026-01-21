@@ -55,6 +55,7 @@
         "card_select_target_card.played_card",
         "card_select_target_card.num_chara_selected",
         "card_select_target_card.top_of_deck",
+        "card_select_target_card.discard_deck",
       ],"multiselect":false,"name":"card_selection_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"card_select_target_card.none","varType":6,},
     {"$GMObjectProperty":"v2","%Name":"allowed_classes","filters":[],"listItems":[
         "chara_class.all_chara",

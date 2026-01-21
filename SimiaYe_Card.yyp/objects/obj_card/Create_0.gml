@@ -20,6 +20,9 @@ card_can_be_moved = array_all(interaction_type,
 //Be sure to check the Variable Definitions, there are many variables to manipulate there
 card_description = "This is example text of the card's description"
 
+// This is the default ordering for target selection, but it can be changed if a card has a reason for it
+target_selection_order = [selection_target.character, selection_target.card, selection_target.enemy]
+
 /// @description									The unique action of the card when it is played
 /// @param {struct_card_action} card_action_struct	The struct that contains all card actions
 card_action = function (card_action_struct) {
@@ -126,7 +129,8 @@ function play_card() {
 			defender_selection_type,
 			allowed_classes,
 			num_cards_to_select,
-			card_played : id
+			card_played : id,
+			target_selection_order
 		})
 	}
 }

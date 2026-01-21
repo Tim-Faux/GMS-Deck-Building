@@ -142,20 +142,70 @@ function struct_card_action(_selected_chara, _selected_cards, _selected_enemies,
 		}	
 	}
 	
-	/// @description								Removes all selected cards from the player's hand and
-	///													puts them in the discard pile
-	static discard_selected_cards = function () {
+	/// @description								Loops through the selected cards and finds their
+	///													summed energy cost
+	/// @returns {Real}								All selected_cards energy cost summed together
+	static get_selected_cards_energy = function () {
+		var energy_of_all_selected_cards = 0
+		
+		var temp_card_instance_layer = layer_create(0, "temp_card_instance_layer")
 		for (var card_index = 0; card_index < array_length(selected_cards); card_index++) {
-			selected_cards[card_index].discard_card()
+			if(object_exists(selected_cards[card_index])) {
+				var temp_card_instance = instance_create_layer(0, 0, temp_card_instance_layer, selected_cards[card_index])
+				energy_of_all_selected_cards += temp_card_instance.energy_cost
+			}
+			else {
+				energy_of_all_selected_cards += selected_cards[card_index].energy_cost	
+			}
+		}
+		layer_destroy(temp_card_instance_layer)
+		return energy_of_all_selected_cards
+	}
+	
+	/// @description								Adds all selected to the discard pile. NOTE: These
+	///													cards must also be removed from their current
+	///													deck, or they will be duplicated
+	static discard_selected_cards = function () {
+		var temp_card_instance_layer = layer_create(0, "temp_card_instance_layer")
+		for (var card_index = 0; card_index < array_length(selected_cards); card_index++) {
+			if(object_exists(selected_cards[card_index])) {
+				var temp_card_instance = instance_create_layer(0, 0, temp_card_instance_layer, selected_cards[card_index])
+				temp_card_instance.discard_card()
+			}
+			else {
+				selected_cards[card_index].discard_card()
+			}
+		}
+		layer_destroy(temp_card_instance_layer)
+	}
+	
+	/// @description								Removes the selected cards from the discard pile.
+	///													NOTE: If these cards are not added to another
+	///													deck they will cease to exist in the current deck
+	static remove_cards_from_discard_pile = function() {
+		for (var card_index = 0; card_index < array_length(selected_cards); card_index++) {
+			if(object_exists(selected_cards[card_index]))
+				remove_card_from_player_discard_deck(selected_cards[card_index])
+			else 
+				remove_card_from_player_discard_deck(selected_cards[card_index].object_index)
 		}
 	}
 	
-	/// @description								Removes all selected cards from the player's hand and
-	///													puts them in the exhaust pile
-	static exhaust_selected_cards = function () {
+	/// @description								Adds all selected to the exhaust pile. NOTE: These
+	///													cards must also be removed from their current
+	///													deck, or they will be duplicated
+	static exhaust_selected_cards = function() {
+		var temp_card_instance_layer = layer_create(0, "temp_card_instance_layer")
 		for (var card_index = 0; card_index < array_length(selected_cards); card_index++) {
-			selected_cards[card_index].exhaust_card()
+			if(object_exists(selected_cards[card_index])) {
+				var temp_card_instance = instance_create_layer(0, 0, temp_card_instance_layer, selected_cards[card_index])
+				temp_card_instance.exhaust_card()
+			}
+			else {
+				selected_cards[card_index].exhaust_card()
+			}
 		}
+		layer_destroy(temp_card_instance_layer)
 	}
 	
 	/// @description								Draws cards from the player's deck one at a time and

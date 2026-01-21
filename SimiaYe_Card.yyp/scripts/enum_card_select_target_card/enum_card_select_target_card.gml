@@ -4,5 +4,6 @@ enum card_select_target_card {
 	whole_hand,
 	played_card,
 	num_chara_selected,
-	top_of_deck
+	top_of_deck,
+	discard_deck
 }

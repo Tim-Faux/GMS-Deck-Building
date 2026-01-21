@@ -4,5 +4,8 @@
 if(button_clicked && is_top_layer(layer)) {
 	button_clicked = false
 	global.object_being_clicked = false
+	
+	if(on_layer_closed != undefined && is_method(on_layer_closed))
+		method_call(on_layer_closed, on_layer_closed_args)	
 	find_and_delete_related_layers(layer)
 }

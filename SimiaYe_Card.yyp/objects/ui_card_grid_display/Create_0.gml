@@ -22,12 +22,12 @@ function create_card_display_header(layer_id) {
 						header_sprite_scale)
 	instance_create_layer(header_x_pos, header_y_pos, layer_id, ui_player_deck_header_background, {
 		image_xscale : header_sprite_scale,
-		image_yscale : header_sprite_scale
+		image_yscale : header_sprite_scale,
+		on_deck_view_closed,
+		on_deck_view_closed_args
 	})
 }
 
-
-//TODO need to make this more genaric for any card array
 /// @desc									Displays all of the players cards in their current deck in a grid
 function create_card_grid_view() {
 	if(array_length(cards_to_display) > 0) {
@@ -56,7 +56,9 @@ function create_card_grid_view() {
 
 			var display_card = instance_create_layer(card_x_pos, card_y_pos, card_display_instance_id, cards_to_display[card_index], {
 				flexpanels,
-				interaction_type : [card_interaction_type.display_card, card_interaction_type.expandable_card]
+				interaction_type : [card_interaction_type.display_card,
+									cards_are_selectable ? card_interaction_type.selectable_card :
+															card_interaction_type.expandable_card]
 			})
 			display_cards[card_index] = display_card
 		}
