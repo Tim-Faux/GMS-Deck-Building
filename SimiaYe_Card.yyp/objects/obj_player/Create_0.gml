@@ -84,8 +84,7 @@ function get_attack(damage_multiplier) {
 		
 	var hitstrct = {
 	damage : (10 + strength) * damage_multiplier,
-	debuffs : [[card_debuff_effects.Poison, 3 * damage_multiplier],
-				[card_debuff_effects.Burn,  5 * damage_multiplier]]
+	debuffs : [[card_debuff_effects.Poison, 3 * damage_multiplier]]
 	}
 	return hitstrct
 }

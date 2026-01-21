@@ -16,14 +16,6 @@ function get_debuff_damage(debuffs, debuff_name) {
 		case card_debuff_effects.Poison:
 			return [debuffs[$ debuff_name], c_purple]
 			
-		case card_debuff_effects.Burn:
-			debuffs[$ debuff_name] -= 1
-			if(debuffs[$ debuff_name] < 1) {
-				struct_remove(debuffs, debuff_name)
-				return []
-			}
-			return [debuffs[$ debuff_name], c_red]
-			
 		case card_debuff_effects.Weakness:
 			return [debuffs[$ debuff_name], c_dkgrey]
 			
@@ -34,6 +26,14 @@ function get_debuff_damage(debuffs, debuff_name) {
 				return []
 			}
 			return [debuffs[$ debuff_name], c_green]
+			
+		case card_debuff_effects.Wound:
+			debuffs[$ debuff_name] -= 1
+			if(debuffs[$ debuff_name] < 1) {
+				struct_remove(debuffs, debuff_name)
+				return []
+			}
+			return [debuffs[$ debuff_name] + 1, c_red]
 			
 		default:
 			return [debuffs[$ debuff_name], c_orange]
@@ -53,17 +53,16 @@ function apply_debuff(debuffs, debuff_name, debuff_amount) {
 			debuff_color = c_purple
 			break
 			
-		case card_debuff_effects.Burn:
-			debuff_amount--
-			debuff_color = c_red
-			break
-			
 		case card_debuff_effects.Weakness:
 			debuff_color = c_dkgrey
 			break
 			
 		case card_debuff_effects.Mark:
 			debuff_color = c_green
+			break
+			
+		case card_debuff_effects.Wound:
+			debuff_color = c_red
 			break
 	}
 	
