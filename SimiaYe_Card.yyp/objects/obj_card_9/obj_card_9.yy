@@ -12,10 +12,11 @@
     {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"defender_selection_type","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"card_attack_target.no_enemies",},
     {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"card_type","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"card_type.ability",},
     {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"card_selection_type","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"card_select_target_card.none",},
+    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"allowed_classes","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"chara_class.science",},
   ],
   "parent":{
-    "name":"Basic Cards",
-    "path":"folders/Objects/Card/Basic Cards.yy",
+    "name":"Science Cards",
+    "path":"folders/Objects/Card/Science Cards.yy",
   },
   "parentObjectId":{
     "name":"obj_card",
