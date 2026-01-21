@@ -1,19 +1,20 @@
 {
   "$GMObject":"",
-  "%Name":"obj_card_20",
+  "%Name":"obj_card_19",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_card_20",
+  "name":"obj_card_19",
   "overriddenProperties":[
     {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"energy_cost","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"0",},
-    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"card_type","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"card_type.none",},
+    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"attacker_selection_type","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"card_selection_target.random_chara",},
+    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"defender_selection_type","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"card_attack_target.single_enemy",},
+    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"card_type","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"card_type.attack",},
     {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"allowed_classes","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"chara_class.science",},
+    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"card_selection_type","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"card_select_target_card.none",},
+    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"num_chara_to_select","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"1",},
     {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"card_is_discarded_when_played","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"False",},
-    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"attacker_selection_type","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"card_selection_target.no_chara",},
-    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"defender_selection_type","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"card_attack_target.no_enemies",},
-    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},"propertyId":{"name":"card_is_exhausted_when_played","path":"objects/obj_card/obj_card.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"True",},
   ],
   "parent":{
     "name":"Science Cards",

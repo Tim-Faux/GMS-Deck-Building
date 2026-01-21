@@ -2,9 +2,10 @@
 #macro SELECTABLE_CHARA_CANCEL_BUTTON_PADDING 10
 #macro NUMBER_OF_TARGETS_TEXT_PADDING 25
 
-highlighed_chara_layer = layer_create(depth - 100, "highlighed_chara_layer")
-highlighed_cards_layer = layer_create(depth - 100, "highlighed_cards_layer")
-highlighed_enemies_layer = layer_create(depth - 100, "highlighed_enemies_layer")
+var top_layer_depth = layer_get_depth(find_top_layer())
+highlighed_chara_layer = layer_create(top_layer_depth - 100, "highlighed_chara_layer")
+highlighed_cards_layer = layer_create(top_layer_depth - 100, "highlighed_cards_layer")
+highlighed_enemies_layer = layer_create(top_layer_depth - 100, "highlighed_enemies_layer")
 selectable_to_hand_card_struct = {}
 selected_chara = []
 selected_cards = []
@@ -121,8 +122,10 @@ function find_allowed_attackers(allowed_class = [chara_class.all_chara]) {
 /// @param {Array<Real>} allowed_chara_classes		The classes allowed to attack, defaulting to all_chara
 function create_attacker_selection(allowed_chara_classes = [chara_class.all_chara]) {
 	var all_allowed_attackers = find_allowed_attackers(allowed_chara_classes)
-	if(!layer_exists(highlighed_chara_layer))
-		highlighed_chara_layer = layer_create(depth - 100, "highlighed_chara_layer")
+	if(!layer_exists(highlighed_chara_layer)) {
+		var top_layer_depth = layer_get_depth(find_top_layer([highlighed_cards_layer, highlighed_enemies_layer]))
+		highlighed_chara_layer = layer_create(top_layer_depth - 100, "highlighed_chara_layer")
+	}
 
 	for(var chara_index = 0; chara_index < array_length(all_allowed_attackers); chara_index++) {
 		var sprite = all_allowed_attackers[chara_index].sprite_index
@@ -256,8 +259,10 @@ function create_card_selection(allowed_cards) {
 	show_enemy_sprites()
 	selected_cards = []
 	num_cards_selected = 0
-	if(!layer_exists(highlighed_cards_layer))
-		highlighed_cards_layer = layer_create(depth - 100, "highlighed_cards_layer")
+	if(!layer_exists(highlighed_cards_layer)) {
+		var top_layer_depth = layer_get_depth(find_top_layer([highlighed_chara_layer, highlighed_enemies_layer]))
+		highlighed_cards_layer = layer_create(top_layer_depth - 100, "highlighed_cards_layer")
+	}
 	
 	var numCards = array_length(allowed_cards)
 	if(num_cards_to_select > numCards) {
@@ -281,8 +286,10 @@ function create_card_selection(allowed_cards) {
 ///													from a deck view
 /// @param {Array<Id.Instance>} allowed_cards	The cards that the player can select from
 function create_deck_card_selection(allowed_cards) {
-	if(!layer_exists(highlighed_cards_layer))
-		highlighed_cards_layer = layer_create(depth - 100, "highlighed_cards_layer")
+	if(!layer_exists(highlighed_cards_layer)) {
+		var top_layer_depth = layer_get_depth(find_top_layer([highlighed_chara_layer, highlighed_enemies_layer]))
+		highlighed_cards_layer = layer_create(top_layer_depth - 100, "highlighed_cards_layer")
+	}
 	var back_function = find_back_button_function(selection_target_index) ??
 							method(self, cancel_target_selection)
 	instance_create_layer(x, y, highlighed_cards_layer, ui_card_grid_display, {
@@ -371,8 +378,10 @@ function all_enemies_selected() {
 ///												by the played attack
 function create_defender_selection() {
 	var all_allowed_enemies = find_allowed_enemies()
-	if(!layer_exists(highlighed_enemies_layer))
-		highlighed_enemies_layer = layer_create(depth - 100, "highlighed_enemies_layer")
+	if(!layer_exists(highlighed_enemies_layer)) {
+		var top_layer_depth = layer_get_depth(find_top_layer([highlighed_chara_layer, highlighed_cards_layer]))
+		highlighed_enemies_layer = layer_create(top_layer_depth - 100, "highlighed_enemies_layer")
+	}
 
 	for(var enemy_index = 0; enemy_index < array_length(all_allowed_enemies); enemy_index++) {
 		var sprite = all_allowed_enemies[enemy_index].sprite_index

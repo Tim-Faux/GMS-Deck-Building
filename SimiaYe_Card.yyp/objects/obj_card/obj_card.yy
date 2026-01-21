@@ -68,6 +68,7 @@
         "card_type.none",
       ],"multiselect":false,"name":"card_type","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"card_type.none","varType":6,},
     {"$GMObjectProperty":"v2","%Name":"card_is_discarded_when_played","filters":[],"listItems":[],"multiselect":false,"name":"card_is_discarded_when_played","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"true","varType":3,},
+    {"$GMObjectProperty":"v2","%Name":"card_is_exhausted_when_played","filters":[],"listItems":[],"multiselect":false,"name":"card_is_exhausted_when_played","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"False","varType":3,},
     {"$GMObjectProperty":"v2","%Name":"not_enough_energy_error_font","filters":[
         "GMFont",
       ],"listItems":[],"multiselect":false,"name":"not_enough_energy_error_font","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resource":{"name":"fnt_button_font","path":"fonts/fnt_button_font/fnt_button_font.yy",},"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"fnt_button_font","varType":5,},

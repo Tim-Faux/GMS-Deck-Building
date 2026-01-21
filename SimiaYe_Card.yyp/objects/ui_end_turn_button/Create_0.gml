@@ -3,8 +3,25 @@ event_inherited();
 
 button_can_be_pressed = true
 
-/// @desc			Controls the end of a players turn, filling the player's hand with cards
-function end_player_turn() {
+/// @desc								Starts the end turn process by looping through all the cards
+///											and running their player_turn_end_action
+/// @param {Real} card_index			The index of the card in the player's hand to run the 
+///											player_turn_end_action for. NOTE: This must be incremented
+///											and function run again as this is acting as a loop
+function end_player_turn(card_index = 0) {
+	if(instance_exists(ui_player_hand) && ui_player_hand.is_hand_visible) {
+		var players_current_hand = ui_player_hand.get_player_current_hand()
+		if(array_length(players_current_hand) > card_index) {
+			players_current_hand[card_index].player_turn_end_action(end_player_turn, [++card_index])
+		}
+		else {
+			discard_player_hand()
+		}
+	}
+}
+
+/// @desc								Discards all of the cards in the player's hand
+function discard_player_hand() {
 	if(instance_exists(ui_player_hand) && ui_player_hand.is_hand_visible) {
 		ui_player_hand.empty_player_hand(trigger_player_end_of_turn_effects)
 	}

@@ -61,6 +61,17 @@ card_exhaust_action = function (on_card_exhaust, on_card_exhaust_args) {
 chara_selected_action = function (selected_chara) {
 // Only implement this function if a card has an on chara select effect
 }
+
+/// @description									The action of the card when the player ends their turn
+/// @param {Function} on_end_turn_action			The call back function for after the end turn 
+///														action completes
+/// @param {Array} on_end_turn_action_args			The argurments for the on_end_turn_action function
+player_turn_end_action = function (on_end_turn_action, on_end_turn_action_args) {
+	// Only implement this function if a card has an on end turn effect
+	// NOTE: The following lines must be implemented to allow the player's turn to end
+	if(on_end_turn_action != undefined && is_method(on_end_turn_action))
+		method_call(on_end_turn_action, on_end_turn_action_args)
+}
 #endregion
 
 /// @description							Checks to see if no other cards are selected then allows this
@@ -106,20 +117,8 @@ function play_card() {
 		reset_card()
 	}
 	else {
-		var target_selection_layer = layer
-		if(instance_number(obj_target_selection_handler) > 0) {
-			var selection_layer_depth = depth
-			for(var target_selection_index = 0; target_selection_index < instance_number(obj_target_selection_handler); target_selection_index++) {
-				var target_selection_handler = instance_find(obj_target_selection_handler, target_selection_index)
-				if (target_selection_handler.depth < selection_layer_depth) {
-					selection_layer_depth = target_selection_handler.depth
-				}
-			}
-			target_selection_layer = layer_create(selection_layer_depth - 100)
-		}
-		else {
-			target_selection_layer = layer_create(depth - 100)
-		}
+		var top_layer_depth = layer_get_depth(find_top_layer())
+		var target_selection_layer = layer_create(top_layer_depth - 100)
 		
 		instance_create_layer(x, y, target_selection_layer, obj_target_selection_handler, 
 		{
@@ -157,9 +156,12 @@ function show_not_enough_energy_error() {
 function card_has_been_played(selected_chara, selected_cards, enemy_instance) {
 	ui_player_energy.remove_from_player_current_energy(energy_cost)
 	
-	var on_card_action_complete = method(self, exhaust_card)
+	var on_card_action_complete = undefined
 	if(card_is_discarded_when_played) {
 		on_card_action_complete = method(self, discard_card)
+	}
+	else if(card_is_exhausted_when_played) {
+		on_card_action_complete = method(self, exhaust_card)
 	}
 	var card_action_struct = new struct_card_action(selected_chara, selected_cards, enemy_instance, on_card_action_complete)
 	card_action(card_action_struct)
