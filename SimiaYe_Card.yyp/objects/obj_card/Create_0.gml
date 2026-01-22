@@ -23,6 +23,16 @@ card_description = "This is example text of the card's description"
 // This is the default ordering for target selection, but it can be changed if a card has a reason for it
 target_selection_order = [selection_target.character, selection_target.card, selection_target.enemy]
 
+/// @description									The function run when this card is selected
+///														to be played.
+card_selected_action = function () {
+	// Only implement this function if a card has an on selection effect
+	// NOTE: If this function has a custom implementation it is likely that
+	//		cancel_button_allowed will need to be false
+	// NOTE: The following line must be implemented to allow the card to be played
+	create_target_selection_handler()
+}
+
 /// @description									The unique action of the card when it is played
 /// @param {struct_card_action} card_action_struct	The struct that contains all card actions
 card_action = function (card_action_struct) {
@@ -117,23 +127,28 @@ function play_card() {
 		reset_card()
 	}
 	else {
-		var top_layer_depth = layer_get_depth(find_top_layer())
-		var target_selection_layer = layer_create(top_layer_depth - 100)
-		
-		instance_create_layer(x, y, target_selection_layer, obj_target_selection_handler, 
-		{
-			num_chara_to_select,
-			attacker_selection_type,
-			card_selection_type,
-			defender_selection_type,
-			allowed_classes,
-			num_cards_to_select,
-			card_played : id,
-			target_selection_order,
-			allowed_back_button_stages,
-			cancel_button_allowed
-		})
+		card_selected_action()
 	}
+}
+
+/// @description							Creates the target selection handler on a new layer above
+///												the current highest layer
+function create_target_selection_handler() {
+	var top_layer_depth = layer_get_depth(find_top_layer())
+	var target_selection_layer = layer_create(top_layer_depth - 100)
+	instance_create_layer(x, y, target_selection_layer, obj_target_selection_handler, 
+	{
+		num_chara_to_select,
+		attacker_selection_type,
+		card_selection_type,
+		defender_selection_type,
+		allowed_classes,
+		num_cards_to_select,
+		card_played : id,
+		target_selection_order,
+		allowed_back_button_stages,
+		cancel_button_allowed
+	})
 }
 
 /// @description							Shows the error prompt for when a card is attempted to be
