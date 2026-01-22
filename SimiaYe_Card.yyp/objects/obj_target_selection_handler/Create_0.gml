@@ -442,27 +442,31 @@ function show_enemy_sprites(sprites_to_show = []) {
 ///												land. Then creates the back and cancel buttons
 /// @param {String, Id.Layer} layer_id		The target selection layer to put the buttons on
 function create_back_and_cancel_buttons(layer_id) {
-	var back_button_needed = false
+	var back_button_needed = array_length(allowed_back_button_stages) > 0
 	var back_button_function = undefined
 	
-	for(var selection_step_to_check = array_length(target_selection_order) - 1; selection_step_to_check >= 0; selection_step_to_check--) {
-		var found_back_button_function = find_back_button_function(selection_step_to_check)
+	if(back_button_needed) {
+		back_button_needed = false
+		for(var selection_step_to_check = array_length(target_selection_order) - 1; selection_step_to_check >= 0; selection_step_to_check--) {
+			var found_back_button_function = find_back_button_function(selection_step_to_check)
 		
-		if(found_back_button_function != undefined){
-			if(selection_step_to_check > selection_target_index) {
-				back_button_needed = true
-			}
-			else if(selection_step_to_check < selection_target_index) {
-				back_button_needed = true
-				back_button_function = found_back_button_function
-				break
+			if(found_back_button_function != undefined){
+				if(selection_step_to_check > selection_target_index) {
+					back_button_needed = true
+				}
+				else if(selection_step_to_check < selection_target_index) {
+					back_button_needed = true
+					back_button_function = found_back_button_function
+					break
+				}
 			}
 		}
 	}
 
 	if(back_button_needed)
-		create_back_button(layer_id, back_button_function)
-	create_cancel_button(layer_id, back_button_needed)
+		create_back_button(layer_id, back_button_function, cancel_button_allowed)
+	if(cancel_button_allowed)
+		create_cancel_button(layer_id, back_button_needed)
 }
 
 /// @desc									Finds what call back function should be used for the back
@@ -472,18 +476,21 @@ function create_back_and_cancel_buttons(layer_id) {
 /// @returns {function}						The method to be run when the back button is pressed or
 ///												undefined if the player doesnt select during that step
 function find_back_button_function(selection_step_to_check){
-	if(target_selection_order[selection_step_to_check] == selection_target.character && 
+	if(target_selection_order[selection_step_to_check] == selection_target.character &&
+		array_contains(allowed_back_button_stages, selection_target.character) &&
 		(attacker_selection_type == card_selection_target.any_class ||
 		attacker_selection_type == card_selection_target.selected_class)) {
 		return method(self, select_target_attacker)
 	}
 	else if(target_selection_order[selection_step_to_check] == selection_target.card &&
+			array_contains(allowed_back_button_stages, selection_target.card) &&
 			(card_selection_type == card_select_target_card.in_hand ||
 			card_selection_type == card_select_target_card.num_chara_selected ||
 			card_selection_type == card_select_target_card.discard_deck)) {
 		return method(self, select_target_card)
 	}
 	else if (target_selection_order[selection_step_to_check] == selection_target.enemy &&
+			array_contains(allowed_back_button_stages, selection_target.enemy) &&
 			(defender_selection_type == card_attack_target.single_enemy)) {
 		return method(self, select_target_enemy)
 	}
@@ -495,10 +502,12 @@ function find_back_button_function(selection_step_to_check){
 /// @desc								Determines the position and return method of the target selection's 
 ///											back button and creates the button in the given layer
 /// @param {String, Id.Layer} layer_id	The target selection layer to put the back button on
-function create_back_button(layer_id, back_function) {
+function create_back_button(layer_id, back_function, has_cancel_button) {
 	var back_button_x = SELECTABLE_CHARA_BACK_BUTTON_PADDING + (sprite_get_width(object_get_sprite(ui_selectable_chara_back_button)) / 2)
-	var back_button_y = display_get_gui_height() / 2 - SELECTABLE_CHARA_BACK_BUTTON_PADDING -
-							(sprite_get_height(object_get_sprite(ui_selectable_chara_back_button)) / 2)
+	var back_button_y = (display_get_gui_height() - sprite_get_height(
+							object_get_sprite(ui_selectable_chara_back_button))) / 2
+	if(has_cancel_button)
+		back_button_y -= SELECTABLE_CHARA_BACK_BUTTON_PADDING 
 	
 	instance_create_layer(back_button_x, back_button_y, layer_id, ui_selectable_chara_back_button, {
 		back_return_fuction : back_function

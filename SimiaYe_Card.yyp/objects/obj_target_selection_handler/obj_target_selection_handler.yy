@@ -45,6 +45,8 @@
         "selection_target.card",
         "selection_target.enemy",
       ],"multiselect":true,"name":"target_selection_order","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"selection_target.character, selection_target.card, selection_target.enemy","varType":6,},
+    {"$GMObjectProperty":"v2","%Name":"allowed_back_button_stages","filters":[],"listItems":[],"multiselect":true,"name":"allowed_back_button_stages","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"","varType":6,},
+    {"$GMObjectProperty":"v2","%Name":"cancel_button_allowed","filters":[],"listItems":[],"multiselect":false,"name":"cancel_button_allowed","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"true","varType":3,},
   ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",

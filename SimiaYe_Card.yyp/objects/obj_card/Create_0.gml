@@ -129,7 +129,9 @@ function play_card() {
 			allowed_classes,
 			num_cards_to_select,
 			card_played : id,
-			target_selection_order
+			target_selection_order,
+			allowed_back_button_stages,
+			cancel_button_allowed
 		})
 	}
 }
