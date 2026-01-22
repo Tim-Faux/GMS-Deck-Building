@@ -15,9 +15,11 @@ function get_player_current_energy() {
 /// @desc							Removes a given amount of energy from the player's current energy
 /// @param {Real} num_energy		The amount of energy to remove from player's current energy supply
 function remove_from_player_current_energy(num_energy) {
-	player_current_energy -= num_energy
-	if(player_current_energy < 0) {
-		player_current_energy = 0
+	if(num_energy >= 0) {
+		player_current_energy -= num_energy
+		if(player_current_energy < 0) {
+			player_current_energy = 0
+		}
 	}
 }
 

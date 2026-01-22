@@ -1,4 +1,5 @@
 #macro NOT_ENOUGH_ENERGY_TO_PLAY_THIS_CARD "Not enough energy to play this card!"
+#macro THIS_CARD_CAN_NOT_BE_PLAYED "This card can not be played!"
 #macro PADDING_BETWEEN_CARD_DESCRIPTION_LINES 2
 #macro CARD_SELECTION_CONFIRMATION_MOVEMENT 30
 
@@ -7,7 +8,7 @@ flexpanels = create_card_flexpanels(sprite_width, sprite_height)
 card_selected = false
 card_start_x_position = x
 card_start_y_position = y
-show_energy_error = false
+error_text = ""
 is_selected = false
 card_played = false
 card_can_be_moved = array_all(interaction_type,
@@ -121,14 +122,19 @@ function exhaust_card(on_card_exhaust = undefined, on_card_exhaust_args = []) {
 /// @description							Handles the card being played. Allowing the player to
 ///												select the attacker and defender of the card
 function play_card() {
-	if (ui_player_energy.get_player_current_energy() < energy_cost) {
-		show_energy_error = true
-		alarm_set(0, 4 * 60)
-		reset_card()
+	if (energy_cost >= 0 && ui_player_energy.get_player_current_energy() < energy_cost) {
+		queue_error_message(NOT_ENOUGH_ENERGY_TO_PLAY_THIS_CARD)
 	}
 	else {
 		card_selected_action()
 	}
+}
+
+function queue_error_message(error_message) {
+	obj_card.error_text = ""
+	error_text = error_message
+	alarm_set(0, 4 * 60)
+	reset_card()
 }
 
 /// @description							Creates the target selection handler on a new layer above
@@ -155,14 +161,14 @@ function create_target_selection_handler() {
 ///												played, but the player does not have enough energy
 ///												NOTE: This can only be called in the draw function
 ///												otherwise it will not work
-function show_not_enough_energy_error() {
+function show_error_message() {
 	draw_set_colour(not_enough_energy_error_color)
 	draw_set_alpha(1)
 	draw_set_halign(fa_center)
 	draw_set_font(not_enough_energy_error_font)
 	var text_x_pos = display_get_gui_width() / 2
 	var text_y_pos = display_get_gui_height() / 3
-	draw_text(text_x_pos, text_y_pos, NOT_ENOUGH_ENERGY_TO_PLAY_THIS_CARD)
+	draw_text(text_x_pos, text_y_pos, error_text)
 }
 
 /// @description								The callback function for obj_target_selection_handler,

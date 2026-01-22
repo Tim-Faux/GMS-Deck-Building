@@ -1,1 +1,1 @@
-show_energy_error = false
+error_text = ""

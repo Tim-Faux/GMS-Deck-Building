@@ -19,7 +19,6 @@
   "height":256,
   "HTile":false,
   "layers":[
-    {"$GMImageLayer":"","%Name":"953d9633-047f-417b-ace1-0af3c8550085","blendMode":0,"displayName":"Energy circle","isLocked":false,"name":"953d9633-047f-417b-ace1-0af3c8550085","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
     {"$GMImageLayer":"","%Name":"8d724a4d-e247-4099-be6d-aa2cbcac4e0e","blendMode":0,"displayName":"Inside border","isLocked":false,"name":"8d724a4d-e247-4099-be6d-aa2cbcac4e0e","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
     {"$GMImageLayer":"","%Name":"b3bd4988-73ec-4010-85be-0df22a247f9f","blendMode":0,"displayName":"Outside border","isLocked":false,"name":"b3bd4988-73ec-4010-85be-0df22a247f9f","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},
     {"$GMImageLayer":"","%Name":"1df4917d-0744-47ba-ac0b-005d9d50fbbc","blendMode":0,"displayName":"Background","isLocked":false,"name":"1df4917d-0744-47ba-ac0b-005d9d50fbbc","opacity":100.0,"resourceType":"GMImageLayer","resourceVersion":"2.0","visible":true,},

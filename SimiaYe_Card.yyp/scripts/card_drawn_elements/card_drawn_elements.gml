@@ -1,6 +1,7 @@
 #macro CARD_ENERGY_COST_FONT				fnt_energy_cost
 #macro CARD_ATTACKER_SELECTION_TYPE_FONT	fnt_attacker_selection_type
 #macro CARD_DESCRIPTION_FONT				fnt_card_description
+#macro ENERGY_CIRCLE_COLOR					make_colour_rgb(0, 174, 240)
 
 /// @description										Creates the flexpanels for the card, with nodes for
 ///															outside_border, background, image_box,
@@ -128,18 +129,36 @@ function create_card_flexpanels(spr_width, spr_height, spr_xscale = 1, spr_yscal
 /// @param {Real} energy_cost							The energy cost to be displayed in the top left corner
 /// @param {Pointer.FlexpanelNode} card_flexpanels		The parent node of the card's flex panel
 function draw_energy_cost(energy_cost, card_flexpanels) {
-	draw_set_colour(c_white)
+	if(energy_cost >= 0) {
+		draw_energy_circle(card_flexpanels)
+		
+		draw_set_colour(c_white)
+		draw_set_alpha(1)
+		draw_set_font(CARD_ENERGY_COST_FONT)
+		draw_set_halign(fa_center)
+		draw_set_valign(fa_middle)
+	
+		var energy_circle_panel = flexpanel_node_layout_get_position(flexpanel_node_get_child(card_flexpanels, "energy_circle"), false)
+		var text_x_pos = x + energy_circle_panel.left + (energy_circle_panel.width / 2)
+		var text_y_pos = y + energy_circle_panel.top + ceil(energy_circle_panel.height / 2)
+		var text_size_scale = find_energy_cost_text_scaling(energy_circle_panel)
+	
+		draw_text_transformed(text_x_pos, text_y_pos, energy_cost, text_size_scale, text_size_scale, 0)
+	}
+}
+
+/// @description										Creates a blue circle in the energy_circle panel
+/// 														NOTE: This can only be called in the draw 
+/// 														function otherwise it will not work
+/// @param {Pointer.FlexpanelNode} card_flexpanels		The parent node of the card's flex panel
+function draw_energy_circle(card_flexpanels) {
+	draw_set_colour(ENERGY_CIRCLE_COLOR)
 	draw_set_alpha(1)
-	draw_set_font(CARD_ENERGY_COST_FONT)
-	draw_set_halign(fa_center)
-	draw_set_valign(fa_middle)
-	
 	var energy_circle_panel = flexpanel_node_layout_get_position(flexpanel_node_get_child(card_flexpanels, "energy_circle"), false)
-	var text_x_pos = x + energy_circle_panel.left + (energy_circle_panel.width / 2)
-	var text_y_pos = y + energy_circle_panel.top + ceil(energy_circle_panel.height / 2)
-	var text_size_scale = find_energy_cost_text_scaling(energy_circle_panel)
+	var circle_x_pos = x + energy_circle_panel.left + (energy_circle_panel.width / 2)
+	var circle_y_pos = y + energy_circle_panel.top + ceil(energy_circle_panel.height / 2)
 	
-	draw_text_transformed(text_x_pos, text_y_pos, energy_cost, text_size_scale, text_size_scale, 0);
+	draw_circle(circle_x_pos, circle_y_pos, energy_circle_panel.width / 2, false)
 }
 
 /// @description										Finds the scaling needed for the energy cost text

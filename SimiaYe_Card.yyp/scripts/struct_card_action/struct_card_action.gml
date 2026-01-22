@@ -158,9 +158,10 @@ function struct_card_action(_selected_chara, _selected_cards, _selected_enemies,
 		for (var card_index = 0; card_index < array_length(selected_cards); card_index++) {
 			if(object_exists(selected_cards[card_index])) {
 				var temp_card_instance = instance_create_layer(0, 0, temp_card_instance_layer, selected_cards[card_index])
-				energy_of_all_selected_cards += temp_card_instance.energy_cost
+				if(temp_card_instance.energy_cost >= 0)
+					energy_of_all_selected_cards += temp_card_instance.energy_cost
 			}
-			else {
+			else if(selected_cards[card_index].energy_cost >= 0) {
 				energy_of_all_selected_cards += selected_cards[card_index].energy_cost	
 			}
 		}
