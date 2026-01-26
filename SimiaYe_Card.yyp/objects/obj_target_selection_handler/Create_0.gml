@@ -266,10 +266,14 @@ function create_card_selection(allowed_cards) {
 	
 	var numCards = array_length(allowed_cards)
 	if(num_cards_to_select > numCards) {
-		num_cards_to_select = numCards	
+		if(card_played != noone) {
+			card_played.queue_error_message(NOT_ENOUGH_CARDS_IN_HAND_TO_PLAY)
+		}
+		cancel_target_selection()
+		return
 	}
-	var spacing_between_cards = clamp((display_get_gui_width() / numCards) - allowed_cards[0].sprite_width, 1, 100 / numCards)
-	var total_width_of_card_selection = ((allowed_cards[0].sprite_width + spacing_between_cards) * numCards) + spacing_between_cards
+	var spacing_between_cards = 100 / numCards
+	var total_width_of_card_selection = ((allowed_cards[0].sprite_width + spacing_between_cards) * numCards) - spacing_between_cards
 	var xpos = (display_get_gui_width() - total_width_of_card_selection) / 2
 	var ypos = (display_get_gui_height() - allowed_cards[0].sprite_height) / 2
 	for (var card_index = 0; card_index < numCards; card_index++) {

@@ -1,5 +1,8 @@
 #macro NOT_ENOUGH_ENERGY_TO_PLAY_THIS_CARD "Not enough energy to play this card!"
 #macro THIS_CARD_CAN_NOT_BE_PLAYED "This card can not be played!"
+#macro NOT_ENOUGH_CARDS_IN_DISCARD_DECK_TO_PLAY "Not enough cards in your discard deck to play this card"
+#macro NOT_ENOUGH_CARDS_IN_HAND_TO_PLAY "Not enough cards in your hand to play this card"
+#macro NOT_ENOUGH_CARDS_IN_DECK_TO_PLAY "Not enough cards in your deck to play this card"
 #macro PADDING_BETWEEN_CARD_DESCRIPTION_LINES 2
 #macro CARD_SELECTION_CONFIRMATION_MOVEMENT 30
 
@@ -125,11 +128,17 @@ function play_card() {
 	if (energy_cost >= 0 && ui_player_energy.get_player_current_energy() < energy_cost) {
 		queue_error_message(NOT_ENOUGH_ENERGY_TO_PLAY_THIS_CARD)
 	}
+	else if(card_selection_type == card_select_target_card.discard_deck &&
+			array_length(get_player_discard_deck()) < num_cards_to_select) {
+		queue_error_message(NOT_ENOUGH_CARDS_IN_DISCARD_DECK_TO_PLAY)
+	}
 	else {
 		card_selected_action()
 	}
 }
 
+/// @description							Clears error text and shows the given error message
+/// @param {string} error_message			The error message to be shown to the player
 function queue_error_message(error_message) {
 	obj_card.error_text = ""
 	error_text = error_message
