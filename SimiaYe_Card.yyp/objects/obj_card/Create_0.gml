@@ -29,12 +29,12 @@ target_selection_order = [selection_target.character, selection_target.card, sel
 
 /// @description									The function run when this card is selected
 ///														to be played.
-card_selected_action = function () {
+card_selected_action = function (remove_card_energy) {
 	// Only implement this function if a card has an on selection effect
 	// NOTE: If this function has a custom implementation it is likely that
 	//		cancel_button_allowed will need to be false
 	// NOTE: The following line must be implemented to allow the card to be played
-	create_target_selection_handler()
+	create_target_selection_handler(remove_card_energy)
 }
 
 /// @description									The unique action of the card when it is played
@@ -124,8 +124,8 @@ function exhaust_card(on_card_exhaust = undefined, on_card_exhaust_args = []) {
 
 /// @description							Handles the card being played. Allowing the player to
 ///												select the attacker and defender of the card
-function play_card() {
-	if (energy_cost >= 0 && ui_player_energy.get_player_current_energy() < energy_cost) {
+function play_card(remove_card_energy = true) {
+	if (remove_card_energy && energy_cost >= 0 && ui_player_energy.get_player_current_energy() < energy_cost) {
 		queue_error_message(NOT_ENOUGH_ENERGY_TO_PLAY_THIS_CARD)
 	}
 	else if(card_selection_type == card_select_target_card.discard_deck &&
@@ -133,7 +133,7 @@ function play_card() {
 		queue_error_message(NOT_ENOUGH_CARDS_IN_DISCARD_DECK_TO_PLAY)
 	}
 	else {
-		card_selected_action()
+		card_selected_action(remove_card_energy)
 	}
 }
 
@@ -148,7 +148,7 @@ function queue_error_message(error_message) {
 
 /// @description							Creates the target selection handler on a new layer above
 ///												the current highest layer
-function create_target_selection_handler() {
+function create_target_selection_handler(remove_card_energy) {
 	var top_layer_depth = layer_get_depth(find_top_layer())
 	var target_selection_layer = layer_create(top_layer_depth - 100)
 	instance_create_layer(x, y, target_selection_layer, obj_target_selection_handler, 
@@ -162,7 +162,8 @@ function create_target_selection_handler() {
 		card_played : id,
 		target_selection_order,
 		allowed_back_button_stages,
-		cancel_button_allowed
+		cancel_button_allowed,
+		remove_card_energy
 	})
 }
 
@@ -185,8 +186,10 @@ function show_error_message() {
 /// @param {Array<Id.Instance>} selected_chara	The character(s) selected for the card's action
 /// @param {Array<Id.Instance>} selected_cards	The card(s) selected for the card's action
 /// @param {Id.Instance} enemy_instance			The enemy selected to take damage
-function card_has_been_played(selected_chara, selected_cards, enemy_instance) {
-	ui_player_energy.remove_from_player_current_energy(energy_cost)
+function card_has_been_played(selected_chara, selected_cards, enemy_instance, remove_card_energy = true) {
+	if(remove_card_energy) {
+		ui_player_energy.remove_from_player_current_energy(energy_cost)
+	}
 	
 	var on_card_action_complete = undefined
 	if(card_is_discarded_when_played) {
@@ -194,6 +197,9 @@ function card_has_been_played(selected_chara, selected_cards, enemy_instance) {
 	}
 	else if(card_is_exhausted_when_played) {
 		on_card_action_complete = method(self, exhaust_card)
+	}
+	else {
+		on_card_action_complete = method(self, reset_card)	
 	}
 	var card_action_struct = new struct_card_action(selected_chara, selected_cards, enemy_instance, on_card_action_complete)
 	card_action(card_action_struct)

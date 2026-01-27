@@ -75,6 +75,15 @@ function struct_card_action(_selected_chara, _selected_cards, _selected_enemies,
 		}	
 	}
 	
+	/// @description								Loops through each selected character and damage them
+	///													by the given amount
+	/// @param {Real} dmg_amount					How much each character will be hurt by
+	static damage_selected_charas = function(dmg_amount) {
+		for(var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
+			selected_chara[chara_index].hit_by_enemy(dmg_amount)
+		}
+	}
+	
 	/// @description								Triggers the Gain_Strength_On_Any_Attack effect,
 	///													giving the character strength
 	static activate_on_attack_buffs = function() {

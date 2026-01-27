@@ -358,7 +358,7 @@ function select_target_enemy() {
 	}
 	else if(defender_selection_type == card_attack_target.no_enemies) {
 		if(card_played != noone) {
-			card_played.card_has_been_played(selected_chara, selected_cards, [])
+			card_played.card_has_been_played(selected_chara, selected_cards, [], remove_card_energy)
 		}
 		
 		selection_target_index++
@@ -372,7 +372,7 @@ function all_enemies_selected() {
 	var enemy_instances = find_allowed_enemies()
 	
 	if(card_played != noone) {
-		card_played.card_has_been_played(selected_chara, selected_cards, enemy_instances)
+		card_played.card_has_been_played(selected_chara, selected_cards, enemy_instances, remove_card_energy)
 	}
 	selection_target_index++
 	find_target_selection_function(selection_target_index)
@@ -419,7 +419,7 @@ function enemy_selected(enemy_instance) {
 	if(enemy_instance != noone) {
 		show_enemy_sprites()
 		if(card_played != noone) {
-			card_played.card_has_been_played(selected_chara, selected_cards, [enemy_instance])
+			card_played.card_has_been_played(selected_chara, selected_cards, [enemy_instance], remove_card_energy)
 		}
 		
 		selection_target_index++

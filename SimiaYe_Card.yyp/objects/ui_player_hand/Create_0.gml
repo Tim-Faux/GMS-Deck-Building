@@ -51,9 +51,19 @@ function fill_player_hand() {
 /// @param {Real} card_index			The current cards_in_hand card index
 function empty_player_hand(on_hand_emptied, card_index = array_length(cards_in_hand) - 1) {
 	if(card_index >= 0) {
-		cards_in_hand[card_index].discard_card(
-			method(self, empty_player_hand),
-			[on_hand_emptied, --card_index])
+		if(cards_in_hand[card_index].card_is_discarded_when_turn_end) {
+			cards_in_hand[card_index].discard_card(
+				method(self, empty_player_hand),
+				[on_hand_emptied, --card_index])
+		}
+		else if(cards_in_hand[card_index].card_is_exhausted_when_turn_end) {
+			cards_in_hand[card_index].exhaust_card(
+				method(self, empty_player_hand),
+				[on_hand_emptied, --card_index])
+		}
+		else {
+			empty_player_hand(on_hand_emptied, --card_index)
+		}
 	}
 	else {
 		if(on_hand_emptied != undefined && is_method(on_hand_emptied))
