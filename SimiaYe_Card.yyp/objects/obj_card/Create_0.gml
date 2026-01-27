@@ -19,6 +19,7 @@ card_can_be_moved = array_all(interaction_type,
 							return _val != card_interaction_type.display_card &&
 									_val != card_interaction_type.selectable_card 
 						})
+card_description_scaling = -1
 
 #region THIS NEED TO BE IMPLEMENTED IN EACH CARD
 //Be sure to check the Variable Definitions, there are many variables to manipulate there
@@ -210,6 +211,31 @@ function card_has_been_played(selected_chara, selected_cards, enemy_instance, re
 function reset_card() {
 	x = card_start_x_position
 	y = card_start_y_position
+}
+
+/// @desc												Calculates the scaling needed for the card's
+///															description to remain in the description box
+/// @param {String} card_description					The text to be scaled
+/// @param {Pointer.FlexpanelNode} card_flexpanels		The parent node of the card's flex panel
+/// @returns {Real}										The scaling needed to fit the text. A max of 1 and
+///															minimum of 0.1. NOTE: This should be used for
+///															X and Y scaling
+function find_card_description_scaling(card_description, card_flexpanels) {
+	draw_set_font(CARD_DESCRIPTION_FONT)
+	var description_box_panel = flexpanel_node_layout_get_position(flexpanel_node_get_child(card_flexpanels, "description_box"), false)
+	var line_seperation = string_height(card_description) + PADDING_BETWEEN_CARD_DESCRIPTION_LINES
+	var text_max_width = (description_box_panel.width - description_box_panel.paddingLeft 
+														- description_box_panel.paddingRight)
+	
+	var text_scale = 1
+	var text_height = string_height_ext(card_description, line_seperation, text_max_width / text_scale)
+	if(text_height > description_box_panel.height) {
+		while(text_scale > 0.1 && text_height > description_box_panel.height / text_scale) {
+			text_scale -= 0.1
+			text_height = string_height_ext(card_description, line_seperation, text_max_width / text_scale)
+		}
+	}
+	return text_scale
 }
 
 /// @desc								Creates a display card the size of the screen with this sprite
