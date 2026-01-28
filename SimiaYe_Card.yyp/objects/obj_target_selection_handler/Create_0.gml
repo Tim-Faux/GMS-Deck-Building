@@ -15,6 +15,8 @@ selection_target_index = 0
 
 find_target_selection_function(selection_target_index)
 
+#region Target Selection Handlers
+
 /// @desc										Determines and runs the target selection function at the
 ///													given step index in target_selection_order, or deletes
 ///													the target selection layers if no step could be found
@@ -58,6 +60,33 @@ function find_target_selection_function(step_num) {
 		find_and_delete_related_layers(layer)	
 	}
 }
+
+/// @desc						The call back function for the obj_selectable_chara and obj_card, 
+///									that determines what was being selected and forwards the action
+function target_selected(selected_target) {
+	if (target_selection_order[selection_target_index] == selection_target.character) {
+		chara_selected(selected_target)
+	}
+	else if(target_selection_order[selection_target_index] == selection_target.card) {
+		card_selected(selected_target)
+	}
+	else {
+		enemy_selected(selected_target)
+	}
+}
+
+/// @desc						The call back function for the obj_selectable_chara and obj_card. Handles
+///									deselecting a target, cleaning up any references to their selection
+function target_deselected(selected_target) {
+	if (target_selection_order[selection_target_index] == selection_target.character) {
+		chara_deselected(selected_target)
+	}
+	else if(target_selection_order[selection_target_index] == selection_target.card) {
+		card_deselected(selected_target)
+	}
+}
+
+#endregion
 
 #region Attacker Selection
 
@@ -626,31 +655,3 @@ function draw_number_of_targets_to_select_prompt() {
 	draw_text(text_x_pos, text_y_pos, number_of_targets_to_select_text)
 }
 #endregion
-
-/// @desc						The call back function for the obj_selectable_chara and obj_card, 
-///									that determines what was being selected and forwards the action
-function target_selected(selected_target) {
-	if (target_selection_order[selection_target_index] == selection_target.character) {
-		chara_selected(selected_target)
-	}
-	else if(target_selection_order[selection_target_index] == selection_target.card) {
-		card_selected(selected_target)
-	}
-	else {
-		enemy_selected(selected_target)
-	}
-}
-
-/// @desc						The call back function for the obj_selectable_chara and obj_card. Handles
-///									deselecting a target, cleaning up any references to their selection
-function target_deselected(selected_target) {
-	if (target_selection_order[selection_target_index] == selection_target.character) {
-		chara_deselected(selected_target)
-	}
-	else if(target_selection_order[selection_target_index] == selection_target.card) {
-		card_deselected(selected_target)
-	}
-}
-
-
-

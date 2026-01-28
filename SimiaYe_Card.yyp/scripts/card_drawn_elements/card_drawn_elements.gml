@@ -2,6 +2,8 @@
 #macro CARD_ATTACKER_SELECTION_TYPE_FONT	fnt_attacker_selection_type
 #macro CARD_DESCRIPTION_FONT				fnt_card_description
 #macro ENERGY_CIRCLE_COLOR					make_colour_rgb(0, 174, 240)
+#macro PLAY_CARD_ERROR_FONT					fnt_button_font
+#macro PLAY_CARD_ERROR_COLOR				make_colour_rgb(174, 0, 0)
 
 /// @description										Creates the flexpanels for the card, with nodes for
 ///															outside_border, background, image_box,
@@ -282,4 +284,18 @@ function draw_description(card_description, card_flexpanels, x_scale = 1, y_scal
 														/ x_scale
 														
 	draw_text_ext_transformed(text_x_pos, text_y_pos, card_description, line_seperation, text_max_width, x_scale, y_scale, 0)
+}
+
+/// @description							Shows the error prompt for when a card is attempted to be
+///												played, but the player does not have enough energy
+///												NOTE: This can only be called in the draw function
+///												otherwise it will not work
+function show_error_message(error_text) {
+	draw_set_colour(PLAY_CARD_ERROR_COLOR)
+	draw_set_alpha(1)
+	draw_set_halign(fa_center)
+	draw_set_font(PLAY_CARD_ERROR_FONT)
+	var text_x_pos = display_get_gui_width() / 2
+	var text_y_pos = display_get_gui_height() / 3
+	draw_text(text_x_pos, text_y_pos, error_text)
 }

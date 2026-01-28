@@ -6,6 +6,7 @@ function struct_card_action(_selected_chara, _selected_cards, _selected_enemies,
 	on_card_action_complete = _on_card_action_complete
 	on_card_action_complete_args = _on_card_action_complete_args
 	
+	#region end of turn functions
 	/// @description								Runs the call back function that allows the card
 	///													execution to continue. NOTE: This function
 	///													must be run at the end of the card_action
@@ -13,6 +14,120 @@ function struct_card_action(_selected_chara, _selected_cards, _selected_enemies,
 	static end_card_action = function() {
 		if(on_card_action_complete != undefined && is_method(on_card_action_complete))
 			method_call(on_card_action_complete, on_card_action_complete_args)	
+	}
+	
+	/// @description								Informs the ui_end_turn_button that the player's next
+	///													turn is being skipped
+	static skip_next_turn = function () {
+		ui_end_turn_button.skip_players_next_turn = true
+	}
+	#endregion
+	
+	#region chara actions
+	/// @description								Loops through each selected character and hit each
+	///													selected enemy with their attack multiplied by
+	///													attack_multiplier
+	/// @param {Real} attack_multiplier				How much each character's attack is muliplied by
+	static charas_attack_enemies = function(attack_multiplier) {
+		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
+			activate_on_attack_buffs()
+			for (var enemy_index = 0; enemy_index < array_length(selected_enemies); enemy_index++) {
+				selected_enemies[enemy_index].hit_by_player(selected_chara[chara_index], attack_multiplier)
+			}
+		}	
+	}
+	
+	/// @description								Loops through each selected character and hit each
+	///													selected enemy with their attack multiplied by
+	///													the amount of shield that character has
+	static deal_dmg_to_enemies_equal_to_shield = function() {
+		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
+			activate_on_attack_buffs()
+			for (var enemy_index = 0; enemy_index < array_length(selected_enemies); enemy_index++) {
+				selected_enemies[enemy_index].hit_by_player(selected_chara[chara_index], selected_chara[chara_index].chara_shield)
+			}
+		}
+	}
+
+	/// @description								Triggers the Gain_Strength_On_Any_Attack effect,
+	///													giving the character strength
+	static activate_on_attack_buffs = function() {
+		for(var chara_index = 0; chara_index < instance_number(obj_player); chara_index++) {
+			var chara = instance_find(obj_player, chara_index)
+			if(chara.active_buffs[$ card_buff_effects.Gain_Strength_On_Any_Attack] != undefined &&
+				chara.active_buffs[$ card_buff_effects.Gain_Strength_On_Any_Attack] > 0) {
+					if(chara.turns_since_gain_strength_on_attack % 2 == 0) {
+						chara.apply_buff(card_buff_effects.Strength, 1)
+						chara.turns_since_gain_strength_on_attack = 1
+					}
+					else {
+						chara.turns_since_gain_strength_on_attack++
+					}
+				}
+		}
+	}
+	
+	/// @description								Applies a given buff to all selected characters
+	/// @param {card_buff_effects} buff_type		The buff being applied
+	/// @param {Real} buff_amount					The amount of the buff being added
+	static add_buff_to_charas = function (buff_type, buff_amount) {
+		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
+			selected_chara[chara_index].apply_buff(buff_type, buff_amount)
+		}	
+	}
+	
+	/// @description								Multiplies the given buff by mult_amount for 
+	///													each selected character
+	/// @param {card_buff_effects} buff_type		The buff being multiplied
+	/// @param {Real} mult_amount					The amount the buff is being multiplied by
+	static mult_charas_buff = function (buff_type, mult_amount) {
+		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
+			selected_chara[chara_index].multiply_buff(buff_type, mult_amount)
+		}	
+	}
+	
+	/// @description								Heals all selected charactes
+	/// @param {Real} heal_amount					The amount of health each character heals
+	static charas_heal = function(heal_amount) {
+		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
+			selected_chara[chara_index].heal_chara(heal_amount)
+		}
+	}
+	
+	/// @description								Applies shield to all selected characters
+	/// @param {Real} shield_amount					The amount of shield each character gets
+	static charas_gain_shield = function(shield_amount) {
+		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
+			selected_chara[chara_index].add_shield(shield_amount)
+		}
+	}
+	
+	/// @description								Loops through each selected character and damage them
+	///													by the given amount
+	/// @param {Real} dmg_amount					How much each character will be hurt by
+	static damage_selected_charas = function(dmg_amount) {
+		for(var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
+			selected_chara[chara_index].hit_by_enemy(dmg_amount)
+		}
+	}
+	
+	#endregion
+	
+	#region card actions
+	
+	/// @description								Draws cards from the player's deck one at a time and
+	///													adds it to their hand
+	/// @param {Real} num_card_to_draw				How many cards should be drawn
+	static draw_num_cards = function(num_card_to_draw) {
+		repeat (num_card_to_draw) {
+			var drawn_card = draw_card()
+			if(drawn_card != -1) {
+				var add_card_succeeded = ui_player_hand.add_card(drawn_card)
+				if(!add_card_succeeded) {
+					break	
+				}
+			}
+		}
 	}
 	
 	/// @description								Shows the selected cards in a line with a confirmation
@@ -60,101 +175,6 @@ function struct_card_action(_selected_chara, _selected_cards, _selected_enemies,
 			})
 			xpos += sprite_get_width(card_sprite) + spacing_between_cards
 		}
-	}
-	
-	/// @description								Loops through each selected character and hit each
-	///													selected enemy with their attack multiplied by
-	///													attack_multiplier
-	/// @param {Real} attack_multiplier				How much each character's attack is muliplied by
-	static charas_attack_enemies = function(attack_multiplier) {
-		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
-			activate_on_attack_buffs()
-			for (var enemy_index = 0; enemy_index < array_length(selected_enemies); enemy_index++) {
-				selected_enemies[enemy_index].hit_by_player(selected_chara[chara_index], attack_multiplier)
-			}
-		}	
-	}
-	
-	/// @description								Loops through each selected character and damage them
-	///													by the given amount
-	/// @param {Real} dmg_amount					How much each character will be hurt by
-	static damage_selected_charas = function(dmg_amount) {
-		for(var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
-			selected_chara[chara_index].hit_by_enemy(dmg_amount)
-		}
-	}
-	
-	/// @description								Triggers the Gain_Strength_On_Any_Attack effect,
-	///													giving the character strength
-	static activate_on_attack_buffs = function() {
-		for(var chara_index = 0; chara_index < instance_number(obj_player); chara_index++) {
-			var chara = instance_find(obj_player, chara_index)
-			if(chara.active_buffs[$ card_buff_effects.Gain_Strength_On_Any_Attack] != undefined &&
-				chara.active_buffs[$ card_buff_effects.Gain_Strength_On_Any_Attack] > 0) {
-					if(chara.turns_since_gain_strength_on_attack % 2 == 0) {
-						chara.apply_buff(card_buff_effects.Strength, 1)
-						chara.turns_since_gain_strength_on_attack = 1
-					}
-					else {
-						chara.turns_since_gain_strength_on_attack++
-					}
-				}
-		}
-	}
-	
-	/// @description								Loops through each selected character and hit each
-	///													selected enemy with their attack multiplied by
-	///													the amount of shield that character has
-	static deal_dmg_to_enemies_equal_to_shield = function() {
-		for (var enemy_index = 0; enemy_index < array_length(selected_enemies); enemy_index++) {
-			for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
-				selected_enemies[enemy_index].hit_by_player(selected_chara[chara_index], selected_chara[chara_index].chara_shield)
-			}
-		}
-	}
-	
-	/// @description								Applies a given debuff to all selected enemies
-	/// @param {card_debuff_effects} debuff_type	The debuff being applied to this enemy
-	/// @param {Real} debuff_amount					The amount of the debuff being added
-	static apply_debuff_to_enemies = function(debuff_type, debuff_amount) {
-		for (var enemy_index = 0; enemy_index < array_length(selected_enemies); enemy_index++) {
-			selected_enemies[enemy_index].apply_debuff_to_enemy(debuff_type, debuff_amount)
-		}	
-	}
-	
-	/// @description								Applies shield to all selected characters
-	/// @param {Real} shield_amount					The amount of shield each character gets
-	static charas_gain_shield = function(shield_amount) {
-		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
-			selected_chara[chara_index].add_shield(shield_amount)
-		}
-	}
-	
-	/// @description								Heals all selected charactes
-	/// @param {Real} heal_amount					The amount of health each character heals
-	static charas_heal = function(heal_amount) {
-		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
-			selected_chara[chara_index].heal_chara(heal_amount)
-		}
-	}
-	
-	/// @description								Applies a given buff to all selected characters
-	/// @param {card_buff_effects} buff_type		The buff being applied
-	/// @param {Real} buff_amount					The amount of the buff being added
-	static add_buff_to_charas = function (buff_type, buff_amount) {
-		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
-			selected_chara[chara_index].apply_buff(buff_type, buff_amount)
-		}	
-	}
-	
-	/// @description								Multiplies the given buff by mult_amount for 
-	///													each selected character
-	/// @param {card_buff_effects} buff_type		The buff being multiplied
-	/// @param {Real} mult_amount					The amount the buff is being multiplied by
-	static mult_charas_buff = function (buff_type, mult_amount) {
-		for (var chara_index = 0; chara_index < array_length(selected_chara); chara_index++) {
-			selected_chara[chara_index].multiply_buff(buff_type, mult_amount)
-		}	
 	}
 	
 	/// @description								Loops through the selected cards and finds their
@@ -223,21 +243,23 @@ function struct_card_action(_selected_chara, _selected_cards, _selected_enemies,
 		}
 		layer_destroy(temp_card_instance_layer)
 	}
+
+	#endregion
 	
-	/// @description								Draws cards from the player's deck one at a time and
-	///													adds it to their hand
-	/// @param {Real} num_card_to_draw				How many cards should be drawn
-	static draw_num_cards = function(num_card_to_draw) {
-		repeat (num_card_to_draw) {
-			var drawn_card = draw_card()
-			if(drawn_card != -1) {
-				var add_card_succeeded = ui_player_hand.add_card(drawn_card)
-				if(!add_card_succeeded) {
-					break	
-				}
-			}
-		}
+	#region enemy actions
+	
+	/// @description								Applies a given debuff to all selected enemies
+	/// @param {card_debuff_effects} debuff_type	The debuff being applied to this enemy
+	/// @param {Real} debuff_amount					The amount of the debuff being added
+	static apply_debuff_to_enemies = function(debuff_type, debuff_amount) {
+		for (var enemy_index = 0; enemy_index < array_length(selected_enemies); enemy_index++) {
+			selected_enemies[enemy_index].apply_debuff_to_enemy(debuff_type, debuff_amount)
+		}	
 	}
+	
+	#endregion
+	
+	#region player energy actions
 	
 	/// @description								Adds a given amount of energy to the player's current
 	///													energy pool
@@ -253,9 +275,5 @@ function struct_card_action(_selected_chara, _selected_cards, _selected_enemies,
 		ui_player_energy.multiply_player_current_energy(energy_mult_amount)
 	}
 	
-	/// @description								Informs the ui_end_turn_button that the player's next
-	///													turn is being skipped
-	static skip_next_turn = function () {
-		ui_end_turn_button.skip_players_next_turn = true
-	}
+	#endregion
 }
