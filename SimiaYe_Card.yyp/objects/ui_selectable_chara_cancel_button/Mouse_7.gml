@@ -1,4 +1,4 @@
-if(is_top_layer(layer) && button_clicked) {
+if(is_top_layer(layer, mouse_x, mouse_y) && button_clicked) {
 	button_clicked = false
 	global.object_being_clicked = false
 	

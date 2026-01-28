@@ -1,4 +1,4 @@
-if(is_top_layer(layer)) {
+if(is_top_layer(layer, mouse_x, mouse_y)) {
 	if(!instance_exists(ui_player_hand)) {
 		instance_create_layer(x,y,"Instances",ui_player_hand)
 	}
