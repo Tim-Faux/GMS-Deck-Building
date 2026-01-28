@@ -4,6 +4,8 @@
 
 bottom_of_header = 0
 height_of_card_list = 0
+display_cards = []
+scroll_bar = noone
 
 var header_depth = layer_get_depth(layer) - 5
 var card_display_header_instance_id = layer_create(header_depth, "card_display_header_instance")
@@ -41,14 +43,13 @@ function create_card_grid_view() {
 		//	more generic would result in a potentially worse solution
 		var card_width = sprite_get_width(object_get_sprite(cards_to_display[0]))
 		var card_height = sprite_get_height(object_get_sprite(cards_to_display[0]))
-		var default_camera_id = camera_get_default()
-		var screen_width = camera_get_view_width(default_camera_id)
+		var screen_width = display_get_gui_width()
 		var num_columns = floor(screen_width / (card_width + CARD_PADDING))
 		var num_rows = ceil(array_length(cards_to_display) / num_columns)
 		height_of_card_list = ((card_height + CARD_PADDING) * num_rows) + CARD_PADDING
 		var flexpanels = create_card_flexpanels(card_width, card_height)
-		
-		var display_cards = array_create(array_length(cards_to_display))
+		display_cards = array_create(array_length(cards_to_display))
+	
 		for (var card_index = 0; card_index < array_length(cards_to_display); card_index++) {
 			var card_x_pos = card_index % num_columns * (card_width + CARD_PADDING) + CARD_PADDING
 			var card_y_pos = bottom_of_header + (floor(card_index / num_columns) * 
@@ -62,7 +63,35 @@ function create_card_grid_view() {
 			})
 			display_cards[card_index] = display_card
 		}
+		
 		create_scroll_bar(display_cards)
+	}
+}
+
+/// @desc										Sets all of the card instances positions, based on their
+///													position in display_cards
+/// @param {Array<Id.Instance>} display_cards	The layer the header will be shown on
+function set_cards_initial_pos(display_cards) {
+	//This assumes the cards will always be the same size. As of right now that's true and to make it
+	//	more generic would result in a potentially worse solution
+	var card_width = display_cards[0].sprite_width
+	var card_height = display_cards[0].sprite_height
+	var screen_width = display_get_gui_width()
+	var num_columns = floor(screen_width / (card_width + CARD_PADDING))
+	var num_rows = ceil(array_length(display_cards) / num_columns)
+	height_of_card_list = ((card_height + CARD_PADDING) * num_rows) + CARD_PADDING
+	
+	for (var card_index = 0; card_index < array_length(display_cards); card_index++) {
+		display_cards[card_index].x = card_index % num_columns * (card_width + CARD_PADDING) + CARD_PADDING
+		display_cards[card_index].y = bottom_of_header + (floor(card_index / num_columns) * 
+							(card_height + CARD_PADDING)) + CARD_PADDING
+		display_cards[card_index].ystart = display_cards[card_index].y
+		display_cards[card_index].xstart = display_cards[card_index].x
+	}
+	
+	if(scroll_bar != noone) {
+		scroll_bar.objects_to_move = display_cards
+		scroll_bar.set_card_to_scroll_pos()
 	}
 }
 
@@ -93,7 +122,7 @@ function create_scroll_bar(objects_to_move) {
 		var bar_x_pos = display_get_gui_width() - SCROLL_BAR_PADDING - bar_sprite_width
 		var bar_y_pos = bottom_of_header + SCROLL_BAR_PADDING
 		var bar_sprite_y_scale = (display_get_gui_height() - bar_y_pos -  SCROLL_BAR_PADDING) / bar_sprite_height
-		instance_create_layer(bar_x_pos, bar_y_pos, scroll_bar_instance_id, ui_player_deck_scrollbar, {
+		scroll_bar = instance_create_layer(bar_x_pos, bar_y_pos, scroll_bar_instance_id, ui_player_deck_scrollbar, {
 			image_yscale : bar_sprite_y_scale,
 			header_bottom_y : bottom_of_header,
 			scrollable_list_height : height_of_card_list,
@@ -102,14 +131,11 @@ function create_scroll_bar(objects_to_move) {
 	}
 }
 
-/// @desc									Clears out the displayed cards, sorts the displayed deck,
-///												and recreates them to be visable to the player
+/// @desc									Sorts the display_cards array using the given sort function,
+///												then repositions all of the cards to match the sorting
+/// @param {Function} sort_function			The function used to determine cards ordering. For more info
+///												see array_sort manual
 function sort_player_deck(sort_function) {
-	for (var display_card_index = 0; display_card_index < instance_number(obj_display_card); display_card_index++)
-	{
-		instance_destroy(instance_find(obj_display_card,display_card_index))
-	}
-	
-	array_sort(cards_to_display, sort_function)
-	create_card_grid_view()
+	array_sort(display_cards, sort_function)
+	set_cards_initial_pos(display_cards)
 }

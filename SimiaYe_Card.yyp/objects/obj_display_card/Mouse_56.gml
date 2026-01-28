@@ -1,3 +1,3 @@
 if(remove_expanded_card) {
-	layer_destroy(layer)
+	find_and_delete_related_layers(layer)
 }

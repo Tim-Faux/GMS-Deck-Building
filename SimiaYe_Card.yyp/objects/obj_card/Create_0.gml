@@ -93,7 +93,7 @@ player_turn_end_action = function (on_end_turn_action, on_end_turn_action_args) 
 /// @description							Checks to see if no other cards are selected then allows this
 ///												card to be selected
 function select_card() {
-	if(!card_selected && !global.object_being_clicked && visible && is_top_layer(layer)) {
+	if(!card_selected && !global.object_being_clicked && visible && is_top_layer(layer, mouse_x, mouse_y)) {
 		global.object_being_clicked	= true
 		card_selected = true
 		if(card_can_be_moved) {
@@ -108,18 +108,20 @@ function select_card() {
 function card_released() {
 	global.object_being_clicked	= false
 	card_selected = false
-	ui_player_hand.card_can_be_selected = true
-	if(y < card_start_y_position - (sprite_height * 0.5)) {
-		if(energy_cost < 0) {
-			queue_error_message(THIS_CARD_CAN_NOT_BE_PLAYED)
+	if(array_contains(interaction_type, card_interaction_type.default_card)) {
+		ui_player_hand.card_can_be_selected = true
+		if(y < card_start_y_position - (sprite_height * 0.5)) {
+			if(energy_cost < 0) {
+				queue_error_message(THIS_CARD_CAN_NOT_BE_PLAYED)
+			}
+			else {
+				play_card()
+			}
 		}
 		else {
-			play_card()
-		}
+			reset_card()
+		}	
 	}
-	else {
-		reset_card()
-	}	
 }
 
 /// @description							Handles the card being played. Allowing the player to

@@ -1,5 +1,5 @@
 if(array_contains(interaction_type, card_interaction_type.selectable_card) &&
-		card_selected && is_top_layer(layer)) {
+		card_selected && is_top_layer(layer, mouse_x, mouse_y)) {
 	card_selected = false
 	global.object_being_clicked = false
 	is_selected = !is_selected
@@ -13,6 +13,6 @@ if(array_contains(interaction_type, card_interaction_type.selectable_card) &&
 	}
 }
 else if(array_contains(interaction_type, card_interaction_type.expandable_card) &&
-		!card_can_be_moved && card_selected && is_top_layer(layer)) {
+		!card_can_be_moved && card_selected && is_top_layer(layer, mouse_x, mouse_y)) {
 	create_expanded_card()
 }

@@ -76,11 +76,21 @@ function move_scroll_thumb(smooth_scroll, thumb_scroll_min = scroll_min, thumb_s
 	else {
 		scroll_thumb.y = amount_page_scrolled
 	}
-		
+
+	set_card_to_scroll_pos(thumb_scroll_min, thumb_scroll_max)
+}
+
+/// @desc								Sets the position of all the objects_to_move based on the
+///											given percent_scrolled and their ystart position
+/// @param {Real} thumb_scroll_min		The highest position on screen the scroll thumb can go to
+///											(default to global variable)
+/// @param {Real} thumb_scroll_max		The lowest position on screen the scroll thumb can go to
+///											(default to global variable)
+function set_card_to_scroll_pos(thumb_scroll_min = scroll_min, thumb_scroll_max = scroll_max) {
+	var percent_scrolled = (scroll_thumb.y - thumb_scroll_min) / (thumb_scroll_max - thumb_scroll_min)
+	var viewable_window = display_get_gui_height() - header_bottom_y
 	for (var movable_objects_index = 0; movable_objects_index < array_length(objects_to_move); movable_objects_index++)
 	{
-		var percent_scrolled = (scroll_thumb.y - thumb_scroll_min) / (thumb_scroll_max - thumb_scroll_min)
-		var viewable_window = display_get_gui_height() - header_bottom_y
 		objects_to_move[movable_objects_index].y = objects_to_move[movable_objects_index].ystart -
 							(percent_scrolled * (scrollable_list_height - viewable_window))
 	}
