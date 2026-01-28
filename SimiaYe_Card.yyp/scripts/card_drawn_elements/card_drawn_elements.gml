@@ -274,6 +274,10 @@ function draw_description(card_description, card_flexpanels, x_scale = 1, y_scal
 	draw_set_halign(fa_left)
 	draw_set_valign(fa_top)
 	
+	var scale_to_fit_description_box = find_card_description_scaling(card_description, card_flexpanels, x_scale, y_scale)
+	x_scale *= scale_to_fit_description_box
+	y_scale *= scale_to_fit_description_box
+	
 	var description_box_panel = flexpanel_node_layout_get_position(flexpanel_node_get_child(card_flexpanels, "description_box"), false)
 	var text_x_pos = x + description_box_panel.paddingLeft + description_box_panel.left
 	var text_y_pos = y + description_box_panel.paddingTop + description_box_panel.top
@@ -284,6 +288,33 @@ function draw_description(card_description, card_flexpanels, x_scale = 1, y_scal
 														/ x_scale
 														
 	draw_text_ext_transformed(text_x_pos, text_y_pos, card_description, line_seperation, text_max_width, x_scale, y_scale, 0)
+}
+
+/// @desc												Calculates the scaling needed for the card's
+///															description to remain in the description box
+/// @param {String} card_description					The text to be scaled
+/// @param {Pointer.FlexpanelNode} card_flexpanels		The parent node of the card's flex panel
+/// @param {Real} x_scale								Optional horizontal scaling argument, defaulting to 1
+/// @param {Real} y_scale								Optional vertical scaling argument, defaulting to 1
+/// @returns {Real}										The scaling needed to fit the text. A max of 1 and
+///															minimum of 0.1. NOTE: This should be used for
+///															X and Y scaling
+function find_card_description_scaling(card_description, card_flexpanels, x_scale = 1, y_scale = 1) {
+	draw_set_font(CARD_DESCRIPTION_FONT)
+	var description_box_panel = flexpanel_node_layout_get_position(flexpanel_node_get_child(card_flexpanels, "description_box"), false)
+	var line_seperation = string_height(card_description) + PADDING_BETWEEN_CARD_DESCRIPTION_LINES
+	var text_max_width = (description_box_panel.width - description_box_panel.paddingLeft 
+							- description_box_panel.paddingRight)
+	
+	var text_scale = 1
+	var text_height = string_height_ext(card_description, line_seperation, text_max_width / (text_scale * x_scale)) * y_scale
+	if(text_height > description_box_panel.height) {
+		while(text_scale > 0.1 && text_height > description_box_panel.height / text_scale) {
+			text_scale -= 0.1
+			text_height = string_height_ext(card_description, line_seperation, text_max_width / (text_scale * x_scale)) * y_scale
+		}
+	}
+	return text_scale
 }
 
 /// @description							Shows the error prompt for when a card is attempted to be
