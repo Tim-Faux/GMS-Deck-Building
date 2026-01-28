@@ -57,6 +57,11 @@ function set_bounding_box() {
 /// @desc								Sets the sort direction for the cards
 function change_sort_direction() {
 	if(!is_sort_selected) {
+		if(instance_exists(ui_card_grid_display)) {
+			method_call(ui_card_grid_display.set_deck_default_sort, [])
+		}
+		ui_card_sort_button.is_sort_selected = false
+		ui_card_sort_button.is_sort_ascending = true
 		is_sort_selected = true
 		is_sort_ascending = true
 		ui_card_grid_display.sort_player_deck(sort_cards)

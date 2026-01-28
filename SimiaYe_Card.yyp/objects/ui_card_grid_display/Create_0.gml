@@ -63,6 +63,8 @@ function create_card_grid_view() {
 			})
 			display_cards[card_index] = display_card
 		}
+		set_deck_default_sort()
+		set_cards_initial_pos(display_cards)
 		
 		create_scroll_bar(display_cards)
 	}
@@ -138,4 +140,27 @@ function create_scroll_bar(objects_to_move) {
 function sort_player_deck(sort_function) {
 	array_sort(display_cards, sort_function)
 	set_cards_initial_pos(display_cards)
+}
+
+/// @desc									Sets the default sorting for the deck, which is based on
+///												the cards energy cost
+function set_deck_default_sort() {
+	if(instance_exists(ui_card_sort_by_cost)) {
+		ui_card_sort_by_cost.is_sort_selected = true
+		ui_card_sort_by_cost.is_sort_ascending = true
+		sort_player_deck(ui_card_sort_by_cost.sort_cards)
+	}
+	else {
+		sort_player_deck(default_sort_function)
+	}
+}
+
+/// @desc									Sorts 2 cards by determining which costs more
+/// @param {Id.Instance} card1				The card at the lower index
+/// @param {Id.Instance} card2				The card at the higher index
+/// @returns								Integer that determines the sort order <= -1: card1 goes
+///												before card2, 0: card1 and card2 are equal price, 
+///												>= 1: card1 goes after card2
+function default_sort_function(card1, card2) {
+	return card2.energy_cost - card1.energy_cost 
 }
