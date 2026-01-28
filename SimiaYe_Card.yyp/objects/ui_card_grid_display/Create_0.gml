@@ -46,8 +46,8 @@ function create_card_grid_view() {
 		var default_camera_id = camera_get_default()
 		var screen_width = camera_get_view_width(default_camera_id)
 		var num_columns = floor(screen_width / (card_width + CARD_PADDING))
-		var num_rows = array_length(cards_to_display) / num_columns
-		height_of_card_list = (card_height + CARD_PADDING) * num_rows
+		var num_rows = ceil(array_length(cards_to_display) / num_columns)
+		height_of_card_list = ((card_height + CARD_PADDING) * num_rows) + CARD_PADDING
 		
 		for (var card_index = 0; card_index < array_length(cards_to_display); card_index++) {
 			var card_x_pos = card_index % num_columns * (card_width + CARD_PADDING) + CARD_PADDING
@@ -90,7 +90,7 @@ function create_scroll_bar() {
 		var bar_sprite_y_scale = (display_get_gui_height() - bar_y_pos -  SCROLL_BAR_PADDING) / bar_sprite_height
 		instance_create_layer(bar_x_pos, bar_y_pos, scroll_bar_instance_id, ui_player_deck_scrollbar, {
 			image_yscale : bar_sprite_y_scale,
-			height_of_card_list : height_of_card_list,
+			list_of_card_height : height_of_card_list,
 			header_bottom_y : bottom_of_header
 		})
 	}

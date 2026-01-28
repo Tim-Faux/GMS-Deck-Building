@@ -1,3 +1,3 @@
-if(is_top_layer(layer) && button_clicked) {
+if(button_clicked && is_top_layer(layer)) {
 	game_end()
 }

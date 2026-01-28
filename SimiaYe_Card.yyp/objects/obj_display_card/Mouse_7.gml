@@ -1,3 +1,3 @@
-if(card_clicked && is_top_layer(layer) && !card_expanded) {
+if(card_clicked && !card_expanded && is_top_layer(layer)) {
 	create_expanded_card()
 }

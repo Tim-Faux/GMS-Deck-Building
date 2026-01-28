@@ -20,7 +20,7 @@ function find_scroll_wheel_scaling() {
 		// This assumes all cards are the same size, right now that is true and the alternative requires
 		// looping through all the cards
 		var card_height = instance_find(obj_display_card, 1).sprite_height
-		var num_card_rows = height_of_card_list / (card_height + CARD_PADDING)
+		var num_card_rows = list_of_card_height / (card_height + CARD_PADDING)
 		return max_scroll_thumb_y / num_card_rows
 	}
 	return 0
@@ -58,7 +58,7 @@ function find_scroll_thumb_scale() {
 	var max_scroll_thumb_scale = (sprite_height - (2 * SCROLL_BORDER_WIDTH * image_yscale))
 									/ sprite_get_height(object_get_sprite(ui_player_deck_scroll_thumb))
 	var deck_view_window = display_get_gui_height() - header_bottom_y
-	var num_screen_lengths = deck_view_window / height_of_card_list
+	var num_screen_lengths = deck_view_window / list_of_card_height
 	return clamp(max_scroll_thumb_scale * num_screen_lengths, 1, max_scroll_thumb_scale)
 }
 
@@ -82,8 +82,8 @@ function move_scroll_thumb(smooth_scroll, thumb_scroll_min = scroll_min, thumb_s
 	{
 		var display_card = instance_find(obj_display_card, movable_objects_index);
 		var percent_scrolled = (scroll_thumb.y - thumb_scroll_min) / (thumb_scroll_max - thumb_scroll_min)
+		var card_grid_display_height = display_get_gui_height() - header_bottom_y
 		display_card.y = display_card.ystart - (percent_scrolled * 
-							(height_of_card_list - display_get_gui_height() + 
-							header_bottom_y + CARD_PADDING))
+							(list_of_card_height - card_grid_display_height))
 	}
 }
