@@ -47,6 +47,7 @@
     {"name":"Gilk","order":1,"path":"folders/Sprites/Chara/Gilk.yy",},
     {"name":"Ivan","order":4,"path":"folders/Sprites/Chara/Ivan.yy",},
     {"name":"UI_Elements","order":1,"path":"folders/Sprites/UI_Elements.yy",},
+    {"name":"Health_Bar","order":1,"path":"folders/Sprites/UI_Elements/Health_Bar.yy",},
   ],
   "ResourceOrderSettings":[
     {"name":"__InputUpdateController","order":19,"path":"objects/__InputUpdateController/__InputUpdateController.yy",},
@@ -56,6 +57,7 @@
     {"name":"ui_close_layer_button","order":1,"path":"objects/ui_close_layer_button/ui_close_layer_button.yy",},
     {"name":"ui_end_turn_button","order":8,"path":"objects/ui_end_turn_button/ui_end_turn_button.yy",},
     {"name":"ui_exit_button","order":4,"path":"objects/ui_exit_button/ui_exit_button.yy",},
+    {"name":"ui_health_bar","order":3,"path":"objects/ui_health_bar/ui_health_bar.yy",},
     {"name":"ui_player_current_discard_button","order":3,"path":"objects/ui_player_current_discard_button/ui_player_current_discard_button.yy",},
     {"name":"ui_room_switch_button","order":5,"path":"objects/ui_room_switch_button/ui_room_switch_button.yy",},
     {"name":"ui_temp_button","order":6,"path":"objects/ui_temp_button/ui_temp_button.yy",},
@@ -332,6 +334,7 @@
     {"name":"spr_gilk_portrait","order":3,"path":"sprites/spr_gilk_portrait/spr_gilk_portrait.yy",},
     {"name":"spr_gilk_walkleft","order":1,"path":"sprites/spr_gilk_walkleft/spr_gilk_walkleft.yy",},
     {"name":"spr_gilk_walkright","order":2,"path":"sprites/spr_gilk_walkright/spr_gilk_walkright.yy",},
+    {"name":"spr_health_bar_health","order":1,"path":"sprites/spr_health_bar_health/spr_health_bar_health.yy",},
     {"name":"spr_player_teleport_effect","order":3,"path":"sprites/spr_player_teleport_effect/spr_player_teleport_effect.yy",},
   ],
 }

@@ -15,6 +15,9 @@ stand_still_sprite =		noone
 teleport_sprite =			spr_player_teleport_effect
 
 arena = false
+if(player_current_health == -1)
+	player_current_health = player_max_health
+
 target_pos = new character_position_target(x, y, 0, sprite_width, sprite_height)
 path = path_add()
 character_teleporting = false
@@ -27,9 +30,18 @@ character_moving = false
 ///											check if player is still alive
 /// @param {Real} damage_taken			The amount of damage the player is taking
 function hit_by_enemy(damage_taken) {
-	player_health -= damage_taken
-	show_debug_message(player_health)
-	if(player_health <= 0)
+	player_current_health -= damage_taken
+	if(instance_number(ui_health_bar) > 0) {
+		for(var health_bar_index = 0; health_bar_index < instance_number(ui_health_bar); health_bar_index++) {
+			var health_bar_instance = instance_find(ui_health_bar, health_bar_index)
+			if(health_bar_instance.associated_chara == object_index) {
+				health_bar_instance.find_chara_health_x_scale()
+			}
+		}
+	}
+	
+	show_debug_message(player_current_health)
+	if(player_current_health <= 0)
 		show_debug_message("Player is dead")
 }
 
