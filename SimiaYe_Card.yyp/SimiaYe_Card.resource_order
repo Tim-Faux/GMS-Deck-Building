@@ -48,6 +48,7 @@
     {"name":"Ivan","order":4,"path":"folders/Sprites/Chara/Ivan.yy",},
     {"name":"UI_Elements","order":1,"path":"folders/Sprites/UI_Elements.yy",},
     {"name":"Health_Bar","order":1,"path":"folders/Sprites/UI_Elements/Health_Bar.yy",},
+    {"name":"Tilesets","order":1,"path":"folders/Sprites/World/Tilesets.yy",},
   ],
   "ResourceOrderSettings":[
     {"name":"__InputUpdateController","order":19,"path":"objects/__InputUpdateController/__InputUpdateController.yy",},
@@ -61,6 +62,7 @@
     {"name":"ui_player_current_discard_button","order":3,"path":"objects/ui_player_current_discard_button/ui_player_current_discard_button.yy",},
     {"name":"ui_room_switch_button","order":5,"path":"objects/ui_room_switch_button/ui_room_switch_button.yy",},
     {"name":"ui_temp_button","order":6,"path":"objects/ui_temp_button/ui_temp_button.yy",},
+    {"name":"rm_forest","order":1,"path":"rooms/rm_forest/rm_forest.yy",},
     {"name":"__InputBindingIsThumbstick","order":6,"path":"scripts/__InputBindingIsThumbstick/__InputBindingIsThumbstick.yy",},
     {"name":"__InputBindingScan","order":7,"path":"scripts/__InputBindingScan/__InputBindingScan.yy",},
     {"name":"__InputClassGamepad","order":1,"path":"scripts/__InputClassGamepad/__InputClassGamepad.yy",},
@@ -334,6 +336,7 @@
     {"name":"spr_gilk_portrait","order":3,"path":"sprites/spr_gilk_portrait/spr_gilk_portrait.yy",},
     {"name":"spr_gilk_walkleft","order":1,"path":"sprites/spr_gilk_walkleft/spr_gilk_walkleft.yy",},
     {"name":"spr_gilk_walkright","order":2,"path":"sprites/spr_gilk_walkright/spr_gilk_walkright.yy",},
+    {"name":"spr_grass_tileset","order":1,"path":"sprites/spr_grass_tileset/spr_grass_tileset.yy",},
     {"name":"spr_health_bar_health","order":1,"path":"sprites/spr_health_bar_health/spr_health_bar_health.yy",},
     {"name":"spr_player_teleport_effect","order":3,"path":"sprites/spr_player_teleport_effect/spr_player_teleport_effect.yy",},
   ],

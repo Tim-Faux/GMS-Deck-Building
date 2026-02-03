@@ -9,6 +9,7 @@
     {"name":"inst_48AB42EA","path":"rooms/rm_level_select/rm_level_select.yy",},
     {"name":"inst_3DEF16AB","path":"rooms/rm_level_select/rm_level_select.yy",},
     {"name":"inst_3986A38B","path":"rooms/rm_level_select/rm_level_select.yy",},
+    {"name":"inst_4AF272A1","path":"rooms/rm_level_select/rm_level_select.yy",},
   ],
   "isDnd":false,
   "layers":[
@@ -25,6 +26,10 @@
             {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"ui_button","path":"objects/ui_button/ui_button.yy",},"propertyId":{"name":"button_text","path":"objects/ui_button/ui_button.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"Arena",},
             {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"ui_room_switch_button","path":"objects/ui_room_switch_button/ui_room_switch_button.yy",},"propertyId":{"name":"new_room","path":"objects/ui_room_switch_button/ui_room_switch_button.yy",},"resource":{"name":"Arena","path":"rooms/Arena/Arena.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"Arena",},
           ],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":0.4,"scaleY":1.5,"x":640.0,"y":96.0,},
+        {"$GMRInstance":"v4","%Name":"inst_4AF272A1","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_4AF272A1","objectId":{"name":"ui_room_switch_button","path":"objects/ui_room_switch_button/ui_room_switch_button.yy",},"properties":[
+            {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"ui_button","path":"objects/ui_button/ui_button.yy",},"propertyId":{"name":"button_text","path":"objects/ui_button/ui_button.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"Forest",},
+            {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"ui_room_switch_button","path":"objects/ui_room_switch_button/ui_room_switch_button.yy",},"propertyId":{"name":"new_room","path":"objects/ui_room_switch_button/ui_room_switch_button.yy",},"resource":{"name":"rm_forest","path":"rooms/rm_forest/rm_forest.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"rm_forest",},
+          ],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":0.4,"scaleY":1.5,"x":832.0,"y":96.0,},
       ],"layers":[],"name":"Instances","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRBackgroundLayer":"","%Name":"Background","animationFPS":15.0,"animationSpeedType":0,"colour":4278190080,"depth":100,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"hspeed":0.0,"htiled":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"layers":[],"name":"Background","properties":[],"resourceType":"GMRBackgroundLayer","resourceVersion":"2.0","spriteId":null,"stretch":false,"userdefinedAnimFPS":false,"userdefinedDepth":false,"visible":true,"vspeed":0.0,"vtiled":false,"x":0,"y":0,},
   ],
