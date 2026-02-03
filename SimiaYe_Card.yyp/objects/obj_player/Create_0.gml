@@ -15,6 +15,7 @@ stand_still_sprite =		noone
 teleport_sprite =			spr_player_teleport_effect
 
 arena = false
+collidable_items = find_room_collision_items(room)
 if(player_current_health == -1)
 	player_current_health = player_max_health
 
@@ -52,8 +53,7 @@ function hit_by_enemy(damage_taken) {
 function move_horizontally(x_movement) {
 	for(var x_step = abs(x_movement); x_step > 0; x_step--) {
 		var signed_x_step = x_movement < 0 ? -x_step : x_step
-		var collision = instance_place(x + signed_x_step, y, obj_wall)
-		if (collision == noone) {
+		if (!place_meeting(x + signed_x_step, y, collidable_items)) {
 			x += signed_x_step
 			break
 		}
@@ -67,8 +67,7 @@ function move_horizontally(x_movement) {
 function move_vertically(y_movement) {
 	for(var y_step = abs(y_movement); y_step > 0; y_step--) {
 		var signed_y_step = y_movement < 0 ? -y_step : y_step
-		var collision = instance_place(x, y + signed_y_step, obj_wall)
-		if (collision == noone) {
+		if (!place_meeting(x, y + signed_y_step, collidable_items)) {
 			y += signed_y_step
 			break
 		}

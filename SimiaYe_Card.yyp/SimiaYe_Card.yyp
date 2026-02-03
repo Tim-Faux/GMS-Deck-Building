@@ -446,6 +446,7 @@
     {"id":{"name":"InputY","path":"scripts/InputY/InputY.yy",},},
     {"id":{"name":"player_deck","path":"scripts/player_deck/player_deck.yy",},},
     {"id":{"name":"player_discard_deck","path":"scripts/player_discard_deck/player_discard_deck.yy",},},
+    {"id":{"name":"room_collision_items","path":"scripts/room_collision_items/room_collision_items.yy",},},
     {"id":{"name":"Script1","path":"scripts/Script1/Script1.yy",},},
     {"id":{"name":"top_layer_check","path":"scripts/top_layer_check/top_layer_check.yy",},},
     {"id":{"name":"shd_clip","path":"shaders/shd_clip/shd_clip.yy",},},

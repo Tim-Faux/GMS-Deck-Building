@@ -2,7 +2,6 @@
   "$GMTileSet":"v1",
   "%Name":"tls_grass",
   "autoTileSets":[
-    {"$GMAutoTileSet":"","%Name":"thin_bush","closed_edge":false,"name":"thin_bush","resourceType":"GMAutoTileSet","resourceVersion":"2.0","tiles":[14,35,33,34,17,26,0,49,15,0,24,50,16,58,59,0,],},
     {"$GMAutoTileSet":"","%Name":"thick_bush","closed_edge":false,"name":"thick_bush","resourceType":"GMAutoTileSet","resourceVersion":"2.0","tiles":[20,57,56,11,48,19,0,10,47,0,21,12,29,28,30,0,],},
   ],
   "macroPageTiles":{

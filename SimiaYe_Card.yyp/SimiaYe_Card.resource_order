@@ -332,6 +332,7 @@
     {"name":"InputVirtualDestroyAll","order":2,"path":"scripts/InputVirtualDestroyAll/InputVirtualDestroyAll.yy",},
     {"name":"InputX","order":2,"path":"scripts/InputX/InputX.yy",},
     {"name":"InputY","order":3,"path":"scripts/InputY/InputY.yy",},
+    {"name":"room_collision_items","order":2,"path":"scripts/room_collision_items/room_collision_items.yy",},
     {"name":"shd_clip","order":2,"path":"shaders/shd_clip/shd_clip.yy",},
     {"name":"spr_gilk_portrait","order":3,"path":"sprites/spr_gilk_portrait/spr_gilk_portrait.yy",},
     {"name":"spr_gilk_walkleft","order":1,"path":"sprites/spr_gilk_walkleft/spr_gilk_walkleft.yy",},
