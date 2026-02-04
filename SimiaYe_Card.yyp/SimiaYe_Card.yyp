@@ -117,6 +117,7 @@
     {"id":{"name":"obj_main","path":"objects/obj_main/obj_main.yy",},},
     {"id":{"name":"obj_player","path":"objects/obj_player/obj_player.yy",},},
     {"id":{"name":"obj_sidechara","path":"objects/obj_sidechara/obj_sidechara.yy",},},
+    {"id":{"name":"obj_tileset_randomizer","path":"objects/obj_tileset_randomizer/obj_tileset_randomizer.yy",},},
     {"id":{"name":"obj_wall","path":"objects/obj_wall/obj_wall.yy",},},
     {"id":{"name":"ui_button","path":"objects/ui_button/ui_button.yy",},},
     {"id":{"name":"ui_card_grid_display","path":"objects/ui_card_grid_display/ui_card_grid_display.yy",},},

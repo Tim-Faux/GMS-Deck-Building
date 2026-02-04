@@ -53,6 +53,7 @@
   "ResourceOrderSettings":[
     {"name":"__InputUpdateController","order":19,"path":"objects/__InputUpdateController/__InputUpdateController.yy",},
     {"name":"obj_gilk","order":1,"path":"objects/obj_gilk/obj_gilk.yy",},
+    {"name":"obj_tileset_randomizer","order":1,"path":"objects/obj_tileset_randomizer/obj_tileset_randomizer.yy",},
     {"name":"ui_button","order":2,"path":"objects/ui_button/ui_button.yy",},
     {"name":"ui_chara_portrait","order":1,"path":"objects/ui_chara_portrait/ui_chara_portrait.yy",},
     {"name":"ui_close_layer_button","order":1,"path":"objects/ui_close_layer_button/ui_close_layer_button.yy",},
