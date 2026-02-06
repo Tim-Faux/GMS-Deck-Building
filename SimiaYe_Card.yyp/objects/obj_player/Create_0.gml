@@ -54,7 +54,7 @@ function move_horizontally(x_movement) {
 	for(var x_step = abs(x_movement); x_step > 0; x_step--) {
 		var signed_x_step = x_movement < 0 ? -x_step : x_step
 		if (!place_meeting(x + signed_x_step, y, collidable_items)) {
-			x += signed_x_step
+			x += signed_x_step * image_xscale
 			break
 		}
 	}
@@ -68,7 +68,7 @@ function move_vertically(y_movement) {
 	for(var y_step = abs(y_movement); y_step > 0; y_step--) {
 		var signed_y_step = y_movement < 0 ? -y_step : y_step
 		if (!place_meeting(x, y + signed_y_step, collidable_items)) {
-			y += signed_y_step
+			y += signed_y_step * image_yscale
 			break
 		}
 	}
