@@ -27,6 +27,38 @@ teleport_effect_subimage = 0
 character_teleported = true
 character_moving = false
 
+/// @desc								Sets the controlled character's initial position so they are
+///											next to the obj_map_swap_trigger with pos_num equal to
+///											pos_num_to_swap_to and in the direction of place_player_dir
+function set_initial_pos() {
+	if(is_controlled_chara) {
+		for(var map_swap_index = 0; map_swap_index < instance_number(obj_map_swap_trigger); map_swap_index++) {
+			var swap_trigger = instance_find(obj_map_swap_trigger, map_swap_index)
+			if(variable_global_exists("pos_num_to_swap_to") && global.pos_num_to_swap_to == swap_trigger.pos_num) {
+				switch(swap_trigger.place_player_dir) {
+					case dir_to_place_player.Top :
+						x = swap_trigger.x
+						y = swap_trigger.bbox_top - sprite_height + sprite_yoffset
+						break
+					case dir_to_place_player.Left :
+						x = swap_trigger.bbox_left - sprite_width + sprite_xoffset
+						y = swap_trigger.y
+						break
+					case dir_to_place_player.Bottom :
+						x = swap_trigger.x
+						y = swap_trigger.bbox_bottom + sprite_height - sprite_yoffset
+						break
+					case dir_to_place_player.Right :
+						x = swap_trigger.bbox_right + sprite_width - sprite_xoffset
+						y = swap_trigger.y
+						break
+				}
+				break
+			}
+		}
+	}
+}
+
 /// @desc								Removes health from the player equal to damage_taken and
 ///											check if player is still alive
 /// @param {Real} damage_taken			The amount of damage the player is taking

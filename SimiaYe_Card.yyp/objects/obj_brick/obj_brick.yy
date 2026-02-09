@@ -6,8 +6,8 @@
   "name":"obj_brick",
   "overriddenProperties":[],
   "parent":{
-    "name":"wall",
-    "path":"folders/Objects/wall.yy",
+    "name":"Walls",
+    "path":"folders/Objects/Map Objects/Walls.yy",
   },
   "parentObjectId":{
     "name":"obj_wall",
