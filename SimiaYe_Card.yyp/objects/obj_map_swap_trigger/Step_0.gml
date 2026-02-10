@@ -1,6 +1,7 @@
-if(!global.room_switching && collision_rectangle(bbox_left, bbox_top, bbox_right, bbox_bottom, obj_gilk, false, true)) {
-	global.room_switching = true
-	global.pos_num_to_swap_to = pos_num_to_swap_to
-	room_goto(new_room)
-	global.room_switching = false
+if(!global.room_switching) {
+	var chara_in_trigger = collision_rectangle(bbox_left, bbox_top, bbox_right, bbox_bottom, obj_player, false, true)
+	if(chara_in_trigger != noone && chara_in_trigger.is_controlled_chara) {
+		global.room_switching = true
+		chara_in_trigger.walk_to_next_room(place_player_dir, sprite_width, method(self, switch_room))
+	}
 }

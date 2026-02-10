@@ -1,16 +1,21 @@
 
 if (!arena) {
 	if(is_controlled_chara) {
-		var x_movement = InputX(INPUT_CLUSTER.NAVIGATION) * WALK_SPEED
-		var y_movement = InputY(INPUT_CLUSTER.NAVIGATION) * WALK_SPEED
+		if(global.room_switching) {
+			animate_player_leaving_room()	
+		}
+		else {
+			var x_movement = InputX(INPUT_CLUSTER.NAVIGATION) * WALK_SPEED
+			var y_movement = InputY(INPUT_CLUSTER.NAVIGATION) * WALK_SPEED
 
-		character_moving = x_movement != 0 || y_movement != 0
-		move_horizontally(x_movement)
-		move_vertically(y_movement)
+			character_moving = x_movement != 0 || y_movement != 0
+			move_horizontally(x_movement)
+			move_vertically(y_movement)
 
-		set_movement_sprite(InputDirection(0, INPUT_CLUSTER.NAVIGATION))
-		if(follower != noone && (x_movement != 0 || y_movement != 0)) {
-			follower.set_target_pos(x, y, InputDirection(0, INPUT_CLUSTER.NAVIGATION))
+			set_movement_sprite(InputDirection(0, INPUT_CLUSTER.NAVIGATION))
+			if(follower != noone && (x_movement != 0 || y_movement != 0)) {
+				follower.set_target_pos(x, y, InputDirection(0, INPUT_CLUSTER.NAVIGATION))
+			}
 		}
 	}
 	else if (!character_teleporting) {

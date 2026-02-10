@@ -26,6 +26,9 @@ set_follow_target()
 teleport_effect_subimage = 0
 character_teleported = true
 character_moving = false
+dir_player_enters_room = dir_to_place_player.Top
+dist_to_leave_room = 0
+on_room_left = undefined
 
 /// @desc								Sets the controlled character's initial position so they are
 ///											next to the obj_map_swap_trigger with pos_num equal to
@@ -57,6 +60,46 @@ function set_initial_pos() {
 			}
 		}
 	}
+}
+
+/// @desc									Sets up the character automatically walking in the given
+///												direction for the given distance
+/// @param {Real} dir_player_is_placed		The opposite of the direction the character will move in
+/// @param {Real} dist_to_walk				How far the character will walk, this is used to determine
+///												how long the animation will take
+/// @param {Function} on_walk_finished		The callback function for when the walk animation is finished
+function walk_to_next_room(dir_player_is_placed, dist_to_walk, on_walk_finished) {
+	dir_player_enters_room = dir_player_is_placed
+	dist_to_leave_room = dist_to_walk / WALK_SPEED
+	on_room_left = on_walk_finished
+	set_leaving_room_sprite(dir_player_enters_room)
+	animate_player_leaving_room()
+}
+
+/// @desc								Uses the variables set up in walk_to_next_room to have the
+///											character leave the room. NOTE: This should be called
+///											every frame in the step function to animate properly
+function animate_player_leaving_room() {
+	switch (dir_player_enters_room) {
+		case dir_to_place_player.Top:
+			move_vertically(WALK_SPEED)
+			break
+		case dir_to_place_player.Left:
+			move_horizontally(WALK_SPEED)
+			break
+		case dir_to_place_player.Bottom:
+			move_vertically(-WALK_SPEED)
+			break
+		case dir_to_place_player.Right:
+			move_horizontally(-WALK_SPEED)
+			break
+	}
+	dist_to_leave_room--
+	
+	if(dist_to_leave_room <= 0 && on_room_left != undefined && is_method(on_room_left))
+	{
+		method_call(on_room_left)
+	}	
 }
 
 /// @desc								Removes health from the player equal to damage_taken and
@@ -117,6 +160,28 @@ function set_movement_sprite(movement_angle) {
 	}
 	var movement_sprites = get_movement_sprites_array()
 	sprite_index = movement_sprites[y_sprite_index][x_sprite_index]
+}
+
+/// @desc										Updates the character's sprite based on the given direction
+/// @param {Real} direction_player_enters_room	The direction the player character enters the room from.
+///													NOTE: This is always the place_player_dir of the
+///													trigger, which is the opposite of the direction they move
+function set_leaving_room_sprite(direction_player_enters_room) {
+	var movement_sprites = get_movement_sprites_array()
+	switch (direction_player_enters_room) {
+		case dir_to_place_player.Bottom:
+			sprite_index = movement_sprites[0][1]
+			break
+		case dir_to_place_player.Right:
+			sprite_index = movement_sprites[1][0]
+			break
+		case dir_to_place_player.Top:
+			sprite_index = movement_sprites[2][1]
+			break
+		case dir_to_place_player.Left:
+			sprite_index = movement_sprites[1][2]
+			break
+	}
 }
 
 /// @desc									Creates a 2D array with all of the charater's movement 
