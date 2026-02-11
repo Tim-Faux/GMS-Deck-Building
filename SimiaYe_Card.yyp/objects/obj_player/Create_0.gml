@@ -26,9 +26,11 @@ set_follow_target()
 teleport_effect_subimage = 0
 character_teleported = true
 character_moving = false
+
 dir_player_enters_room = dir_to_place_player.Top
-dist_to_leave_room = 0
-on_room_left = undefined
+dist_to_move_chara = 0
+on_walk_animation_end = undefined
+chara_leaving_room = undefined
 
 /// @desc								Sets the controlled character's initial position so they are
 ///											next to the obj_map_swap_trigger with pos_num equal to
@@ -38,24 +40,36 @@ function set_initial_pos() {
 		for(var map_swap_index = 0; map_swap_index < instance_number(obj_map_swap_trigger); map_swap_index++) {
 			var swap_trigger = instance_find(obj_map_swap_trigger, map_swap_index)
 			if(variable_global_exists("pos_num_to_swap_to") && global.pos_num_to_swap_to == swap_trigger.pos_num) {
+				var dist_to_walk = 0
+				var normalized_sprite_width = sprite_width - sprite_xoffset
+				var normalized_sprite_height = sprite_height - sprite_yoffset
 				switch(swap_trigger.place_player_dir) {
 					case dir_to_place_player.Top :
 						x = swap_trigger.x
-						y = swap_trigger.bbox_top - sprite_height + sprite_yoffset
+						y = swap_trigger.bbox_bottom + normalized_sprite_height
+						dist_to_walk = swap_trigger.sprite_height - (2 * normalized_sprite_height) -
+											(sprite_height / 2)
 						break
 					case dir_to_place_player.Left :
-						x = swap_trigger.bbox_left - sprite_width + sprite_xoffset
+						x = swap_trigger.bbox_right + normalized_sprite_width
 						y = swap_trigger.y
+						dist_to_walk = swap_trigger.sprite_width - (2 * normalized_sprite_width) - 
+											(sprite_width / 2)
 						break
 					case dir_to_place_player.Bottom :
 						x = swap_trigger.x
-						y = swap_trigger.bbox_bottom + sprite_height - sprite_yoffset
+						y = swap_trigger.bbox_top - normalized_sprite_height
+						dist_to_walk = swap_trigger.sprite_height + (2 * normalized_sprite_height) + 
+											(sprite_height / 2)
 						break
 					case dir_to_place_player.Right :
-						x = swap_trigger.bbox_right + sprite_width - sprite_xoffset
+						x = swap_trigger.bbox_left - normalized_sprite_width
 						y = swap_trigger.y
+						dist_to_walk = swap_trigger.sprite_width + (2 * normalized_sprite_width) + 
+											(sprite_width / 2)
 						break
 				}
+				walk_to_next_room(swap_trigger.place_player_dir, dist_to_walk, undefined, false)
 				break
 			}
 		}
@@ -68,11 +82,13 @@ function set_initial_pos() {
 /// @param {Real} dist_to_walk				How far the character will walk, this is used to determine
 ///												how long the animation will take
 /// @param {Function} on_walk_finished		The callback function for when the walk animation is finished
-function walk_to_next_room(dir_player_is_placed, dist_to_walk, on_walk_finished) {
+/// @param {Bool} leaving_room				Flag to determine the direction the character is moving
+function walk_to_next_room(dir_player_is_placed, dist_to_walk, on_walk_finished, leaving_room) {
 	dir_player_enters_room = dir_player_is_placed
-	dist_to_leave_room = dist_to_walk / WALK_SPEED
-	on_room_left = on_walk_finished
-	set_leaving_room_sprite(dir_player_enters_room)
+	dist_to_move_chara = dist_to_walk / WALK_SPEED
+	on_walk_animation_end = on_walk_finished
+	chara_leaving_room = leaving_room
+	set_room_switch_trigger_sprite(dir_player_is_placed, leaving_room)
 	animate_player_leaving_room()
 }
 
@@ -80,25 +96,34 @@ function walk_to_next_room(dir_player_is_placed, dist_to_walk, on_walk_finished)
 ///											character leave the room. NOTE: This should be called
 ///											every frame in the step function to animate properly
 function animate_player_leaving_room() {
+	var walk_direction = 1
+	if(chara_leaving_room) {
+		walk_direction = -1	
+	}
 	switch (dir_player_enters_room) {
 		case dir_to_place_player.Top:
-			move_vertically(WALK_SPEED)
+			move_vertically(-WALK_SPEED * walk_direction)
 			break
 		case dir_to_place_player.Left:
-			move_horizontally(WALK_SPEED)
+			move_horizontally(-WALK_SPEED * walk_direction)
 			break
 		case dir_to_place_player.Bottom:
-			move_vertically(-WALK_SPEED)
+			move_vertically(WALK_SPEED * walk_direction)
 			break
 		case dir_to_place_player.Right:
-			move_horizontally(-WALK_SPEED)
+			move_horizontally(WALK_SPEED * walk_direction)
 			break
 	}
-	dist_to_leave_room--
+	dist_to_move_chara--
 	
-	if(dist_to_leave_room <= 0 && on_room_left != undefined && is_method(on_room_left))
+	if(dist_to_move_chara <= 0)
 	{
-		method_call(on_room_left)
+		if(!chara_leaving_room) {
+			global.room_switching = false
+		}
+		if(on_walk_animation_end != undefined && is_method(on_walk_animation_end)) {
+			method_call(on_walk_animation_end)
+		}
 	}	
 }
 
@@ -166,20 +191,23 @@ function set_movement_sprite(movement_angle) {
 /// @param {Real} direction_player_enters_room	The direction the player character enters the room from.
 ///													NOTE: This is always the place_player_dir of the
 ///													trigger, which is the opposite of the direction they move
-function set_leaving_room_sprite(direction_player_enters_room) {
+/// @param {Bool} leaving_room					Flag to determine if the player is entering or leaving
+///													the room
+function set_room_switch_trigger_sprite(direction_player_enters_room, leaving_room) {
 	var movement_sprites = get_movement_sprites_array()
+
 	switch (direction_player_enters_room) {
 		case dir_to_place_player.Bottom:
-			sprite_index = movement_sprites[0][1]
+			sprite_index = movement_sprites[!leaving_room * 2][1]
 			break
 		case dir_to_place_player.Right:
-			sprite_index = movement_sprites[1][0]
+			sprite_index = movement_sprites[1][!leaving_room * 2]
 			break
 		case dir_to_place_player.Top:
-			sprite_index = movement_sprites[2][1]
+			sprite_index = movement_sprites[leaving_room * 2][1]
 			break
 		case dir_to_place_player.Left:
-			sprite_index = movement_sprites[1][2]
+			sprite_index = movement_sprites[1][leaving_room * 2]
 			break
 	}
 }
