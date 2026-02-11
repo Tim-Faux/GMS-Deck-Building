@@ -47,13 +47,13 @@ function set_initial_pos() {
 					case dir_to_place_player.Top :
 						x = swap_trigger.x
 						y = swap_trigger.bbox_bottom + normalized_sprite_height
-						dist_to_walk = swap_trigger.sprite_height - (2 * normalized_sprite_height) -
+						dist_to_walk = swap_trigger.sprite_height + (2 * normalized_sprite_height) +
 											(sprite_height / 2)
 						break
 					case dir_to_place_player.Left :
 						x = swap_trigger.bbox_right + normalized_sprite_width
 						y = swap_trigger.y
-						dist_to_walk = swap_trigger.sprite_width - (2 * normalized_sprite_width) - 
+						dist_to_walk = swap_trigger.sprite_width + (2 * normalized_sprite_width) + 
 											(sprite_width / 2)
 						break
 					case dir_to_place_player.Bottom :
