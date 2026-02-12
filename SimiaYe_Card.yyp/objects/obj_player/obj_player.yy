@@ -38,6 +38,9 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":null,
-  "spriteMaskId":null,
+  "spriteMaskId":{
+    "name":"spr_gilk_stand",
+    "path":"sprites/spr_gilk_stand/spr_gilk_stand.yy",
+  },
   "visible":true,
 }

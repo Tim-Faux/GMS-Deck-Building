@@ -1,19 +1,17 @@
 {
   "$GMObject":"",
-  "%Name":"obj_gilk",
-  "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-  ],
+  "%Name":"obj_building",
+  "eventList":[],
   "managed":true,
-  "name":"obj_gilk",
+  "name":"obj_building",
   "overriddenProperties":[],
   "parent":{
-    "name":"Characters",
-    "path":"folders/Objects/Characters.yy",
+    "name":"Buildings",
+    "path":"folders/Objects/Map Objects/Buildings.yy",
   },
   "parentObjectId":{
-    "name":"obj_player",
-    "path":"objects/obj_player/obj_player.yy",
+    "name":"obj_collision_object",
+    "path":"objects/obj_collision_object/obj_collision_object.yy",
   },
   "persistent":false,
   "physicsAngularDamping":0.1,
@@ -33,12 +31,9 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_gilk_stand",
-    "path":"sprites/spr_gilk_stand/spr_gilk_stand.yy",
+    "name":"spr_test_building",
+    "path":"sprites/spr_test_building/spr_test_building.yy",
   },
-  "spriteMaskId":{
-    "name":"spr_gilk_stand",
-    "path":"sprites/spr_gilk_stand/spr_gilk_stand.yy",
-  },
+  "spriteMaskId":null,
   "visible":true,
 }

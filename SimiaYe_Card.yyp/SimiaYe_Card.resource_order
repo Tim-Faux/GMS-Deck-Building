@@ -44,6 +44,7 @@
     {"name":"Verb Interaction","order":11,"path":"folders/Input/Verb Interaction.yy",},
     {"name":"Virtual Buttons","order":12,"path":"folders/Input/Virtual Buttons.yy",},
     {"name":"Map Objects","order":2,"path":"folders/Objects/Map Objects.yy",},
+    {"name":"Buildings","order":3,"path":"folders/Objects/Map Objects/Buildings.yy",},
     {"name":"Cards_Sort_Buttons","order":7,"path":"folders/Objects/UI/Button/Cards_Sort_Buttons.yy",},
     {"name":"City","order":5,"path":"folders/Rooms/City.yy",},
     {"name":"Gilk","order":1,"path":"folders/Sprites/Chara/Gilk.yy",},
@@ -51,6 +52,7 @@
     {"name":"UI_Elements","order":1,"path":"folders/Sprites/UI_Elements.yy",},
     {"name":"Health_Bar","order":1,"path":"folders/Sprites/UI_Elements/Health_Bar.yy",},
     {"name":"City","order":2,"path":"folders/Sprites/World/City.yy",},
+    {"name":"Buildings","order":4,"path":"folders/Sprites/World/Buildings.yy",},
     {"name":"Tilesets","order":1,"path":"folders/Sprites/World/Tilesets.yy",},
   ],
   "ResourceOrderSettings":[
