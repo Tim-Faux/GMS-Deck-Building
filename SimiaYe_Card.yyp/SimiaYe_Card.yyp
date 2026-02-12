@@ -110,6 +110,7 @@
     {"id":{"name":"__InputUpdateController","path":"objects/__InputUpdateController/__InputUpdateController.yy",},},
     {"id":{"name":"obj_battack","path":"objects/obj_battack/obj_battack.yy",},},
     {"id":{"name":"obj_brick","path":"objects/obj_brick/obj_brick.yy",},},
+    {"id":{"name":"obj_camera_controller","path":"objects/obj_camera_controller/obj_camera_controller.yy",},},
     {"id":{"name":"obj_card","path":"objects/obj_card/obj_card.yy",},},
     {"id":{"name":"obj_damageText","path":"objects/obj_damageText/obj_damageText.yy",},},
     {"id":{"name":"obj_display_card","path":"objects/obj_display_card/obj_display_card.yy",},},

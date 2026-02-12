@@ -11,11 +11,13 @@
     {"name":"inst_2638C55B","path":"rooms/rm_bottom_city/rm_bottom_city.yy",},
     {"name":"inst_4ED5450A","path":"rooms/rm_bottom_city/rm_bottom_city.yy",},
     {"name":"inst_1EEB7662","path":"rooms/rm_bottom_city/rm_bottom_city.yy",},
+    {"name":"inst_34195243","path":"rooms/rm_bottom_city/rm_bottom_city.yy",},
   ],
   "isDnd":false,
   "layers":[
     {"$GMRInstanceLayer":"","%Name":"Instances","depth":0,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[
         {"$GMRInstance":"v4","%Name":"inst_45DA128D","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_45DA128D","objectId":{"name":"obj_gilk","path":"objects/obj_gilk/obj_gilk.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":1280.0,"y":64.0,},
+        {"$GMRInstance":"v4","%Name":"inst_34195243","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_34195243","objectId":{"name":"obj_camera_controller","path":"objects/obj_camera_controller/obj_camera_controller.yy",},"properties":[],"resourceType":"GMRInstance","resourceVersion":"2.0","rotation":0.0,"scaleX":1.0,"scaleY":1.0,"x":0.0,"y":0.0,},
       ],"layers":[],"name":"Instances","properties":[],"resourceType":"GMRInstanceLayer","resourceVersion":"2.0","userdefinedDepth":false,"visible":true,},
     {"$GMRInstanceLayer":"","%Name":"Triggers","depth":100,"effectEnabled":true,"effectType":null,"gridX":32,"gridY":32,"hierarchyFrozen":false,"inheritLayerDepth":false,"inheritLayerSettings":false,"inheritSubLayers":true,"inheritVisibility":true,"instances":[
         {"$GMRInstance":"v4","%Name":"inst_6FDB82AC","colour":4294967295,"frozen":false,"hasCreationCode":false,"ignore":false,"imageIndex":0,"imageSpeed":1.0,"inheritCode":false,"inheritedItemId":null,"inheritItemSettings":false,"isDnd":false,"name":"inst_6FDB82AC","objectId":{"name":"obj_map_swap_trigger","path":"objects/obj_map_swap_trigger/obj_map_swap_trigger.yy",},"properties":[
@@ -68,7 +70,7 @@
   },
   "sequenceId":null,
   "views":[
-    {"hborder":683,"hport":768,"hspeed":-1,"hview":768,"inherit":false,"objectId":{"name":"obj_gilk","path":"objects/obj_gilk/obj_gilk.yy",},"vborder":384,"visible":true,"vspeed":-1,"wport":1366,"wview":1366,"xport":0,"xview":597,"yport":0,"yview":0,},
+    {"hborder":683,"hport":768,"hspeed":0,"hview":768,"inherit":false,"objectId":{"name":"obj_gilk","path":"objects/obj_gilk/obj_gilk.yy",},"vborder":384,"visible":true,"vspeed":0,"wport":1366,"wview":1366,"xport":0,"xview":597,"yport":0,"yview":0,},
     {"hborder":32,"hport":768,"hspeed":-1,"hview":768,"inherit":false,"objectId":null,"vborder":32,"visible":false,"vspeed":-1,"wport":1366,"wview":1366,"xport":0,"xview":0,"yport":0,"yview":0,},
     {"hborder":32,"hport":768,"hspeed":-1,"hview":768,"inherit":false,"objectId":null,"vborder":32,"visible":false,"vspeed":-1,"wport":1366,"wview":1366,"xport":0,"xview":0,"yport":0,"yview":0,},
     {"hborder":32,"hport":768,"hspeed":-1,"hview":768,"inherit":false,"objectId":null,"vborder":32,"visible":false,"vspeed":-1,"wport":1366,"wview":1366,"xport":0,"xview":0,"yport":0,"yview":0,},
