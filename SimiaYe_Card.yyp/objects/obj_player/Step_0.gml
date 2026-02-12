@@ -1,7 +1,7 @@
 
 if (!arena) {
 	if(is_controlled_chara) {
-		if(global.room_switching) {
+		if(variable_global_exists("room_switching") && global.room_switching) {
 			animate_player_leaving_room()	
 		}
 		else {
