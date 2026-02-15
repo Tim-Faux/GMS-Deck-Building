@@ -51,8 +51,8 @@
     {"name":"Ivan","order":4,"path":"folders/Sprites/Chara/Ivan.yy",},
     {"name":"UI_Elements","order":1,"path":"folders/Sprites/UI_Elements.yy",},
     {"name":"Health_Bar","order":1,"path":"folders/Sprites/UI_Elements/Health_Bar.yy",},
-    {"name":"City","order":2,"path":"folders/Sprites/World/City.yy",},
     {"name":"Buildings","order":4,"path":"folders/Sprites/World/Buildings.yy",},
+    {"name":"City","order":2,"path":"folders/Sprites/World/City.yy",},
     {"name":"Tilesets","order":1,"path":"folders/Sprites/World/Tilesets.yy",},
   ],
   "ResourceOrderSettings":[
@@ -346,6 +346,7 @@
     {"name":"InputY","order":3,"path":"scripts/InputY/InputY.yy",},
     {"name":"room_collision_items","order":2,"path":"scripts/room_collision_items/room_collision_items.yy",},
     {"name":"shd_clip","order":2,"path":"shaders/shd_clip/shd_clip.yy",},
+    {"name":"shd_see_through","order":1,"path":"shaders/shd_see_through/shd_see_through.yy",},
     {"name":"spr_gilk_portrait","order":3,"path":"sprites/spr_gilk_portrait/spr_gilk_portrait.yy",},
     {"name":"spr_gilk_walkleft","order":1,"path":"sprites/spr_gilk_walkleft/spr_gilk_walkleft.yy",},
     {"name":"spr_gilk_walkright","order":2,"path":"sprites/spr_gilk_walkright/spr_gilk_walkright.yy",},
