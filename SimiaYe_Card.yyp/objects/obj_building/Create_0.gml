@@ -25,7 +25,7 @@ function see_through_building(player) {
 	shader_set(shd_see_through);
 	shader_set_uniform_f(shader_get_uniform(shd_see_through, "fadeInPercent"), fade_in_percent)
 	shader_set_uniform_f(shader_get_uniform(shd_see_through, "radius"), center_circle_uv_radius)
-	shader_set_uniform_f(shader_get_uniform(shd_see_through, "centerPos"), portrait_uv_center_x, portrait_uv_center_y, )
+	shader_set_uniform_f(shader_get_uniform(shd_see_through, "centerPos"), portrait_uv_center_x, portrait_uv_center_y)
 	draw_self()
 	shader_reset()
 }
