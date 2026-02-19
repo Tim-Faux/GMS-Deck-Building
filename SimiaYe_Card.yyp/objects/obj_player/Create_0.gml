@@ -21,9 +21,6 @@ if(player_current_health == -1)
 
 target_pos = new character_position_target(x, y, 0, sprite_width, sprite_height)
 path = path_add()
-if(!variable_global_exists("grid")) {
-	global.grid = -1	
-}
 character_teleporting = false
 set_follow_target()
 teleport_effect_subimage = 0
@@ -436,33 +433,24 @@ function set_target_pos(leader_x, leader_y, angle) {
 function chase_target() {
 	var dist_to_target_pos_squared = sqr(target_pos.x - x) + sqr(target_pos.y - y)
 	if(dist_to_target_pos_squared > sqr(MIN_DIST_FOR_ALLIES_TO_MOVE)) {
-		var dist_move_speed_modifier = dist_to_target_pos_squared / sqr(sprite_width / 2)
-		var move_speed = clamp(WALK_SPEED + dist_move_speed_modifier, WALK_SPEED, WALK_SPEED * 2)
+		if(variable_global_exists("pathing_grid") && global.pathing_grid != -1) {
+			var dist_move_speed_modifier = dist_to_target_pos_squared / sqr(sprite_width / 2)
+			var move_speed = clamp(WALK_SPEED + dist_move_speed_modifier, WALK_SPEED, WALK_SPEED * 2)
 		
-		if(global.grid == -1) {
-			var cell_width = (bbox_right - bbox_left) / 2
-			var cell_height = (bbox_bottom - bbox_top) / 2
-			global.grid = mp_grid_create(0, 0, room_width / cell_width, room_height / cell_height, cell_width, cell_height)
-			for(var item_index = 0; item_index < array_length(collidable_items); item_index++) {
-				if(typeof(collidable_items[item_index]) == "ref") {
-					mp_grid_add_instances(global.grid, collidable_items[item_index], false)	
+			var x_offset = floor((bbox_left - x) + (bbox_right - bbox_left) / 2)
+			var y_offset = floor((bbox_top - y) + (bbox_bottom - bbox_top) / 2)
+			if(mp_grid_path(global.pathing_grid, path, x + x_offset, y + y_offset, target_pos.x + x_offset, target_pos.y + y_offset, true)) {
+				path_start(path, move_speed, path_action_stop, false)
+
+				if(follower != noone) {
+					follower.set_target_pos(x, y, target_pos.angle)
 				}
 			}
-		}
-
-		var x_offset = floor((bbox_left - x) + (bbox_right - bbox_left) / 2)
-		var y_offset = floor((bbox_top - y) + (bbox_bottom - bbox_top) / 2)
-		if(mp_grid_path(global.grid, path, x + x_offset, y + y_offset, target_pos.x + x_offset, target_pos.y + y_offset, true)) {
-			path_start(path, move_speed, path_action_stop, false)
-
-			if(follower != noone) {
-				follower.set_target_pos(x, y, target_pos.angle)
+			else {
+				path_end()
+				character_moving = false
+				teleport_character()
 			}
-		}
-		else {
-			path_end()
-			character_moving = false
-			teleport_character()
 		}
 	}
 }

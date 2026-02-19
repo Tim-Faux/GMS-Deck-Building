@@ -1,11 +1,12 @@
 {
   "$GMObject":"",
-  "%Name":"obj_tileset_randomizer",
+  "%Name":"obj_tileset_setup",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":4,"eventType":7,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_tileset_randomizer",
+  "name":"obj_tileset_setup",
   "overriddenProperties":[],
   "parent":{
     "name":"Objects",
