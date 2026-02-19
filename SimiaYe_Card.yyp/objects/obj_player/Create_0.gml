@@ -19,7 +19,11 @@ collidable_items = find_room_collision_items(room)
 if(player_current_health == -1)
 	player_current_health = player_max_health
 
-target_pos = new character_position_target(x, y, 0, sprite_width, sprite_height)
+var bbox_edge_to_origin_dist = { left :	bbox_left - x,
+									top :	bbox_top - y,
+									right:	bbox_right - x,
+									bottom:bbox_bottom - y}
+target_pos = new character_position_target(x, y, 0, sprite_width, sprite_height, bbox_edge_to_origin_dist)
 path = path_add()
 character_teleporting = false
 set_follow_target()
@@ -155,6 +159,7 @@ function move_horizontally(x_movement) {
 		var signed_x_step = x_movement < 0 ? -x_step : x_step
 		if (!place_meeting(x + signed_x_step, y, collidable_items)) {
 			x += signed_x_step * image_xscale
+			x = clamp(x, 0 + sprite_xoffset, room_width - sprite_width + sprite_xoffset)
 			break
 		}
 	}
@@ -169,6 +174,7 @@ function move_vertically(y_movement) {
 		var signed_y_step = y_movement < 0 ? -y_step : y_step
 		if (!place_meeting(x, y + signed_y_step, collidable_items)) {
 			y += signed_y_step * image_yscale
+			y = clamp(y, 0 + sprite_yoffset, room_height - sprite_height + sprite_yoffset)
 			break
 		}
 	}
@@ -243,13 +249,17 @@ function set_follow_target() {
 ///										to align itself to
 /// @param {Real} _sprite_width		The width of this character's sprite
 /// @param {Real} _sprite_height	The height of this character's sprite
-function character_position_target(_x_intent, _y_intent, _angle, _sprite_width, _sprite_height) constructor {
+/// @param {struct} bbox_to_origin_dist			The struct containing the distance from the origin
+///													to the bbox left, top, right, and bottom edge
+function character_position_target(_x_intent, _y_intent, _angle, _sprite_width, _sprite_height, bbox_to_origin_dist) constructor {
 	#macro SPACE_BETWEEN_FOLLOWERS 5
 	x_intent = _x_intent
 	y_intent = _y_intent
 	angle = _angle
-	x = x_intent - ((_sprite_width + SPACE_BETWEEN_FOLLOWERS) * dcos(_angle))
-	y = y_intent + ((_sprite_height + SPACE_BETWEEN_FOLLOWERS) * dsin(_angle))
+	x = clamp(x_intent - ((_sprite_width + SPACE_BETWEEN_FOLLOWERS) * dcos(_angle)),
+				-bbox_to_origin_dist.left, room_width - bbox_to_origin_dist.right)
+	y = clamp(y_intent + ((_sprite_height + SPACE_BETWEEN_FOLLOWERS) * dsin(_angle)), 
+				-bbox_to_origin_dist.top, room_height - bbox_to_origin_dist.bottom)
 		
 	/// @desc							Used to redefine this structs variables
 	/// @param {Real} _x_intent			The x position of the character that this character is following
@@ -258,12 +268,16 @@ function character_position_target(_x_intent, _y_intent, _angle, _sprite_width, 
 	///										to align itself to
 	/// @param {Real} _sprite_width		The width of this character's sprite
 	/// @param {Real} _sprite_height	The height of this character's sprite
-	static update_target_pos = function(_x_intent, _y_intent, _angle, _sprite_width, _sprite_height) {
+	/// @param {struct} bbox_to_origin_dist			The struct containing the distance from the origin
+	///													to the bbox left, top, right, and bottom edge
+	static update_target_pos = function(_x_intent, _y_intent, _angle, _sprite_width, _sprite_height, bbox_to_origin_dist) {
 		x_intent = _x_intent
 		y_intent = _y_intent
 		angle = _angle
-		x = x_intent - ((_sprite_width + SPACE_BETWEEN_FOLLOWERS) * dcos(_angle))
-		y = y_intent + ((_sprite_height + SPACE_BETWEEN_FOLLOWERS) * dsin(_angle))
+		x = clamp(x_intent - ((_sprite_width + SPACE_BETWEEN_FOLLOWERS) * dcos(_angle)),
+					-bbox_to_origin_dist.left, room_width - bbox_to_origin_dist.right)
+		y = clamp(y_intent + ((_sprite_height + SPACE_BETWEEN_FOLLOWERS) * dsin(_angle)),
+					-bbox_to_origin_dist.top, room_height - bbox_to_origin_dist.bottom)
 	}
 	
 	/// @desc										Attempts to find a space this character fits by shifting
@@ -368,6 +382,8 @@ function character_position_target(_x_intent, _y_intent, _angle, _sprite_width, 
 			x = x_intent
 			y = y_intent
 		}
+		x = clamp(x, 0, room_width + bbox_to_origin_dist.right)
+		y = clamp(x, 0, room_height + bbox_to_origin_dist.bottom)
 	}
 	
 	/// @desc									Attempts to shift this character vertically to the edge of
@@ -391,6 +407,8 @@ function character_position_target(_x_intent, _y_intent, _angle, _sprite_width, 
 			x = x_intent
 			y = y_intent
 		}
+		x = clamp(x, 0, room_width + bbox_to_origin_dist.right)
+		y = clamp(x, 0, room_height + bbox_to_origin_dist.bottom)
 	}
 }
 
@@ -402,11 +420,12 @@ function character_position_target(_x_intent, _y_intent, _angle, _sprite_width, 
 ///										to align itself to
 function set_target_pos(leader_x, leader_y, angle) {
 	character_moving = true
-	target_pos.update_target_pos(leader_x, leader_y, angle, sprite_height, sprite_width)
 	var bbox_edge_to_origin_dist = { left :	bbox_left - x,
 									 top :	bbox_top - y,
 									 right:	bbox_right - x,
 									 bottom:bbox_bottom - y}
+	target_pos.update_target_pos(leader_x, leader_y, angle, sprite_height, sprite_width, bbox_edge_to_origin_dist)
+	
 	var num_open_space_attempts = 0
 	while(true) {
 		var collision = collision_rectangle(ceil(target_pos.x + bbox_edge_to_origin_dist.left) + 1,

@@ -16,13 +16,13 @@ function create_room_grid() {
 	for(var chara_index = 0; chara_index < instance_number(obj_player); chara_index++) {
 		var chara_instance = instance_find(obj_player, chara_index)
 		if(chara_instance.is_controlled_chara) {
-			cell_width = (chara_instance.bbox_right - chara_instance.bbox_left) / 2
-			cell_height = (chara_instance.bbox_bottom - chara_instance.bbox_top) / 2
+			cell_width = round((chara_instance.bbox_right - chara_instance.bbox_left) / 2)
+			cell_height = round((chara_instance.bbox_bottom - chara_instance.bbox_top) / 2)
 			break
 		}
 	}
 		
-	global.pathing_grid = mp_grid_create(0, 0, room_width / cell_width, room_height / cell_height, cell_width, cell_height)
+	global.pathing_grid = mp_grid_create(0, 0, ceil(room_width / cell_width), ceil(room_height / cell_height), cell_width, cell_height)
 	grid_being_created = false
 	return true
 }
