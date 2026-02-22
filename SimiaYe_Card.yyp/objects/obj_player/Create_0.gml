@@ -1,4 +1,6 @@
 #macro WALK_SPEED 7.8
+#macro STARTING_ACCELERATION_VALUE 0.3
+#macro ACCELERATION_SPEED 0.1
 #macro MAX_SPRITE_SCALE_FRAME_INDEX 14
 #macro MIN_DIST_FOR_ALLIES_TO_MOVE 3
 
@@ -25,6 +27,7 @@ var bbox_edge_to_origin_dist = { left :	bbox_left - x,
 									bottom:bbox_bottom - y}
 target_pos = new character_position_target(x, y, 0, sprite_width, sprite_height, bbox_edge_to_origin_dist)
 path = path_add()
+chara_acceleration = STARTING_ACCELERATION_VALUE
 character_teleporting = false
 set_follow_target()
 teleport_effect_subimage = 0
@@ -453,9 +456,12 @@ function chase_target() {
 	var dist_to_target_pos_squared = sqr(target_pos.x - x) + sqr(target_pos.y - y)
 	if(dist_to_target_pos_squared > sqr(MIN_DIST_FOR_ALLIES_TO_MOVE)) {
 		if(variable_global_exists("pathing_grid") && global.pathing_grid != -1) {
-			var dist_move_speed_modifier = dist_to_target_pos_squared / sqr(sprite_width / 2)
-			var move_speed = clamp(WALK_SPEED + dist_move_speed_modifier, WALK_SPEED, WALK_SPEED * 2)
-		
+			chara_acceleration = clamp(chara_acceleration + ACCELERATION_SPEED, STARTING_ACCELERATION_VALUE, 1)
+			var min_walk_speed = WALK_SPEED * 2/3
+			var max_walk_speed = WALK_SPEED * 3/2
+			var dist_move_speed_modifier = 2 * dist_to_target_pos_squared / sqr(sprite_width)
+			var move_speed = clamp((min_walk_speed + dist_move_speed_modifier) * chara_acceleration, min_walk_speed, max_walk_speed)
+			
 			var x_offset = floor((bbox_left - x) + (bbox_right - bbox_left) / 2)
 			var y_offset = floor((bbox_top - y) + (bbox_bottom - bbox_top) / 2)
 			if(mp_grid_path(global.pathing_grid, path, x + x_offset, y + y_offset, target_pos.x + x_offset, target_pos.y + y_offset, true)) {

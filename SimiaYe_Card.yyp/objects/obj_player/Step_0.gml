@@ -23,6 +23,7 @@ if (!arena) {
 		set_movement_sprite(direction)
 		if(path_position == 1) {
 			character_moving = false
+			acceleration = STARTING_ACCELERATION_VALUE
 		}
 	}
 	else if (character_teleporting) {
