@@ -3,6 +3,7 @@
 #macro ACCELERATION_SPEED 0.1
 #macro MAX_SPRITE_SCALE_FRAME_INDEX 14
 #macro MIN_DIST_FOR_ALLIES_TO_MOVE 3
+#macro MAX_DIST_TO_ENTER_BUILDING 50
 
 move_north_west_sprite =	noone
 move_north_sprite =			noone
@@ -40,12 +41,12 @@ on_walk_animation_end = undefined
 chara_leaving_room = undefined
 
 /// @desc								Sets the controlled character's initial position so they are
-///											next to the obj_map_swap_trigger with pos_num equal to
+///											next to the obj_room_change_trigger with pos_num equal to
 ///											pos_num_to_swap_to and in the direction of place_player_dir
 function set_initial_pos() {
 	if(is_controlled_chara) {
-		for(var map_swap_index = 0; map_swap_index < instance_number(obj_map_swap_trigger); map_swap_index++) {
-			var swap_trigger = instance_find(obj_map_swap_trigger, map_swap_index)
+		for(var map_swap_index = 0; map_swap_index < instance_number(obj_room_change_trigger); map_swap_index++) {
+			var swap_trigger = instance_find(obj_room_change_trigger, map_swap_index)
 			if(variable_global_exists("pos_num_to_swap_to") && global.pos_num_to_swap_to == swap_trigger.pos_num) {
 				var dist_to_walk = 0
 				var normalized_sprite_width = sprite_width - sprite_xoffset
@@ -162,7 +163,9 @@ function move_horizontally(x_movement) {
 		var signed_x_step = x_movement < 0 ? -x_step : x_step
 		if (!place_meeting(x + signed_x_step, y, collidable_items)) {
 			x += signed_x_step * image_xscale
-			x = clamp(x, 0 + sprite_xoffset, room_width - sprite_width + sprite_xoffset)
+			if(!variable_global_exists("room_switching") || !global.room_switching) {
+				x = clamp(x, 0 + sprite_xoffset, room_width - sprite_width + sprite_xoffset)
+			}
 			break
 		}
 	}
@@ -175,9 +178,12 @@ function move_horizontally(x_movement) {
 function move_vertically(y_movement) {
 	for(var y_step = abs(y_movement); y_step > 0; y_step--) {
 		var signed_y_step = y_movement < 0 ? -y_step : y_step
-		if (!place_meeting(x, y + signed_y_step, collidable_items)) {
+		if (!place_meeting(x, y + signed_y_step, collidable_items) || 
+			(variable_global_exists("room_switching") && global.room_switching)) {
 			y += signed_y_step * image_yscale
-			y = clamp(y, 0 + sprite_yoffset, room_height - sprite_height + sprite_yoffset)
+			if(!variable_global_exists("room_switching") || !global.room_switching) {
+				y = clamp(y, 0 + sprite_yoffset, room_height - sprite_height + sprite_yoffset)
+			}
 			break
 		}
 	}
@@ -527,5 +533,14 @@ function scale_sprite_for_teleport() {
 			character_teleporting = false
 			character_teleported = false
 		}
+	}
+}
+
+/// @desc							Searches for any building triggers that are close enough to be
+///										interacted with and activates them to start listening
+function check_for_building_entrance() {
+	var closest_trigger = instance_nearest(x, y, obj_enter_building_trigger)
+	if(distance_to_object(closest_trigger) < MAX_DIST_TO_ENTER_BUILDING) {
+		closest_trigger.wake_up(id)	
 	}
 }

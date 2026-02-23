@@ -1,0 +1,1 @@
+find_player_chara()

@@ -1,11 +1,13 @@
 {
   "$GMObject":"",
-  "%Name":"obj_map_swap_trigger",
+  "%Name":"obj_enter_building_trigger",
   "eventList":[
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":8,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"obj_map_swap_trigger",
+  "name":"obj_enter_building_trigger",
   "overriddenProperties":[],
   "parent":{
     "name":"Triggers",
@@ -33,9 +35,9 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_map_swap",
-    "path":"sprites/spr_map_swap/spr_map_swap.yy",
+    "name":"spr_enter_building",
+    "path":"sprites/spr_enter_building/spr_enter_building.yy",
   },
   "spriteMaskId":null,
-  "visible":false,
+  "visible":true,
 }

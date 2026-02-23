@@ -16,6 +16,8 @@ if (!arena) {
 			if(follower != noone && (x_movement != 0 || y_movement != 0)) {
 				follower.set_target_pos(x, y, InputDirection(0, INPUT_CLUSTER.NAVIGATION))
 			}
+			
+			check_for_building_entrance()
 		}
 	}
 	else if (!character_teleporting) {
