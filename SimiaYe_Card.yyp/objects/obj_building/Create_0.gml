@@ -1,5 +1,21 @@
 fade_in = false
 fade_in_percent = 1
+player_chara = noone
+
+/// @desc							Finds the current player controlled character and assigns it to
+///										player_chara or set it to noone if no player character is found
+///										NOTE: This assumes there is only 1 controlled chara and will
+///										not search for any more after one is found
+function find_player_chara() {
+	player_chara = noone
+	for(var chara_index = 0; chara_index < instance_number(obj_player); chara_index++) {
+		var chara = instance_find(obj_player, chara_index)
+		if(chara != noone && chara.is_controlled_chara) {
+			player_chara = chara
+			return
+		}
+	}
+}
 
 /// @desc							Sets up the shd_see_through shader to cut out a circle in the building
 ///										texture around the player
