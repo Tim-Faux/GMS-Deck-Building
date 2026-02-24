@@ -1,8 +1,8 @@
-if(player_in_range) {
+if(player_in_range && variable_global_exists("player_chara") && global.player_chara != noone) {
 	if (InputCheck(INPUT_VERB.INTERACT) && !global.room_switching) {
 		trigger_activated()
 	}
-	if(player_chara != noone && distance_to_object(player_chara) >= MAX_DIST_TO_ENTER_BUILDING) {
+	if(distance_to_object(global.player_chara) >= MAX_DIST_TO_ENTER_BUILDING) {
 		player_in_range = false
 	}
 }

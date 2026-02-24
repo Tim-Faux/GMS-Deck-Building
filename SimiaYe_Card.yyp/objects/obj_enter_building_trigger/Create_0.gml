@@ -7,9 +7,8 @@ player_in_range = false
 
 /// @desc							Wakes up this trigger so that the player can interact with it
 ///										to move to the associated room
-function wake_up(player_chara) {
+function wake_up() {
 	player_in_range = true
-	player_chara = player_chara
 }
 
 /// @desc							Draws the icon for the player's interact button as well as a

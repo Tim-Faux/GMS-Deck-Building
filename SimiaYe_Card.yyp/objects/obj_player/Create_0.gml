@@ -30,7 +30,6 @@ target_pos = new character_position_target(x, y, 0, sprite_width, sprite_height,
 path = path_add()
 chara_acceleration = STARTING_ACCELERATION_VALUE
 character_teleporting = false
-set_follow_target()
 teleport_effect_subimage = 0
 character_teleported = true
 character_moving = false
@@ -80,6 +79,9 @@ function set_initial_pos() {
 				walk_to_next_room(swap_trigger.place_player_dir, dist_to_walk, undefined, false)
 				break
 			}
+		}
+		if(instance_exists(obj_camera_controller)) {
+			obj_camera_controller.set_camera_initial_pos()
 		}
 	}
 }
@@ -239,15 +241,8 @@ function get_movement_sprites_array() {
 
 /// @desc							Finds the an avaliable obj_player to follow
 function set_follow_target() {
-	if(!is_controlled_chara) {
-		for(var chara_index = 0; chara_index < instance_number(obj_player); chara_index++) {
-			var chara_to_follow = instance_find(obj_player, chara_index)
-			if(chara_to_follow != id && chara_to_follow != noone && chara_to_follow.follower == noone) {
-				chara_to_follow.follower = id
-				set_target_pos(chara_to_follow.x, chara_to_follow.y, 270)
-				break
-			}
-		}
+	if(!is_controlled_chara && instance_exists(obj_follower_order_manager)) {
+		obj_follower_order_manager.add_follower(id)
 	}
 }
 
@@ -541,6 +536,6 @@ function scale_sprite_for_teleport() {
 function check_for_building_entrance() {
 	var closest_trigger = instance_nearest(x, y, obj_enter_building_trigger)
 	if(distance_to_object(closest_trigger) < MAX_DIST_TO_ENTER_BUILDING) {
-		closest_trigger.wake_up(id)	
+		closest_trigger.wake_up()	
 	}
 }

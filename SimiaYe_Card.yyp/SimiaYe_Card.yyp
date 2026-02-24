@@ -123,6 +123,7 @@
     {"id":{"name":"obj_easyenemy","path":"objects/obj_easyenemy/obj_easyenemy.yy",},},
     {"id":{"name":"obj_enemy","path":"objects/obj_enemy/obj_enemy.yy",},},
     {"id":{"name":"obj_enter_building_trigger","path":"objects/obj_enter_building_trigger/obj_enter_building_trigger.yy",},},
+    {"id":{"name":"obj_follower_order_manager","path":"objects/obj_follower_order_manager/obj_follower_order_manager.yy",},},
     {"id":{"name":"obj_gilk","path":"objects/obj_gilk/obj_gilk.yy",},},
     {"id":{"name":"obj_interactable","path":"objects/obj_interactable/obj_interactable.yy",},},
     {"id":{"name":"obj_main","path":"objects/obj_main/obj_main.yy",},},

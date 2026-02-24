@@ -61,6 +61,7 @@
     {"name":"__InputUpdateController","order":19,"path":"objects/__InputUpdateController/__InputUpdateController.yy",},
     {"name":"obj_camera_controller","order":3,"path":"objects/obj_camera_controller/obj_camera_controller.yy",},
     {"name":"obj_collision_object","order":4,"path":"objects/obj_collision_object/obj_collision_object.yy",},
+    {"name":"obj_follower_order_manager","order":5,"path":"objects/obj_follower_order_manager/obj_follower_order_manager.yy",},
     {"name":"obj_gilk","order":1,"path":"objects/obj_gilk/obj_gilk.yy",},
     {"name":"obj_map_swap_trigger","order":1,"path":"objects/obj_map_swap_trigger/obj_map_swap_trigger.yy",},
     {"name":"obj_pathing_grid","order":4,"path":"objects/obj_pathing_grid/obj_pathing_grid.yy",},
