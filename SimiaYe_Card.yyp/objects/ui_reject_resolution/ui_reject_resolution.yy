@@ -1,17 +1,17 @@
 {
   "$GMObject":"",
-  "%Name":"ui_close_layer_button",
+  "%Name":"ui_reject_resolution",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":7,"eventType":6,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
-  "name":"ui_close_layer_button",
+  "name":"ui_reject_resolution",
   "overriddenProperties":[
-    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"ui_button","path":"objects/ui_button/ui_button.yy",},"propertyId":{"name":"button_text","path":"objects/ui_button/ui_button.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"",},
+    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"ui_button","path":"objects/ui_button/ui_button.yy",},"propertyId":{"name":"button_text","path":"objects/ui_button/ui_button.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"Revert",},
   ],
   "parent":{
-    "name":"Button",
-    "path":"folders/Objects/UI/Button.yy",
+    "name":"Resolution_Acceptance_Buttons",
+    "path":"folders/Objects/UI/Button/Resolution_Acceptance_Buttons.yy",
   },
   "parentObjectId":{
     "name":"ui_button",
@@ -35,8 +35,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_close_layer",
-    "path":"sprites/spr_close_layer/spr_close_layer.yy",
+    "name":"spr_default_button",
+    "path":"sprites/spr_default_button/spr_default_button.yy",
   },
   "spriteMaskId":null,
   "visible":true,

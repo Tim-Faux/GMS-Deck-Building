@@ -1,7 +1,4 @@
-// Inherit the parent event
-event_inherited();
 #macro LAYER_SEARCH_TOLERANCE 10
-
 
 /// @desc									Finds all nearby layers of the provided layer, deleting
 ///												the provided layer and the nearby ones

@@ -1,0 +1,1 @@
+alarm_0_triggered()
