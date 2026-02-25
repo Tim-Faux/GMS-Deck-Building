@@ -387,7 +387,7 @@ function character_position_target(_x_intent, _y_intent, _angle, _sprite_width, 
 			y = y_intent
 		}
 		x = clamp(x, 0, room_width + bbox_to_origin_dist.right)
-		y = clamp(x, 0, room_height + bbox_to_origin_dist.bottom)
+		y = clamp(y, 0, room_height + bbox_to_origin_dist.bottom)
 	}
 	
 	/// @desc									Attempts to shift this character vertically to the edge of
@@ -398,10 +398,10 @@ function character_position_target(_x_intent, _y_intent, _angle, _sprite_width, 
 	/// @param {bool} shift_x_attempted			Optional flag to determine if shifting x should be attempted 
 	///												if shifting y fails
 	static shift_on_y = function(collision_bounds, bbox_to_origin_dist, shift_x_attempted = false) {
-		if(collision_bounds.bottom < y_intent) {
+		if(collision_bounds.bottom < y_intent + bbox_to_origin_dist.top + 1) {
 			y = collision_bounds.bottom - bbox_to_origin_dist.top + 1
 		}
-		else if(collision_bounds.top > y_intent) {
+		else if(collision_bounds.top > y_intent + bbox_to_origin_dist.bottom - 1) {
 			y = collision_bounds.top - bbox_to_origin_dist.bottom - 1
 		}
 		else if(!shift_x_attempted) {
@@ -412,7 +412,7 @@ function character_position_target(_x_intent, _y_intent, _angle, _sprite_width, 
 			y = y_intent
 		}
 		x = clamp(x, 0, room_width + bbox_to_origin_dist.right)
-		y = clamp(x, 0, room_height + bbox_to_origin_dist.bottom)
+		y = clamp(y, 0, room_height + bbox_to_origin_dist.bottom)
 	}
 }
 
