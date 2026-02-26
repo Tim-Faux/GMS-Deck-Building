@@ -158,9 +158,13 @@ function create_attacker_selection(allowed_chara_classes = [chara_class.all_char
 
 	for(var chara_index = 0; chara_index < array_length(all_allowed_attackers); chara_index++) {
 		var sprite = all_allowed_attackers[chara_index].sprite_index
+		var x_scale = all_allowed_attackers[chara_index].image_xscale
+		var y_scale = all_allowed_attackers[chara_index].image_yscale
 		instance_create_layer(all_allowed_attackers[chara_index].x, all_allowed_attackers[chara_index].y, highlighed_chara_layer, obj_selectable_chara, {
 			sprite_index : sprite,
-			chara_instance : all_allowed_attackers[chara_index]
+			chara_instance : all_allowed_attackers[chara_index],
+			image_xscale : x_scale,
+			image_yscale : y_scale
 		})
 		all_allowed_attackers[chara_index].visible = false
 	}
@@ -306,8 +310,12 @@ function create_card_selection(allowed_cards) {
 	var xpos = (display_get_gui_width() - total_width_of_card_selection) / 2
 	var ypos = (display_get_gui_height() - allowed_cards[0].sprite_height) / 2
 	for (var card_index = 0; card_index < numCards; card_index++) {
+		var x_scale = allowed_cards[card_index].image_xscale
+		var y_scale = allowed_cards[card_index].image_yscale
 		var selectable_card_instance = instance_create_layer(xpos, ypos, highlighed_cards_layer, allowed_cards[card_index].object_index, {
-			interaction_type : [card_interaction_type.selectable_card]
+			interaction_type : [card_interaction_type.selectable_card],
+			image_xscale : x_scale,
+			image_yscale : y_scale
 		})
 		selectable_to_hand_card_struct[$ selectable_card_instance] = allowed_cards[card_index]
 		xpos += allowed_cards[card_index].sprite_width + spacing_between_cards
@@ -418,9 +426,13 @@ function create_defender_selection() {
 
 	for(var enemy_index = 0; enemy_index < array_length(all_allowed_enemies); enemy_index++) {
 		var sprite = all_allowed_enemies[enemy_index].sprite_index
+		var x_scale = all_allowed_enemies[enemy_index].image_xscale
+		var y_scale = all_allowed_enemies[enemy_index].image_yscale
 		instance_create_layer(all_allowed_enemies[enemy_index].x, all_allowed_enemies[enemy_index].y, highlighed_enemies_layer, obj_selectable_chara, {
 			sprite_index : sprite,
-			chara_instance : all_allowed_enemies[enemy_index]
+			chara_instance : all_allowed_enemies[enemy_index],
+			image_xscale : x_scale,
+			image_yscale : y_scale
 		})
 		all_allowed_enemies[enemy_index].visible = false
 	}
