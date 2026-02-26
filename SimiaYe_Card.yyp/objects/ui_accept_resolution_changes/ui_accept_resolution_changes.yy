@@ -29,10 +29,10 @@
   "physicsShapePoints":[],
   "physicsStartAwake":true,
   "properties":[
-    {"$GMObjectProperty":"v1","%Name":"font","filters":[
+    {"$GMObjectProperty":"v2","%Name":"font","filters":[
         "GMFont",
       ],"listItems":[],"multiselect":false,"name":"font","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resource":{"name":"fnt_resolution_confirmation","path":"fonts/fnt_resolution_confirmation/fnt_resolution_confirmation.yy",},"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"fnt_resolution_confirmation","varType":5,},
-    {"$GMObjectProperty":"v1","%Name":"font_color","filters":[],"listItems":[],"multiselect":false,"name":"font_color","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"$FFFFFFFF","varType":7,},
+    {"$GMObjectProperty":"v2","%Name":"font_color","filters":[],"listItems":[],"multiselect":false,"name":"font_color","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"$FFFFFFFF","varType":7,},
   ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
