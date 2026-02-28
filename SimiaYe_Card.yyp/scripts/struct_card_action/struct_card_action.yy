@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"struct_card_action",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"struct_card_action",
+  "parent":{
+    "name":"Card",
+    "path":"folders/Objects/Card.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

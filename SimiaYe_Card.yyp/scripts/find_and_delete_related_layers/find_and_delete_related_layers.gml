@@ -4,9 +4,11 @@
 ///												the provided layer and the nearby ones
 /// @param {String, Id.Layer} layer_id		The layer to search above and below
 function find_and_delete_related_layers(layer_id) {
-	var all_layers_to_delete = find_neighboring_layers(layer_id)
-	delete_layers(all_layers_to_delete, layer_id)
-	layer_destroy(layer_id)
+	if(layer_exists(layer_id)) {
+		var all_layers_to_delete = find_neighboring_layers(layer_id)
+		delete_layers(all_layers_to_delete, layer_id)
+		layer_destroy(layer_id)
+	}
 }
 
 /// @desc									Finds all of the layers with a depth within LAYER_SEARCH_TOLERANCE 

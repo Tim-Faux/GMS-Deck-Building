@@ -31,7 +31,7 @@
   "physicsShapePoints":[],
   "physicsStartAwake":true,
   "properties":[
-    {"$GMObjectProperty":"v1","%Name":"new_room","filters":[
+    {"$GMObjectProperty":"v2","%Name":"new_room","filters":[
         "GMRoom",
       ],"listItems":[],"multiselect":false,"name":"new_room","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resource":{"name":"rm_main_menu","path":"rooms/rm_main_menu/rm_main_menu.yy",},"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"rm_main_menu","varType":5,},
   ],
