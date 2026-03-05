@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"book_menu_page_data",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"book_menu_page_data",
+  "parent":{
+    "name":"Book_Menu",
+    "path":"folders/Objects/Book_Menu.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

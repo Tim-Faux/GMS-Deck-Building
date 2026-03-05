@@ -1,5 +1,5 @@
 if(mouse_check_button_released(mb_left)) {
-	page_being_flipped = true	
+	page_being_flipped = true
 }
 
 if (page_being_flipped) {

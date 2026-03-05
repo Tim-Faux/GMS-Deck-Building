@@ -1,2 +1,1 @@
-draw_cover()
-draw_moveable_page()
+// Drawing done in Draw GUI
