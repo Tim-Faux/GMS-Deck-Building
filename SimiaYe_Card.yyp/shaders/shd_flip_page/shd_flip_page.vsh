@@ -5,6 +5,7 @@ attribute vec2 in_TextureCoord;              // (u,v)
 
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
+varying float page_angle;
 
 uniform vec4 page_vertex_data;
 uniform vec2 page_flip_data;
@@ -26,6 +27,7 @@ void main()
     vec4 object_space_pos = vec4( _x, _y, _y - _start_y, 1.0);
     gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * object_space_pos;
     
+	page_angle = cos(_page_angel);
 	v_vColour = in_Colour;
     v_vTexcoord = in_TextureCoord;
 }

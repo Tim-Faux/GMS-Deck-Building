@@ -14,7 +14,9 @@ vertex_buffer = create_vertex_buffer()
 
 uniform_page_vertex_data = shader_get_uniform(shd_flip_page, "page_vertex_data")
 uniform_page_flip_data = shader_get_uniform(shd_flip_page, "page_flip_data")
+uniform_page_back = shader_get_sampler_index(shd_flip_page, "page_back")
 spr_flipping_page = undefined
+spr_flipping_page_back = undefined
 
 current_page = 0
 page_data = new book_menu_page_data(x, y, sprite_height, sprite_width)
@@ -110,6 +112,8 @@ function flip_book_page() {
 		flip_direction = page_flip_direction.none
 		sprite_delete(spr_flipping_page)
 		spr_flipping_page = undefined
+		sprite_delete(spr_flipping_page_back)
+		spr_flipping_page_back = undefined
 		current_page++
 		create_page_objects()
 	}
@@ -126,8 +130,11 @@ function draw_moveable_page() {
 	
 	if(page_being_flipped) {
 		spr_flipping_page ??= create_page_flip_sprite()
+		spr_flipping_page_back ??= create_page_back_sprite()
+		
 		draw_sprite_ext(spr_flipping_page, 0, 0, 0, 1, 1,
 									image_angle, image_blend, image_alpha)
+		texture_set_stage(uniform_page_back, sprite_get_texture(spr_flipping_page_back, 0))
 	}
 	else {
 		draw_sprite_ext(sprite_index, 0, 0, 0, image_xscale, image_yscale,
@@ -189,8 +196,24 @@ function create_page_flip_sprite() {
 	}
 	var spr_custom = sprite_create_from_surface(page_flip_surf, 0, 0, 
 							surface_get_width(page_flip_surf), surface_get_height(page_flip_surf),
-							false, false, 0, 0);
-	surface_reset_target();
+							false, false, 0, 0)
+	surface_reset_target()
+	return spr_custom
+}
+
+/// @desc						Creates a scaled sprite of a blank page for the page's back
+/// @returns {Asset.GMSprite}	The page sprite to be used for back of a page
+function create_page_back_sprite() {
+	var page_back_surf = surface_create(sprite_width, sprite_height)
+	surface_set_target(page_back_surf)
+	draw_clear_alpha(c_black, 0)
+	
+	draw_sprite_ext(sprite_index, 0, 0, 0, image_xscale, image_yscale,
+									image_angle, image_blend, image_alpha)
+	var spr_custom = sprite_create_from_surface(page_back_surf, 0, 0, 
+							surface_get_width(page_back_surf), surface_get_height(page_back_surf),
+							false, false, 0, 0)
+	surface_reset_target()
 	return spr_custom
 }
 
