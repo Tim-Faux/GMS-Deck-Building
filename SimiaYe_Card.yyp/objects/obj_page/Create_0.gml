@@ -69,16 +69,47 @@ function create_page_objects() {
 				instance_create_layer(_value.x_pos + column_width, _value.y_pos, page_elements_layer, _value.element)
 			}
 		})
+		
+		create_page_flip_button()
 	}
 }
 
-/// @desc						Sets the page_dir and page_bend based on the flip_direction to create
-///									a smooth motion of the page flipping
-function flip_book_page() {
-	if(flip_direction == page_flip_direction.none) {
+/// @desc						Creates the next and previous page buttons based on number of pages
+///									in the button's direction
+function create_page_flip_button() {
+	var cover_nineslice = sprite_get_nineslice(object_get_sprite(obj_book_menu))
+	var next_page_button_width = sprite_get_width(object_get_sprite(ui_next_book_page_button))
+	var next_page_button_scale = cover_nineslice.right / next_page_button_width
+	if(array_length(page_data.all_pages) > current_page + 1) {
+		instance_create_layer(x + sprite_width + next_page_button_width, y + (sprite_height / 2), page_elements_layer, ui_next_book_page_button, {
+			on_button_pressed : method(self, flip_book_page),
+			on_button_pressed_args : [page_flip_direction.left],
+			image_xscale : next_page_button_scale,
+			image_yscale : next_page_button_scale
+		})
+	}
+	if(current_page > 0) {
+		instance_create_layer(x - sprite_width - next_page_button_width, y + (sprite_height / 2), page_elements_layer, ui_next_book_page_button, {
+			on_button_pressed : method(self, flip_book_page),
+			on_button_pressed_args : [page_flip_direction.right],
+			image_xscale : -next_page_button_scale,
+			image_yscale : next_page_button_scale
+		})
+	}
+}
+
+/// @desc											Sets the page_dir and page_bend based on the 
+///														flip_direction to create a smooth motion 
+///														of the page flipping
+/// @param {page_flip_direction} page_flip_dir		The direction that determines which way the
+///														page will flip
+function flip_book_page(page_flip_dir) {
+	if(page_flip_dir == page_flip_direction.none) {
 		return	
 	}
 	
+	flip_direction = page_flip_dir
+	page_being_flipped = true
 	flip_percent = min(1, flip_percent + PAGE_TURN_SPEED)
 	
 	var to_middle = clamp(flip_percent, 0, 0.5) * 2
@@ -93,7 +124,7 @@ function flip_book_page() {
 	var end_dir = 180
 	var end_bend = 0
 
-	if(flip_direction == page_flip_direction.left) {
+	if(page_flip_dir == page_flip_direction.left) {
 		var end_of_flip_dir = lerp(mid_dir, end_dir, to_end)
 		page_dir = lerp(start_dir, end_of_flip_dir, to_middle)
 		page_bend = lerp(start_bend, lerp(mid_bend, end_bend, to_end), to_middle)
@@ -114,7 +145,12 @@ function flip_book_page() {
 		spr_flipping_page = undefined
 		sprite_delete(spr_flipping_page_back)
 		spr_flipping_page_back = undefined
-		current_page++
+		
+		if(page_flip_dir == page_flip_direction.left)
+			current_page = min(array_length(page_data.all_pages) - 1, current_page + 1)
+		else
+			current_page = max(0, current_page - 1)
+			
 		create_page_objects()
 	}
 }
