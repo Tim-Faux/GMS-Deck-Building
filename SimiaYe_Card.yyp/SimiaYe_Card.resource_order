@@ -85,6 +85,7 @@
     {"name":"obj_main","order":1,"path":"objects/obj_main/obj_main.yy",},
     {"name":"obj_page","order":1,"path":"objects/obj_page/obj_page.yy",},
     {"name":"obj_selectable_chara","order":3,"path":"objects/obj_selectable_chara/obj_selectable_chara.yy",},
+    {"name":"obj_settings_bookmark","order":8,"path":"objects/obj_settings_bookmark/obj_settings_bookmark.yy",},
     {"name":"obj_settings_chapter","order":3,"path":"objects/obj_settings_chapter/obj_settings_chapter.yy",},
     {"name":"obj_target_selection_handler","order":4,"path":"objects/obj_target_selection_handler/obj_target_selection_handler.yy",},
     {"name":"ui_background_dimmer","order":9,"path":"objects/ui_background_dimmer/ui_background_dimmer.yy",},
@@ -146,5 +147,6 @@
     {"name":"spr_player_deck_header_background","order":8,"path":"sprites/spr_player_deck_header_background/spr_player_deck_header_background.yy",},
     {"name":"spr_player_deck_scroll_thumb","order":1,"path":"sprites/spr_player_deck_scroll_thumb/spr_player_deck_scroll_thumb.yy",},
     {"name":"spr_selectable_chara_back_button","order":4,"path":"sprites/spr_selectable_chara_back_button/spr_selectable_chara_back_button.yy",},
+    {"name":"spr_settings_bookmark_top","order":3,"path":"sprites/spr_settings_bookmark_top/spr_settings_bookmark_top.yy",},
   ],
 }
