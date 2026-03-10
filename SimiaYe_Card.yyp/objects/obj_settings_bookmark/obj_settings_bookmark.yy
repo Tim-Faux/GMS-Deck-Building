@@ -1,21 +1,19 @@
 {
   "$GMObject":"",
   "%Name":"obj_settings_bookmark",
-  "eventList":[
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":7,"eventType":6,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-  ],
+  "eventList":[],
   "managed":true,
   "name":"obj_settings_bookmark",
   "overriddenProperties":[
-    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"ui_button","path":"objects/ui_button/ui_button.yy",},"propertyId":{"name":"button_text","path":"objects/ui_button/ui_button.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"",},
+    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_bookmark","path":"objects/obj_bookmark/obj_bookmark.yy",},"propertyId":{"name":"bookmark_chapter","path":"objects/obj_bookmark/obj_bookmark.yy",},"resource":{"name":"obj_settings_chapter","path":"objects/obj_settings_chapter/obj_settings_chapter.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"obj_settings_chapter",},
   ],
   "parent":{
     "name":"Book_Menu",
     "path":"folders/Objects/Book_Menu.yy",
   },
   "parentObjectId":{
-    "name":"ui_button",
-    "path":"objects/ui_button/ui_button.yy",
+    "name":"obj_bookmark",
+    "path":"objects/obj_bookmark/obj_bookmark.yy",
   },
   "persistent":false,
   "physicsAngularDamping":0.1,
@@ -30,9 +28,7 @@
   "physicsShape":1,
   "physicsShapePoints":[],
   "physicsStartAwake":true,
-  "properties":[
-    {"$GMObjectProperty":"v2","%Name":"on_bookmark_pressed","filters":[],"listItems":[],"multiselect":false,"name":"on_bookmark_pressed","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"","varType":4,},
-  ],
+  "properties":[],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
