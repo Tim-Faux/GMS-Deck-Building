@@ -3,8 +3,8 @@
   "%Name":"shd_flip_page",
   "name":"shd_flip_page",
   "parent":{
-    "name":"Book_Menu",
-    "path":"folders/Objects/Book_Menu.yy",
+    "name":"Scripts",
+    "path":"folders/Objects/Book_Menu/Scripts.yy",
   },
   "resourceType":"GMShader",
   "resourceVersion":"2.0",

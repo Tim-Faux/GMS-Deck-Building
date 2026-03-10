@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"book_menu_page_data",
+  "%Name":"enum_page_flip_direction",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"book_menu_page_data",
+  "name":"enum_page_flip_direction",
   "parent":{
     "name":"Scripts",
     "path":"folders/Objects/Book_Menu/Scripts.yy",

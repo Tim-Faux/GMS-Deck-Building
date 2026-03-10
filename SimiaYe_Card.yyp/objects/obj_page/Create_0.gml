@@ -1,56 +1,10 @@
-#macro PAGE_TURN_SPEED 0.03
-
-flip_percent = 0
-page_dir = 0
-page_bend = 0
-segment_num = 10
-segment_length = sprite_width / (segment_num - 1)
-
-page_being_flipped = false
+current_page = 0
+run_page_flip_sprite_creation = false
 flip_direction = page_flip_direction.none
 
-surf = surface_create(sprite_width, sprite_height)
-vertex_buffer = create_vertex_buffer()
-
-uniform_page_vertex_data = shader_get_uniform(shd_flip_page, "page_vertex_data")
-uniform_page_flip_data = shader_get_uniform(shd_flip_page, "page_flip_data")
-uniform_page_back = shader_get_sampler_index(shd_flip_page, "page_back")
-spr_flipping_page = undefined
-spr_flipping_page_back = undefined
-
-current_page = 0
 page_data = new book_menu_page_data(x, y, sprite_height, sprite_width)
 page_elements_layer = layer_create(depth - 1, "page_elements_layer")
-
-enum page_flip_direction {
-	none,
-	left,
-	right,
-}
-
-/// @desc						Creates a vertex buffer for the page with segment_num - 1 verticies
-/// @returns {Id.VertexBuffer}	The vertex buffer for the flippable page
-function create_vertex_buffer() {
-	vertex_format_begin()
-	vertex_format_add_position()
-	vertex_format_add_texcoord()
-	vertex_format_add_colour()
-	var vertex_format = vertex_format_end()
-
-	var buffer = vertex_create_buffer()
-	vertex_begin(buffer, vertex_format)
-	for(var segment_index = 0; segment_index < segment_num; segment_index++) {
-		vertex_position(buffer, segment_index, 0)
-		vertex_texcoord(buffer, segment_index / (segment_num - 1), 0)
-		vertex_colour(buffer, c_white, 1)
-		
-		vertex_position(buffer, segment_index, 1)
-		vertex_texcoord(buffer, segment_index / (segment_num - 1), 1)
-		vertex_colour(buffer, c_white, 1)
-	}
-	vertex_end(buffer)
-	return buffer
-}
+flip_page_layer = layer_create(depth - 5, "flip_page_layer")
 
 /// @desc						Creates the current page's interactable elements
 function create_page_objects() {
@@ -75,14 +29,14 @@ function create_page_objects() {
 }
 
 /// @desc						Creates the next and previous page buttons based on number of pages
-///									in the button's direction
+///									avaliable in the button's direction
 function create_page_flip_button() {
 	var cover_nineslice = sprite_get_nineslice(object_get_sprite(obj_book_menu))
 	var next_page_button_width = sprite_get_width(object_get_sprite(ui_next_book_page_button))
 	var next_page_button_scale = cover_nineslice.right / next_page_button_width
 	if(array_length(page_data.all_pages) > current_page + 1) {
 		instance_create_layer(x + sprite_width + next_page_button_width, y + (sprite_height / 2), page_elements_layer, ui_next_book_page_button, {
-			on_button_pressed : method(self, flip_book_page),
+			on_button_pressed : method(self, book_page_flipped),
 			on_button_pressed_args : [page_flip_direction.left],
 			image_xscale : next_page_button_scale,
 			image_yscale : next_page_button_scale
@@ -90,7 +44,7 @@ function create_page_flip_button() {
 	}
 	if(current_page > 0) {
 		instance_create_layer(x - sprite_width - next_page_button_width, y + (sprite_height / 2), page_elements_layer, ui_next_book_page_button, {
-			on_button_pressed : method(self, flip_book_page),
+			on_button_pressed : method(self, book_page_flipped),
 			on_button_pressed_args : [page_flip_direction.right],
 			image_xscale : -next_page_button_scale,
 			image_yscale : next_page_button_scale
@@ -98,142 +52,93 @@ function create_page_flip_button() {
 	}
 }
 
-/// @desc											Sets the page_dir and page_bend based on the 
-///														flip_direction to create a smooth motion 
-///														of the page flipping
-/// @param {page_flip_direction} page_flip_dir		The direction that determines which way the
-///														page will flip
-function flip_book_page(page_flip_dir) {
-	if(page_flip_dir == page_flip_direction.none) {
-		return	
-	}
-	
+/// @desc											Call back function for when a ui_next_book_page_button
+///														is pressed. This will set up and create
+///														the obj_flipping_page
+/// @param {Id.Instance} flipping_page_sprite		The sprite to be used for obj_flipping_page's
+///														front. If none is provided it will be created
+///														during the next Draw GUI event.
+/// @param {Id.Instance} flipping_page_sprite_back	The sprite to be used for obj_flipping_page's
+///														back
+function book_page_flipped(page_flip_dir, flipping_page_sprite = noone, flipping_page_sprite_back = noone) {
 	flip_direction = page_flip_dir
-	page_being_flipped = true
-	flip_percent = min(1, flip_percent + PAGE_TURN_SPEED)
 	
-	var to_middle = clamp(flip_percent, 0, 0.5) * 2
-	var to_end = clamp(flip_percent - 0.5, 0, 0.5) * 2
-
-	var start_dir = 0
-	var start_bend = 0
-
-	var mid_dir = flip_direction == page_flip_direction.left ? 160 : 20
-	var mid_bend = flip_direction == page_flip_direction.left ? -180 / segment_num : 180 / segment_num
-
-	var end_dir = 180
-	var end_bend = 0
-
-	if(page_flip_dir == page_flip_direction.left) {
-		var end_of_flip_dir = lerp(mid_dir, end_dir, to_end)
-		page_dir = lerp(start_dir, end_of_flip_dir, to_middle)
-		page_bend = lerp(start_bend, lerp(mid_bend, end_bend, to_end), to_middle)
+	if(flipping_page_sprite == noone) {
+		run_page_flip_sprite_creation = true
 	}
 	else {
-		var end_of_flip_dir = lerp(mid_dir, start_dir, to_end)
-		page_dir = lerp(end_dir, end_of_flip_dir, to_middle)
-		page_bend = lerp(end_bend, lerp(mid_bend, start_bend, to_end), to_middle)
-	}
-
-	if(flip_percent >= 1) {
-		page_being_flipped = false
-		flip_percent = 0
-		page_dir = start_dir
-		page_bend = start_bend
-		flip_direction = page_flip_direction.none
-		sprite_delete(spr_flipping_page)
-		spr_flipping_page = undefined
-		sprite_delete(spr_flipping_page_back)
-		spr_flipping_page_back = undefined
-		
-		if(page_flip_dir == page_flip_direction.left)
+		run_page_flip_sprite_creation = false
+		if(page_flip_dir == page_flip_direction.left) {
+			layer_destroy_instances(page_elements_layer)
 			current_page = min(array_length(page_data.all_pages) - 1, current_page + 1)
-		else
-			current_page = max(0, current_page - 1)
+			create_page_objects()
 			
-		create_page_objects()
+			instance_create_layer(x, y, flip_page_layer, obj_flipping_page, {
+				flip_direction : page_flip_dir,
+				sprite_index : flipping_page_sprite,
+				spr_flipping_page_back : flipping_page_sprite_back
+			})
+		}
+		else {
+			instance_create_layer(x, y, flip_page_layer, obj_flipping_page, {
+				flip_direction : page_flip_dir,
+				sprite_index : flipping_page_sprite,
+				spr_flipping_page_back : flipping_page_sprite_back,
+				on_page_flipped : method(self, page_flip_finished),
+				on_page_flipped_args : []
+			})
+		}
 	}
 }
 
-/// @desc						Draws a page that can be flipped like a book page using flip_book_page()
-function draw_moveable_page() {
-	if(is_undefined(surf) || !surface_exists(surf)) {
-		surf = surface_create(sprite_width, sprite_height)
-	}
-
-	surface_set_target(surf)
-	draw_clear_alpha(c_white, 0)
-	
-	if(page_being_flipped) {
-		spr_flipping_page ??= create_page_flip_sprite()
-		spr_flipping_page_back ??= create_page_back_sprite()
-		
-		draw_sprite_ext(spr_flipping_page, 0, 0, 0, 1, 1,
-									image_angle, image_blend, image_alpha)
-		texture_set_stage(uniform_page_back, sprite_get_texture(spr_flipping_page_back, 0))
-	}
-	else {
-		draw_sprite_ext(sprite_index, 0, 0, 0, image_xscale, image_yscale,
-									image_angle, image_blend, image_alpha)
-		draw_elements_text()
-	}
-	surface_reset_target()
-	shader_set(shd_flip_page)
-	shader_set_uniform_f(uniform_page_vertex_data, x, y, sprite_height, segment_length)
-	shader_set_uniform_f(uniform_page_flip_data, page_dir / 180 * pi, page_bend / 180 * pi)
-
-	vertex_submit(vertex_buffer, pr_trianglestrip, surface_get_texture(surf))
-	shader_reset()
+/// @desc						Cleans up the previously shown page and creates this page's elements
+///									when flipping the page to the right
+function page_flip_finished() {
+	layer_destroy_instances(page_elements_layer)
+	current_page = max(0, current_page - 1)
+	create_page_objects()
 }
 
-/// @desc						Creates a sprite of the right side page with all of the elements
+/// @desc						Creates a sprite of the right side page with all of it's elements
 ///									drawn on it
-/// @returns {Asset.GMSprite}	The page sprite to be used for flipping the page
 function create_page_flip_sprite() {
 	var page_flip_surf = surface_create(sprite_width, sprite_height)
 	surface_set_target(page_flip_surf)
 	draw_clear_alpha(c_black, 0)
 	
-	draw_sprite_ext(sprite_index, 0, 0, 0, image_xscale, image_yscale,
-									image_angle, image_blend, image_alpha)
-	draw_elements_text()
-									
-	var related_layers = []
-	for(var layer_to_check_depth = depth - 10; layer_to_check_depth <= depth; layer_to_check_depth++) {
-		var layers_at_depth = layer_get_id_at_depth(layer_to_check_depth)
-		if(layers_at_depth[0] != -1) {
-			related_layers = array_concat(related_layers, layers_at_depth)
-		}
-	}
-	for(var layer_index = 0; layer_index < array_length(related_layers); layer_index++) {
-		var active_layer_elements = layer_get_all_elements(related_layers[layer_index])
-		for(var element_index = 0; element_index < array_length(active_layer_elements); element_index++) {
-			if (layer_get_element_type(active_layer_elements[element_index]) == layerelementtype_instance &&
-					event_type == ev_draw)
-		    {
-				var layer_instance = layer_instance_get_instance(active_layer_elements[element_index])
-				if(!object_is_ancestor(layer_instance.object_index, obj_page)) {
-					layer_instance.x -= x
-					layer_instance.y -= y
-					if(event_number == ev_draw_normal) {
-						with(layer_instance) {
-							event_perform(ev_draw, ev_draw_normal)
-						}
+	draw_sprite_stretched(sprite_index, 0, 0, 0, sprite_width, sprite_height)
+	var page_num = current_page
+	if(flip_direction == page_flip_direction.right)
+		page_num--
+	draw_elements_text(true, page_num)
+	
+	
+	if(array_length(page_data.all_pages) - 1 > page_num) {
+		var page_elements = page_data.all_pages[page_num].elements
+		
+		struct_foreach(page_elements, function(_name, _value) {
+			if(struct_exists(_value, "element")) {
+				var temp_instance = instance_create_layer(_value.x_pos + column_width - x, _value.y_pos - y, page_elements_layer, _value.element)
+				if(event_number == ev_draw_normal) {
+					with(temp_instance) {
+						event_perform(ev_draw, ev_draw_normal)
 					}
-			        else if (event_number == ev_gui) {
-						with(layer_instance) {
-							event_perform(ev_draw, ev_gui)
-						}
-					}
-					instance_destroy(layer_instance)
 				}
+				else if (event_number == ev_gui) {
+					with(temp_instance) {
+						event_perform(ev_draw, ev_gui)
+					}
+				}
+				instance_destroy(temp_instance)
 			}
-		}
+		})	
 	}
+	surface_reset_target()
+	
 	var spr_custom = sprite_create_from_surface(page_flip_surf, 0, 0, 
 							surface_get_width(page_flip_surf), surface_get_height(page_flip_surf),
 							false, false, 0, 0)
-	surface_reset_target()
+	surface_free(page_flip_surf)
 	return spr_custom
 }
 
@@ -253,16 +158,26 @@ function create_page_back_sprite() {
 	return spr_custom
 }
 
-/// @desc						Draws the text for each page_data element
-function draw_elements_text() {
-	if(array_length(page_data.all_pages) >= current_page + 1) {
+/// @desc								Draws the text for each page_data element for the given page
+/// @param {bool} adjust_for_surface	Flag to determine if the text position should be based on 0, 0
+///											or based on the page's position
+/// @param {Real} page_num				Optional number to chose a page to draw the text for
+function draw_elements_text(adjust_for_surface, page_num = current_page) {
+	if(array_length(page_data.all_pages) - 1 > page_num) {
 		draw_set_colour(c_black)
-		var page_elements = page_data.all_pages[current_page].elements
-		struct_foreach(page_elements, function(_name, _value) {
-			draw_set_font(_value.font)
-			draw_set_halign(_value.text_alignment)
-			draw_text(_value.x_pos - x, _value.y_pos - y, _value.text)
-		})	
+		var page_elements = page_data.all_pages[page_num].elements
+		var page_element_names = variable_struct_get_names(page_elements)
+		for(var name_index = 0; name_index < array_length(page_element_names); name_index++) {
+			var page_element = struct_get(page_elements, page_element_names[name_index])
+			draw_set_font(page_element.font)
+			draw_set_halign(page_element.text_alignment)
+			if(adjust_for_surface) {
+				draw_text(page_element.x_pos - x, page_element.y_pos - y, page_element.text)
+			}
+			else {
+				draw_text(page_element.x_pos, page_element.y_pos, page_element.text)
+			}
+		}	
 		draw_set_halign(fa_left)
 	}
 }
