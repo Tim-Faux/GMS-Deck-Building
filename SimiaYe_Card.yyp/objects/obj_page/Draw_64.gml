@@ -5,4 +5,5 @@ if(run_page_flip_sprite_creation) {
 }
 
 draw_self()
+draw_sprite_ext(sprite_index, 0, x, y, -image_xscale, image_yscale, image_angle, image_blend, image_alpha)
 draw_elements_text(false)
