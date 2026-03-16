@@ -1,1 +1,1 @@
-flip_book_page()
+flip_percent += PAGE_TURN_SPEED

@@ -37,6 +37,7 @@
     {"$GMObjectProperty":"v2","%Name":"spr_flipping_page_back","filters":[],"listItems":[],"multiselect":false,"name":"spr_flipping_page_back","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"","varType":5,},
     {"$GMObjectProperty":"v2","%Name":"on_page_flipped","filters":[],"listItems":[],"multiselect":false,"name":"on_page_flipped","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"noone","varType":4,},
     {"$GMObjectProperty":"v2","%Name":"on_page_flipped_args","filters":[],"listItems":[],"multiselect":true,"name":"on_page_flipped_args","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"","varType":6,},
+    {"$GMObjectProperty":"v2","%Name":"is_chapter_flip","filters":[],"listItems":[],"multiselect":false,"name":"is_chapter_flip","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"False","varType":3,},
   ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",

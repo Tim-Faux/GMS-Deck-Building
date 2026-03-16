@@ -1,10 +1,13 @@
 current_page = 0
 run_page_flip_sprite_creation = false
+flip_to_chapter = true
 flip_direction = page_flip_direction.none
 
 page_data = new book_menu_page_data(x, y, sprite_height, sprite_width)
 page_elements_layer = layer_create(depth - 1, "page_elements_layer")
 flip_page_layer = layer_create(depth - 5, "flip_page_layer")
+
+book_page_flipped(page_flip_direction.left)
 
 /// @desc						Creates the current page's interactable elements
 function create_page_objects() {
@@ -52,9 +55,9 @@ function create_page_flip_button() {
 	}
 }
 
-/// @desc											Call back function for when a ui_next_book_page_button
-///														is pressed. This will set up and create
-///														the obj_flipping_page
+/// @desc											Call back function to flip one or many pages by
+///														setting up and creating an obj_flipping_page
+/// @param {page_flip_direction} page_flip_dir		The direction the page will be flipped to
 /// @param {Id.Instance} flipping_page_sprite		The sprite to be used for obj_flipping_page's
 ///														front. If none is provided it will be created
 ///														during the next Draw GUI event.
@@ -70,18 +73,26 @@ function book_page_flipped(page_flip_dir, flipping_page_sprite = noone, flipping
 		run_page_flip_sprite_creation = false
 		if(page_flip_dir == page_flip_direction.left) {
 			layer_destroy_instances(page_elements_layer)
-			current_page = min(array_length(page_data.all_pages) - 1, current_page + 1)
 			create_page_objects()
-			
 			instance_create_layer(x, y, flip_page_layer, obj_flipping_page, {
 				flip_direction : page_flip_dir,
+				is_chapter_flip : flip_to_chapter,
 				sprite_index : flipping_page_sprite,
 				spr_flipping_page_back : flipping_page_sprite_back
 			})
+			
+			if(flip_to_chapter) {
+				current_page = 0
+				flip_to_chapter = false
+			}
+			else {
+				current_page = min(array_length(page_data.all_pages) - 1, current_page + 1)
+			}	
 		}
 		else {
 			instance_create_layer(x, y, flip_page_layer, obj_flipping_page, {
 				flip_direction : page_flip_dir,
+				is_chapter_flip : flip_to_chapter,
 				sprite_index : flipping_page_sprite,
 				spr_flipping_page_back : flipping_page_sprite_back,
 				on_page_flipped : method(self, page_flip_finished),
@@ -95,7 +106,13 @@ function book_page_flipped(page_flip_dir, flipping_page_sprite = noone, flipping
 ///									when flipping the page to the right
 function page_flip_finished() {
 	layer_destroy_instances(page_elements_layer)
-	current_page = max(0, current_page - 1)
+	if(flip_to_chapter) {
+		current_page = 0
+		flip_to_chapter = false
+	}
+	else {
+		current_page = max(0, current_page - 1)
+	}
 	create_page_objects()
 }
 
@@ -107,31 +124,33 @@ function create_page_flip_sprite() {
 	draw_clear_alpha(c_black, 0)
 	
 	draw_sprite_stretched(sprite_index, 0, 0, 0, sprite_width, sprite_height)
-	var page_num = current_page
-	if(flip_direction == page_flip_direction.right)
-		page_num--
-	draw_elements_text(true, page_num)
+	if(!flip_to_chapter) {
+		var page_num = current_page
+		if(flip_direction == page_flip_direction.right)
+			page_num--
+		draw_elements_text(true, page_num)
 	
 	
-	if(array_length(page_data.all_pages) - 1 > page_num) {
-		var page_elements = page_data.all_pages[page_num].elements
+		if(array_length(page_data.all_pages) - 1 > page_num) {
+			var page_elements = page_data.all_pages[page_num].elements
 		
-		struct_foreach(page_elements, function(_name, _value) {
-			if(struct_exists(_value, "element")) {
-				var temp_instance = instance_create_layer(_value.x_pos + column_width - x, _value.y_pos - y, page_elements_layer, _value.element)
-				if(event_number == ev_draw_normal) {
-					with(temp_instance) {
-						event_perform(ev_draw, ev_draw_normal)
+			struct_foreach(page_elements, function(_name, _value) {
+				if(struct_exists(_value, "element")) {
+					var temp_instance = instance_create_layer(_value.x_pos + column_width - x, _value.y_pos - y, page_elements_layer, _value.element)
+					if(event_number == ev_draw_normal) {
+						with(temp_instance) {
+							event_perform(ev_draw, ev_draw_normal)
+						}
 					}
-				}
-				else if (event_number == ev_gui) {
-					with(temp_instance) {
-						event_perform(ev_draw, ev_gui)
+					else if (event_number == ev_gui) {
+						with(temp_instance) {
+							event_perform(ev_draw, ev_gui)
+						}
 					}
+					instance_destroy(temp_instance)
 				}
-				instance_destroy(temp_instance)
-			}
-		})	
+			})	
+		}
 	}
 	surface_reset_target()
 	
