@@ -140,6 +140,7 @@
     {"name":"etest","order":2,"path":"sprites/etest/etest.yy",},
     {"name":"spr_ability_symbol","order":3,"path":"sprites/spr_ability_symbol/spr_ability_symbol.yy",},
     {"name":"spr_attack_symbol","order":2,"path":"sprites/spr_attack_symbol/spr_attack_symbol.yy",},
+    {"name":"spr_book_front","order":5,"path":"sprites/spr_book_front/spr_book_front.yy",},
     {"name":"spr_bookmark_bottom","order":4,"path":"sprites/spr_bookmark_bottom/spr_bookmark_bottom.yy",},
     {"name":"spr_card_sort_button","order":3,"path":"sprites/spr_card_sort_button/spr_card_sort_button.yy",},
     {"name":"spr_card","order":1,"path":"sprites/spr_card/spr_card.yy",},

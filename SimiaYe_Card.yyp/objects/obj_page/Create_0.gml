@@ -1,17 +1,23 @@
-current_page = 0
+#macro NUM_PAGES_FOR_CHAPTER_FLIP 20
+
+current_page = -1
 run_page_flip_sprite_creation = false
-flip_to_chapter = true
-flip_direction = page_flip_direction.none
+flip_direction = page_flip_direction.left
 
 page_data = new book_menu_page_data(x, y, sprite_height, sprite_width)
 page_elements_layer = layer_create(depth - 1, "page_elements_layer")
 flip_page_layer = layer_create(depth - 5, "flip_page_layer")
 
-book_page_flipped(page_flip_direction.left)
+page_surf = surface_create(sprite_width, sprite_height)
+
+var flipping_page_sprite = create_page_flip_sprite()
+var flipping_page_sprite_back = create_page_back_sprite()
+pages_to_flip = create_chapter_pages_array(flipping_page_sprite, flipping_page_sprite_back)
+book_page_flipped(pages_to_flip)
 
 /// @desc						Creates the current page's interactable elements
 function create_page_objects() {
-	if(array_length(page_data.all_pages) >= current_page + 1) {
+	if(current_page > -1 && array_length(page_data.all_pages) >= current_page + 1) {
 		if(layer_exists("page_elements_layer")) {
 			page_elements_layer = layer_get_id("page_elements_layer")
 		}
@@ -26,20 +32,25 @@ function create_page_objects() {
 				instance_create_layer(_value.x_pos + column_width, _value.y_pos, page_elements_layer, _value.element)
 			}
 		})
-		
-		create_page_flip_button()
 	}
 }
 
 /// @desc						Creates the next and previous page buttons based on number of pages
 ///									avaliable in the button's direction
 function create_page_flip_button() {
-	var cover_nineslice = sprite_get_nineslice(object_get_sprite(obj_book_menu))
+	if(layer_exists("page_elements_layer")) {
+		page_elements_layer = layer_get_id("page_elements_layer")
+	}
+	else {
+		page_elements_layer = layer_create(depth - 1, "page_elements_layer")
+	}
+	
+	var cover_nineslice = sprite_get_nineslice(spr_cover)
 	var next_page_button_width = sprite_get_width(object_get_sprite(ui_next_book_page_button))
 	var next_page_button_scale = cover_nineslice.right / next_page_button_width
 	if(array_length(page_data.all_pages) > current_page + 1) {
 		instance_create_layer(x + sprite_width + next_page_button_width, y + (sprite_height / 2), page_elements_layer, ui_next_book_page_button, {
-			on_button_pressed : method(self, book_page_flipped),
+			on_button_pressed : method(self, flip_page_button_pressed),
 			on_button_pressed_args : [page_flip_direction.left],
 			image_xscale : next_page_button_scale,
 			image_yscale : next_page_button_scale
@@ -47,7 +58,7 @@ function create_page_flip_button() {
 	}
 	if(current_page > 0) {
 		instance_create_layer(x - sprite_width - next_page_button_width, y + (sprite_height / 2), page_elements_layer, ui_next_book_page_button, {
-			on_button_pressed : method(self, book_page_flipped),
+			on_button_pressed : method(self, flip_page_button_pressed),
 			on_button_pressed_args : [page_flip_direction.right],
 			image_xscale : -next_page_button_scale,
 			image_yscale : next_page_button_scale
@@ -55,76 +66,119 @@ function create_page_flip_button() {
 	}
 }
 
-/// @desc											Call back function to flip one or many pages by
-///														setting up and creating an obj_flipping_page
+/// @desc											Call back function for ui_next_book_page_button. 
+///														Sets up for the page to be turned in the given
+///														direction on the next draw event
 /// @param {page_flip_direction} page_flip_dir		The direction the page will be flipped to
-/// @param {Id.Instance} flipping_page_sprite		The sprite to be used for obj_flipping_page's
-///														front. If none is provided it will be created
-///														during the next Draw GUI event.
-/// @param {Id.Instance} flipping_page_sprite_back	The sprite to be used for obj_flipping_page's
-///														back
-function book_page_flipped(page_flip_dir, flipping_page_sprite = noone, flipping_page_sprite_back = noone) {
+function flip_page_button_pressed(page_flip_dir) {
+	run_page_flip_sprite_creation = true
 	flip_direction = page_flip_dir
-	
-	if(flipping_page_sprite == noone) {
-		run_page_flip_sprite_creation = true
+}
+
+/// @desc											Creates an array of structs to represent the
+///														different pages that are flipped when on
+///														a chapter change
+/// @param {Asset.GMSprite} page_front_sprite		The sprite used for the front of the pages
+/// @param {Asset.GMSprite} page_back_sprite		The sprite used for the back of the pages
+function create_chapter_pages_array(page_front_sprite = spr_page, page_back_sprite = spr_page) {
+	var chapter_pages_array = array_create(NUM_PAGES_FOR_CHAPTER_FLIP, 
+											{ front_sprite : page_front_sprite,
+												back_sprite : page_back_sprite,
+												x_pos : x,
+												y_pos : y,
+												bend_page : true,
+												surface : page_surf })
+	if(!book_is_open) {
+		chapter_pages_array[0] = pages_array
+	}
+	return chapter_pages_array
+}
+
+/// @desc											Creates an array with a single structs to represent
+///														the one page being flipped
+/// @param {Asset.GMSprite} page_front_sprite		The sprite used for the front of the pages
+/// @param {Asset.GMSprite} page_back_sprite		The sprite used for the back of the pages
+function create_single_page_array(page_front_sprite = spr_page, page_back_sprite = spr_page) {
+	return [{ front_sprite : page_front_sprite,
+				back_sprite : page_back_sprite,
+				x_pos : x,
+				y_pos : y,
+				bend_page : true,
+				surface : page_surf }]
+}
+
+/// @desc									Sets up an obj_flipping_page to animate the given pages
+///												as flipping in the flip_direction
+/// @param {Array<Struct>} page_array		The array containing the data needed to draw each page
+function book_page_flipped(page_array) {
+	if(flip_direction == page_flip_direction.left) {
+		current_page = clamp(current_page + 1, 0, array_length(page_data.all_pages) - 1)
+		layer_destroy_instances(page_elements_layer)
+		create_page_objects()
+		instance_create_layer(page_array[0].x_pos, page_array[0].y_pos, flip_page_layer, obj_flipping_page, {
+			flip_direction,
+			pages_to_flip : page_array,
+			on_page_flipped : method(self, page_flip_finished),
+			on_page_flipped_args : []
+		})
+			
 	}
 	else {
-		run_page_flip_sprite_creation = false
-		if(page_flip_dir == page_flip_direction.left) {
-			layer_destroy_instances(page_elements_layer)
-			create_page_objects()
-			instance_create_layer(x, y, flip_page_layer, obj_flipping_page, {
-				flip_direction : page_flip_dir,
-				is_chapter_flip : flip_to_chapter,
-				sprite_index : flipping_page_sprite,
-				spr_flipping_page_back : flipping_page_sprite_back
-			})
-			
-			if(flip_to_chapter) {
-				current_page = 0
-				flip_to_chapter = false
-			}
-			else {
-				current_page = min(array_length(page_data.all_pages) - 1, current_page + 1)
-			}	
-		}
-		else {
-			instance_create_layer(x, y, flip_page_layer, obj_flipping_page, {
-				flip_direction : page_flip_dir,
-				is_chapter_flip : flip_to_chapter,
-				sprite_index : flipping_page_sprite,
-				spr_flipping_page_back : flipping_page_sprite_back,
-				on_page_flipped : method(self, page_flip_finished),
-				on_page_flipped_args : []
-			})
-		}
+		instance_create_layer(x, y, flip_page_layer, obj_flipping_page, {
+			flip_direction,
+			pages_to_flip : page_array,
+			on_page_flipped : method(self, page_flipped_right),
+			on_page_flipped_args : []
+		})
 	}
 }
 
 /// @desc						Cleans up the previously shown page and creates this page's elements
 ///									when flipping the page to the right
-function page_flip_finished() {
+function page_flipped_right() {
 	layer_destroy_instances(page_elements_layer)
-	if(flip_to_chapter) {
-		current_page = 0
-		flip_to_chapter = false
-	}
-	else {
-		current_page = max(0, current_page - 1)
-	}
+	current_page = max(0, current_page - 1)
 	create_page_objects()
+	page_flip_finished()
+}
+
+/// @desc						Call back function for obj_flipping_page. Handles the actions needed
+///									after the page flip animation is complete
+function page_flip_finished() {
+	if(!book_is_open) {
+		book_is_open = true
+	}
+	create_page_flip_button()
+	delete_pages_sprites()
+	
+	if(on_cover_opened != noone && is_method(on_cover_opened)) {
+		method_call(on_cover_opened, on_cover_opened_args)	
+	}
+}
+
+/// @desc						Deletes all the front and back sprites of pages_to_flip's pages
+function delete_pages_sprites() {
+	for(var page_index = 0; page_index < array_length(pages_to_flip); page_index++) {
+		var page_sprite_front = pages_to_flip[page_index].front_sprite
+		var page_sprite_back = pages_to_flip[page_index].back_sprite
+		if(sprite_exists(page_sprite_front)) {
+			sprite_delete(page_sprite_front)
+		}
+		if(sprite_exists(page_sprite_back)) {
+			sprite_delete(page_sprite_back)
+		}
+	}	
 }
 
 /// @desc						Creates a sprite of the right side page with all of it's elements
 ///									drawn on it
 function create_page_flip_sprite() {
-	var page_flip_surf = surface_create(sprite_width, sprite_height)
-	surface_set_target(page_flip_surf)
+	surface_set_target(page_surf)
 	draw_clear_alpha(c_black, 0)
 	
-	draw_sprite_stretched(sprite_index, 0, 0, 0, sprite_width, sprite_height)
-	if(!flip_to_chapter) {
+	draw_sprite_ext(sprite_index, 0, 0, 0, image_xscale, image_yscale,
+									image_angle, image_blend, image_alpha)
+	if(current_page > -1) {
 		var page_num = current_page
 		if(flip_direction == page_flip_direction.right)
 			page_num--
@@ -152,26 +206,23 @@ function create_page_flip_sprite() {
 			})	
 		}
 	}
-	surface_reset_target()
-	
-	var spr_custom = sprite_create_from_surface(page_flip_surf, 0, 0, 
-							surface_get_width(page_flip_surf), surface_get_height(page_flip_surf),
+	var spr_custom = sprite_create_from_surface(page_surf, 0, 0, 
+							surface_get_width(page_surf), surface_get_height(page_surf),
 							false, false, 0, 0)
-	surface_free(page_flip_surf)
+	surface_reset_target()
 	return spr_custom
 }
 
 /// @desc						Creates a scaled sprite of a blank page for the page's back
 /// @returns {Asset.GMSprite}	The page sprite to be used for back of a page
 function create_page_back_sprite() {
-	var page_back_surf = surface_create(sprite_width, sprite_height)
-	surface_set_target(page_back_surf)
+	surface_set_target(page_surf)
 	draw_clear_alpha(c_black, 0)
 	
 	draw_sprite_ext(sprite_index, 0, 0, 0, image_xscale, image_yscale,
 									image_angle, image_blend, image_alpha)
-	var spr_custom = sprite_create_from_surface(page_back_surf, 0, 0, 
-							surface_get_width(page_back_surf), surface_get_height(page_back_surf),
+	var spr_custom = sprite_create_from_surface(page_surf, 0, 0, 
+							surface_get_width(page_surf), surface_get_height(page_surf),
 							false, false, 0, 0)
 	surface_reset_target()
 	return spr_custom
@@ -182,7 +233,7 @@ function create_page_back_sprite() {
 ///											or based on the page's position
 /// @param {Real} page_num				Optional number to chose a page to draw the text for
 function draw_elements_text(adjust_for_surface, page_num = current_page) {
-	if(array_length(page_data.all_pages) - 1 > page_num) {
+	if(page_num > -1 && array_length(page_data.all_pages) - 1 > page_num) {
 		draw_set_colour(c_black)
 		var page_elements = page_data.all_pages[page_num].elements
 		var page_element_names = variable_struct_get_names(page_elements)

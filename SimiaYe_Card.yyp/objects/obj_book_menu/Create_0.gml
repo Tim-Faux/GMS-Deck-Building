@@ -5,9 +5,14 @@ book_bookmarks = [obj_settings_bookmark, obj_settings_bookmark]
 bookmarks_layer = layer_create(depth - 1, "bookmarks_layer")
 active_page_layer = layer_create(depth - 2, "active_page_layer")
 bookmark_bottom_layer = layer_create(depth - 3, "bookmark_bottom_layer")
-cover_nine_slice = sprite_get_nineslice(sprite_index)
+cover_nine_slice = sprite_get_nineslice(spr_cover)
 page_x_pos = x
 page_y_pos = y + cover_nine_slice.top
+book_opened = false
+spr_cover_front = noone
+spr_cover_back = noone
+cover_surf = surface_create(sprite_width, sprite_height)
+create_cover_sprites()
 
 //Not subtracting the left nineslice because we want the pages to meet exactly in the middle
 page_width = sprite_width  - cover_nine_slice.right
@@ -19,7 +24,7 @@ create_bookmarks()
 ///											spaced at the top of the book
 function create_bookmarks() {
 	var bookmark_width = (sprite_get_width(spr_settings_bookmark_top) * bookmark_scale)
-	var bookmark_x_pos = page_x_pos - page_width
+	var bookmark_x_pos = page_x_pos
 	var bookmark_y_pos = page_y_pos - (sprite_get_height(spr_settings_bookmark_top) * bookmark_scale)
 	
 	for(var bookmark_index = 0; bookmark_index < array_length(book_bookmarks); bookmark_index++) {
@@ -42,13 +47,33 @@ function create_chapter(chapter, bookmark_x_pos) {
 	delete_layers(find_layers_above(active_page_layer), bookmark_bottom_layer)
 	layer_destroy_instances(active_page_layer)
 	
-	var page_x_scale = page_width / sprite_get_width(sprite_index)
-	var page_y_scale = page_height / sprite_get_height(sprite_index)
+	var page_x_scale = page_width / sprite_get_width(spr_cover)
+	var page_y_scale = page_height / sprite_get_height(spr_cover)
 	instance_create_layer(page_x_pos, page_y_pos, active_page_layer, chapter, {
 		image_xscale : page_x_scale,
-		image_yscale : page_y_scale
+		image_yscale : page_y_scale,
+		book_is_open : book_opened,
+		pages_array : {front_sprite : spr_cover_front, back_sprite : spr_cover_back, x_pos : x, y_pos : y, bend_page : false, surface : cover_surf},
+		on_cover_opened : method(self, book_finished_opening),
+		on_cover_opened_args : []
 	})
+	sprite_index = spr_cover
 	add_bookmark_bottom(bookmark_x_pos)
+}
+
+/// @desc								Call back function for obj_page. This updates the sprite and
+///											records that the book is now open
+function book_finished_opening() {
+	sprite_index = spr_cover
+	book_opened = true
+	if(sprite_exists(spr_cover_front)) {
+		sprite_delete(spr_cover_front)
+		spr_cover_front = noone
+	}
+	if(sprite_exists(spr_cover_back)) {
+		sprite_delete(spr_cover_back)
+		spr_cover_back = noone
+	}
 }
 
 /// @desc								Adds an obj_bookmark_bottom to the clicked bookmark overtop
@@ -66,4 +91,25 @@ function add_bookmark_bottom(bookmark_x_pos) {
 			image_yscale : bookmark_bottom_y_scale
 		})
 	}
+}
+
+/// @desc						Creates a scaled sprite the cover's front and back and places them in
+///									spr_cover_front and spr_cover_back respectively
+function create_cover_sprites() {
+	var cover_surf = surface_create(sprite_width, sprite_height)
+	surface_set_target(cover_surf)
+	draw_clear_alpha(c_black, 0)
+	
+	draw_sprite_ext(sprite_index, 0, 0, 0, image_xscale, image_yscale,
+									image_angle, image_blend, image_alpha)
+	spr_cover_front = sprite_create_from_surface(cover_surf, 0, 0, 
+							surface_get_width(cover_surf), surface_get_height(cover_surf),
+							false, false, 0, 0)
+	draw_clear_alpha(c_black, 0)
+	
+	draw_sprite_stretched(spr_cover, 0, 0, 0, sprite_width, sprite_height)
+	spr_cover_back = sprite_create_from_surface(cover_surf, 0, 0, 
+							surface_get_width(cover_surf), surface_get_height(cover_surf),
+							false, false, 0, 0)
+	surface_reset_target()
 }

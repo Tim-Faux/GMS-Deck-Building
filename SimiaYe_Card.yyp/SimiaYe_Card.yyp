@@ -195,6 +195,7 @@
     {"id":{"name":"spr_ability_symbol","path":"sprites/spr_ability_symbol/spr_ability_symbol.yy",},},
     {"id":{"name":"spr_attack_symbol","path":"sprites/spr_attack_symbol/spr_attack_symbol.yy",},},
     {"id":{"name":"spr_battack","path":"sprites/spr_battack/spr_battack.yy",},},
+    {"id":{"name":"spr_book_front","path":"sprites/spr_book_front/spr_book_front.yy",},},
     {"id":{"name":"spr_bookmark_bottom","path":"sprites/spr_bookmark_bottom/spr_bookmark_bottom.yy",},},
     {"id":{"name":"spr_brick","path":"sprites/spr_brick/spr_brick.yy",},},
     {"id":{"name":"spr_button_test","path":"sprites/spr_button_test/spr_button_test.yy",},},

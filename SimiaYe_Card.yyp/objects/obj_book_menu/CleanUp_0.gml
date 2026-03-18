@@ -1,0 +1,11 @@
+if(spr_cover_front != noone && sprite_exists(spr_cover_front))
+	sprite_delete(spr_cover_front)
+if(spr_cover_back != noone && sprite_exists(spr_cover_back))
+	sprite_delete(spr_cover_back)
+if(cover_surf != noone && surface_exists(cover_surf)) 
+	surface_free(cover_surf)
+	
+if(sprite_exists(spr_cover_front))
+	sprite_delete(spr_cover_front)
+if(sprite_exists(spr_cover_back))
+	sprite_delete(spr_cover_back)
