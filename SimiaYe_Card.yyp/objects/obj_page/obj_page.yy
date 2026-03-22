@@ -33,6 +33,10 @@
     {"$GMObjectProperty":"v2","%Name":"pages_array","filters":[],"listItems":[],"multiselect":true,"name":"pages_array","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"{}","varType":4,},
     {"$GMObjectProperty":"v2","%Name":"on_cover_opened","filters":[],"listItems":[],"multiselect":false,"name":"on_cover_opened","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"noone","varType":4,},
     {"$GMObjectProperty":"v2","%Name":"on_cover_opened_args","filters":[],"listItems":[],"multiselect":true,"name":"on_cover_opened_args","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"","varType":6,},
+    {"$GMObjectProperty":"v2","%Name":"bookmarks_to_flip","filters":[
+        "GMSprite",
+      ],"listItems":[],"multiselect":true,"name":"bookmarks_to_flip","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"","varType":6,},
+    {"$GMObjectProperty":"v2","%Name":"bookmark_scale","filters":[],"listItems":[],"multiselect":false,"name":"bookmark_scale","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"0","varType":0,},
   ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",

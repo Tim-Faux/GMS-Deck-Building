@@ -18,6 +18,6 @@ function bookmark_pressed() {
 		obj_bookmark.is_active_bookmark = false
 		is_active_bookmark = true
 		if(on_bookmark_pressed != undefined && is_method(on_bookmark_pressed))
-			method_call(on_bookmark_pressed, [bookmark_chapter, x])
+			method_call(on_bookmark_pressed, [bookmark_chapter, bookmark_index])
 	}	
 }

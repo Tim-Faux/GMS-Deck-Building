@@ -6,13 +6,16 @@ flip_direction = page_flip_direction.left
 
 page_data = new book_menu_page_data(x, y, sprite_height, sprite_width)
 page_elements_layer = layer_create(depth - 1, "page_elements_layer")
-flip_page_layer = layer_create(depth - 5, "flip_page_layer")
+flip_page_layer = layer_create(depth - 2, "flip_page_layer")
 
-page_surf = surface_create(sprite_width, sprite_height)
-
-var flipping_page_sprite = create_page_flip_sprite()
-var flipping_page_sprite_back = create_page_back_sprite()
-pages_to_flip = create_chapter_pages_array(flipping_page_sprite, flipping_page_sprite_back)
+bookmark_height = array_length(bookmarks_to_flip) > 0 ? 
+						(sprite_get_height(bookmarks_to_flip[0].sprite) * bookmark_scale) :
+						0
+						
+page_surf = surface_create(sprite_width, sprite_height + bookmark_height)
+var page_front_sprites = create_page_front_sprite(true)
+var page_back_sprites = create_page_back_sprite(true)
+pages_to_flip = create_chapter_pages_array(page_front_sprites, page_back_sprites)
 book_page_flipped(pages_to_flip)
 
 /// @desc						Creates the current page's interactable elements
@@ -75,34 +78,71 @@ function flip_page_button_pressed(page_flip_dir) {
 	flip_direction = page_flip_dir
 }
 
-/// @desc											Creates an array of structs to represent the
-///														different pages that are flipped when on
-///														a chapter change
-/// @param {Asset.GMSprite} page_front_sprite		The sprite used for the front of the pages
-/// @param {Asset.GMSprite} page_back_sprite		The sprite used for the back of the pages
-function create_chapter_pages_array(page_front_sprite = spr_page, page_back_sprite = spr_page) {
-	var chapter_pages_array = array_create(NUM_PAGES_FOR_CHAPTER_FLIP, 
-											{ front_sprite : page_front_sprite,
-												back_sprite : page_back_sprite,
+/// @desc												Creates an array of structs to represent the
+///															different pages that are flipped when on
+///															a chapter change
+/// @param {Array<Asset.GMSprite>} page_front_sprites	All the sprites used for the fronts of the pages
+/// @param {Array<Asset.GMSprite>} page_back_sprites	All the sprite used for the backs of the pages
+/// @returns {Array <Struct>}							The positional and sprite data of all the pages
+///															to be used when flipping the pages
+function create_chapter_pages_array(page_front_sprites = [spr_page], page_back_sprites = [spr_page]) {
+	var chapter_pages_array = array_create(NUM_PAGES_FOR_CHAPTER_FLIP + 1, -1)
+	var page_sprite_index = 0
+	for(var page_index = 0; page_index < array_length(chapter_pages_array) - 1; page_index++) {
+		if(!book_is_open && page_index == 0) {
+			chapter_pages_array[page_index] = pages_array
+		}
+		else {
+			if(array_length(page_front_sprites) > 1) {
+				var total_num_pages = NUM_PAGES_FOR_CHAPTER_FLIP - 1
+				var num_bookmark_pages = array_length(page_back_sprites) - 2
+				var blank_to_bookmark_page_ratio = total_num_pages / num_bookmark_pages
+				var num_pages_until_bookmark_page = (max(blank_to_bookmark_page_ratio, 1))
+				
+				if((page_index + 1) % num_pages_until_bookmark_page < 1 &&
+						page_sprite_index < array_length(page_front_sprites) - 2 && 
+						page_sprite_index < array_length(page_back_sprites) - 2) {
+					chapter_pages_array[page_index] = {	
+												front_sprite : page_front_sprites[page_sprite_index],
+												back_sprite : page_back_sprites[page_sprite_index],
 												x_pos : x,
-												y_pos : y,
+												y_pos : y - bookmark_height,
 												bend_page : true,
-												surface : page_surf })
-	if(!book_is_open) {
-		chapter_pages_array[0] = pages_array
+												surface : page_surf }
+					page_sprite_index++
+				}
+			}
+			if(chapter_pages_array[page_index] == -1) {
+				chapter_pages_array[page_index] = {	
+												front_sprite : array_last(page_front_sprites),
+												back_sprite : array_last(page_back_sprites),
+												x_pos : x,
+												y_pos : y - bookmark_height,
+												bend_page : true,
+												surface : page_surf }
+			}
+		}
 	}
+	
+	chapter_pages_array[NUM_PAGES_FOR_CHAPTER_FLIP] = {	
+												front_sprite : page_front_sprites[array_length(page_front_sprites) - 2],
+												back_sprite : page_back_sprites[array_length(page_back_sprites) - 2],
+												x_pos : x,
+												y_pos : y - bookmark_height,
+												bend_page : true,
+												surface : page_surf }
 	return chapter_pages_array
 }
 
-/// @desc											Creates an array with a single structs to represent
-///														the one page being flipped
-/// @param {Asset.GMSprite} page_front_sprite		The sprite used for the front of the pages
-/// @param {Asset.GMSprite} page_back_sprite		The sprite used for the back of the pages
-function create_single_page_array(page_front_sprite = spr_page, page_back_sprite = spr_page) {
-	return [{ front_sprite : page_front_sprite,
-				back_sprite : page_back_sprite,
+/// @desc												Creates an array with a single structs to represent
+///															the one page being flipped
+/// @param {Array<Asset.GMSprite>} page_front_sprite	The sprites used for the front of the page
+/// @param {Array<Asset.GMSprite>} page_back_sprite		The sprites used for the back of the page
+function create_single_page_array(page_front_sprite = [spr_page], page_back_sprite = [spr_page]) {
+	return [{ front_sprite : page_front_sprite[0],
+				back_sprite : page_back_sprite[0],
 				x_pos : x,
-				y_pos : y,
+				y_pos : y - bookmark_height,
 				bend_page : true,
 				surface : page_surf }]
 }
@@ -170,62 +210,89 @@ function delete_pages_sprites() {
 	}	
 }
 
-/// @desc						Creates a sprite of the right side page with all of it's elements
-///									drawn on it
-function create_page_flip_sprite() {
+/// @desc								Creates a sprite of the right side page with all of it's elements
+///											drawn on it
+/// @param {bool} is_chapter_flip		Flag to determine if the bookmark should be added to the sprite
+/// @returns {Array<Asset.GMSprite>}	An array of the page's front sprites
+function create_page_front_sprite(is_chapter_flip) {
 	surface_set_target(page_surf)
-	draw_clear_alpha(c_black, 0)
+	var page_sprites = array_create(array_length(bookmarks_to_flip) + 1)
+	for(var bookmark_index = 0; bookmark_index < array_length(bookmarks_to_flip) + 1; bookmark_index++) {
+		draw_clear_alpha(c_black, 0)
 	
-	draw_sprite_ext(sprite_index, 0, 0, 0, image_xscale, image_yscale,
-									image_angle, image_blend, image_alpha)
-	if(current_page > -1) {
-		var page_num = current_page
-		if(flip_direction == page_flip_direction.right)
-			page_num--
-		draw_elements_text(true, page_num)
-	
-	
-		if(array_length(page_data.all_pages) - 1 > page_num) {
-			var page_elements = page_data.all_pages[page_num].elements
-		
-			struct_foreach(page_elements, function(_name, _value) {
-				if(struct_exists(_value, "element")) {
-					var temp_instance = instance_create_layer(_value.x_pos + column_width - x, _value.y_pos - y, page_elements_layer, _value.element)
-					if(event_number == ev_draw_normal) {
-						with(temp_instance) {
-							event_perform(ev_draw, ev_draw_normal)
-						}
-					}
-					else if (event_number == ev_gui) {
-						with(temp_instance) {
-							event_perform(ev_draw, ev_gui)
-						}
-					}
-					instance_destroy(temp_instance)
-				}
-			})	
+		if(bookmark_index < array_length(bookmarks_to_flip) && is_chapter_flip) {
+			draw_sprite_ext(bookmarks_to_flip[bookmark_index].sprite, 0, bookmarks_to_flip[bookmark_index].x_pos - x, 0, bookmark_scale, 
+												bookmark_scale, image_angle, image_blend, image_alpha)
 		}
+		draw_sprite_ext(sprite_index, 0, 0, bookmark_height, image_xscale, image_yscale,
+										image_angle, image_blend, image_alpha)
+		if(current_page > -1) {
+			var page_num = current_page
+			if(flip_direction == page_flip_direction.right)
+				page_num--
+			draw_elements_text(true, page_num)
+	
+	
+			if(array_length(page_data.all_pages) - 1 > page_num) {
+				var page_elements = page_data.all_pages[page_num].elements
+		
+				struct_foreach(page_elements, function(_name, _value) {
+					if(struct_exists(_value, "element")) {
+						var temp_instance = instance_create_layer(_value.x_pos + column_width - x, _value.y_pos - y + bookmark_height, page_elements_layer, _value.element)
+						if(event_number == ev_draw_normal) {
+							with(temp_instance) {
+								event_perform(ev_draw, ev_draw_normal)
+							}
+						}
+						else if (event_number == ev_gui) {
+							with(temp_instance) {
+								event_perform(ev_draw, ev_gui)
+							}
+						}
+						instance_destroy(temp_instance)
+					}
+				})	
+			}
+		}
+		var spr_custom = sprite_create_from_surface(page_surf, 0, 0, 
+								surface_get_width(page_surf), surface_get_height(page_surf),
+								false, false, 0, 0)
+		page_sprites[bookmark_index] = spr_custom
 	}
-	var spr_custom = sprite_create_from_surface(page_surf, 0, 0, 
-							surface_get_width(page_surf), surface_get_height(page_surf),
-							false, false, 0, 0)
 	surface_reset_target()
-	return spr_custom
+	return page_sprites
 }
 
-/// @desc						Creates a scaled sprite of a blank page for the page's back
-/// @returns {Asset.GMSprite}	The page sprite to be used for back of a page
-function create_page_back_sprite() {
+/// @desc								Creates a scaled sprite of a blank page for the page's back
+/// @param {bool} is_chapter_flip		Flag to determine if the bookmark should be added to the sprite
+/// @returns {Array<Asset.GMSprite>}	An array of the page's back sprites
+function create_page_back_sprite(is_chapter_flip) {
 	surface_set_target(page_surf)
-	draw_clear_alpha(c_black, 0)
-	
-	draw_sprite_ext(sprite_index, 0, 0, 0, image_xscale, image_yscale,
-									image_angle, image_blend, image_alpha)
-	var spr_custom = sprite_create_from_surface(page_surf, 0, 0, 
-							surface_get_width(page_surf), surface_get_height(page_surf),
-							false, false, 0, 0)
+	var page_sprites = array_create(array_length(bookmarks_to_flip) + 1)
+	for(var bookmark_index = 0; bookmark_index < array_length(bookmarks_to_flip) + 1; bookmark_index++) {
+		draw_clear_alpha(c_black, 0)
+		
+		if(bookmark_index < array_length(bookmarks_to_flip) && is_chapter_flip) {
+			draw_sprite_ext(bookmarks_to_flip[bookmark_index].sprite, 0, bookmarks_to_flip[bookmark_index].x_pos - x, 0, bookmark_scale, 
+												bookmark_scale, image_angle, image_blend, image_alpha)
+		}
+		
+		draw_sprite_ext(sprite_index, 0, 0, bookmark_height, image_xscale, image_yscale,
+										image_angle, image_blend, image_alpha)
+										
+		if(bookmark_index < array_length(bookmarks_to_flip) && is_chapter_flip) {
+			var bookmark_bottom_y_scale = 0.5 * sprite_height / sprite_get_height(object_get_sprite(obj_bookmark_bottom))
+			draw_sprite_ext(spr_bookmark_bottom, 0, bookmarks_to_flip[bookmark_index].x_pos - x, bookmark_height, bookmark_scale, 
+												bookmark_bottom_y_scale, image_angle, image_blend, image_alpha)
+		}
+										
+		var spr_custom = sprite_create_from_surface(page_surf, 0, 0, 
+								surface_get_width(page_surf), surface_get_height(page_surf),
+								false, false, 0, 0)
+		page_sprites[bookmark_index] = spr_custom
+	}
 	surface_reset_target()
-	return spr_custom
+	return page_sprites
 }
 
 /// @desc								Draws the text for each page_data element for the given page
@@ -242,7 +309,7 @@ function draw_elements_text(adjust_for_surface, page_num = current_page) {
 			draw_set_font(page_element.font)
 			draw_set_halign(page_element.text_alignment)
 			if(adjust_for_surface) {
-				draw_text(page_element.x_pos - x, page_element.y_pos - y, page_element.text)
+				draw_text(page_element.x_pos - x, page_element.y_pos - y + bookmark_height, page_element.text)
 			}
 			else {
 				draw_text(page_element.x_pos, page_element.y_pos, page_element.text)

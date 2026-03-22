@@ -1,6 +1,6 @@
 if(run_page_flip_sprite_creation) {
-	var flipping_page_sprite = create_page_flip_sprite()
-	var flipping_page_sprite_back = create_page_back_sprite()
+	var flipping_page_sprite = create_page_front_sprite(false)
+	var flipping_page_sprite_back = create_page_back_sprite(false)
 	run_page_flip_sprite_creation = false
 	pages_to_flip = create_single_page_array(flipping_page_sprite, flipping_page_sprite_back)
 	book_page_flipped(pages_to_flip)
