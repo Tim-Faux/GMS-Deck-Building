@@ -2,7 +2,6 @@ if(!variable_global_exists("object_being_clicked")) {
 	global.object_being_clicked = false
 }
 bookmark_clicked = false
-is_active_bookmark = false
 
 /// @desc							Handles the mouse hovering over the bookmark
 function handle_mouse_enter() {

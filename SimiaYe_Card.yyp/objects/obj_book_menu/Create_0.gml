@@ -43,6 +43,7 @@ function create_bookmarks(bookmark_start_pos = page_x_pos, start_index = 0, end_
 			image_xscale : last_left_bookmark_index >= bookmark_index ? -bookmark_scale : bookmark_scale,
 			image_yscale : bookmark_scale,
 			bookmark_index,
+			is_active_bookmark : last_left_bookmark_index == bookmark_index,
 			on_bookmark_pressed : method(self, create_chapter)
 		})
 		
