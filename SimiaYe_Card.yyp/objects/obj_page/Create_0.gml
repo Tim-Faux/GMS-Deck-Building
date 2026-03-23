@@ -234,7 +234,7 @@ function create_page_front_sprite(is_chapter_flip) {
 		draw_clear_alpha(c_black, 0)
 	
 		if(bookmark_index < array_length(bookmarks_to_flip) && is_chapter_flip) {
-			draw_sprite_ext(bookmarks_to_flip[bookmark_index].sprite, 0, bookmarks_to_flip[bookmark_index].x_pos - x, 0, bookmark_scale, 
+			draw_sprite_ext(bookmarks_to_flip[bookmark_index].sprite, 0, bookmarks_to_flip[bookmark_index].x_pos, 0, bookmark_scale, 
 												bookmark_scale, image_angle, image_blend, image_alpha)
 		}
 		draw_sprite_ext(sprite_index, 0, 0, bookmark_height, image_xscale, image_yscale,
@@ -286,7 +286,7 @@ function create_page_back_sprite(is_chapter_flip) {
 		draw_clear_alpha(c_black, 0)
 		
 		if(bookmark_index < array_length(bookmarks_to_flip) && is_chapter_flip) {
-			draw_sprite_ext(bookmarks_to_flip[bookmark_index].sprite, 0, bookmarks_to_flip[bookmark_index].x_pos - x, 0, bookmark_scale, 
+			draw_sprite_ext(bookmarks_to_flip[bookmark_index].sprite, 0, bookmarks_to_flip[bookmark_index].x_pos, 0, bookmark_scale, 
 												bookmark_scale, image_angle, image_blend, image_alpha)
 		}
 		
@@ -295,7 +295,7 @@ function create_page_back_sprite(is_chapter_flip) {
 										
 		if(bookmark_index < array_length(bookmarks_to_flip) && is_chapter_flip) {
 			var bookmark_bottom_y_scale = 0.5 * sprite_height / sprite_get_height(object_get_sprite(obj_bookmark_bottom))
-			draw_sprite_ext(spr_bookmark_bottom, 0, bookmarks_to_flip[bookmark_index].x_pos - x, bookmark_height, bookmark_scale, 
+			draw_sprite_ext(spr_bookmark_bottom, 0, bookmarks_to_flip[bookmark_index].x_pos, bookmark_height, bookmark_scale, 
 												bookmark_bottom_y_scale, image_angle, image_blend, image_alpha)
 		}
 										

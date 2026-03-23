@@ -38,7 +38,7 @@ function create_bookmarks(bookmark_start_pos = page_x_pos, start_index = 0, end_
 									bookmark_start_pos - dist_from_start :
 									bookmark_start_pos + dist_from_start
 		
-		bookmark_data[bookmark_index] = { sprite : object_get_sprite(book_bookmarks[bookmark_index]), x_pos : bookmark_x_pos }
+		bookmark_data[bookmark_index] = { sprite : object_get_sprite(book_bookmarks[bookmark_index]), x_pos : dist_from_start }
 		instance_create_layer(bookmark_x_pos, bookmark_y_pos, bookmarks_layer, book_bookmarks[bookmark_index], { 
 			image_xscale : last_left_bookmark_index >= bookmark_index ? -bookmark_scale : bookmark_scale,
 			image_yscale : bookmark_scale,
@@ -89,10 +89,10 @@ function create_chapter(chapter, bookmark_index_pressed) {
 	}
 	else {
 		delete_bookmarks(bookmark_index_pressed + 1, last_left_bookmark_index)
-		add_bookmark_bottom(bookmark_data[bookmark_index_pressed].x_pos)
+		add_bookmark_bottom(x - bookmark_data[bookmark_index_pressed].x_pos)
 		flip_direction = page_flip_direction.right
 		
-		bookmarks_to_flip = array_create(last_left_bookmark_index - bookmark_index_pressed + 1)
+		bookmarks_to_flip = array_create(last_left_bookmark_index - bookmark_index_pressed)
 		for(var bookmark_index = 0; bookmark_index < array_length(bookmarks_to_flip); bookmark_index++) {
 			bookmarks_to_flip[bookmark_index] = bookmark_data[last_left_bookmark_index - bookmark_index]
 		}
@@ -131,7 +131,7 @@ function book_finished_opening(bookmark_index_pressed) {
 		create_bookmarks(x, max_left_bookmark_index + 1, bookmark_index_pressed)
 	}
 	
-	add_bookmark_bottom(bookmark_data[bookmark_index_pressed].x_pos)
+	add_bookmark_bottom(x - bookmark_data[bookmark_index_pressed].x_pos)
 	
 	if(sprite_exists(spr_cover_front)) {
 		sprite_delete(spr_cover_front)
