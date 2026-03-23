@@ -1,11 +1,11 @@
 {
   "$GMObject":"",
-  "%Name":"obj_settings_bookmark",
+  "%Name":"obj_cards_bookmark",
   "eventList":[],
   "managed":true,
-  "name":"obj_settings_bookmark",
+  "name":"obj_cards_bookmark",
   "overriddenProperties":[
-    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_bookmark","path":"objects/obj_bookmark/obj_bookmark.yy",},"propertyId":{"name":"bookmark_chapter","path":"objects/obj_bookmark/obj_bookmark.yy",},"resource":{"name":"obj_settings_chapter","path":"objects/obj_settings_chapter/obj_settings_chapter.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"obj_settings_chapter",},
+    {"$GMOverriddenProperty":"v1","%Name":"","name":"","objectId":{"name":"obj_bookmark","path":"objects/obj_bookmark/obj_bookmark.yy",},"propertyId":{"name":"bookmark_chapter","path":"objects/obj_bookmark/obj_bookmark.yy",},"resource":{"name":"obj_cards_chapter","path":"objects/obj_cards_chapter/obj_cards_chapter.yy",},"resourceType":"GMOverriddenProperty","resourceVersion":"2.0","value":"obj_cards_chapter",},
   ],
   "parent":{
     "name":"Bookmarks",
@@ -33,8 +33,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_settings_bookmark_top",
-    "path":"sprites/spr_settings_bookmark_top/spr_settings_bookmark_top.yy",
+    "name":"spr_cards_bookmark_top",
+    "path":"sprites/spr_cards_bookmark_top/spr_cards_bookmark_top.yy",
   },
   "spriteMaskId":null,
   "visible":true,

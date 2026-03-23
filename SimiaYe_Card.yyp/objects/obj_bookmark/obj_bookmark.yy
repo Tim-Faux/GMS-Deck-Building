@@ -15,8 +15,8 @@
   "name":"obj_bookmark",
   "overriddenProperties":[],
   "parent":{
-    "name":"Book_Menu",
-    "path":"folders/Objects/Book_Menu.yy",
+    "name":"Bookmarks",
+    "path":"folders/Objects/Book_Menu/Bookmarks.yy",
   },
   "parentObjectId":null,
   "persistent":false,

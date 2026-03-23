@@ -1,6 +1,6 @@
 #macro BOOKMARK_PADDING 1
 
-book_bookmarks = [obj_settings_bookmark, obj_settings_bookmark]
+book_bookmarks = [ obj_settings_bookmark, obj_cards_bookmark, obj_characters_bookmark ]
 bookmark_data = array_create(array_length(book_bookmarks))
 
 bookmarks_layer = layer_create(depth - 1, "bookmarks_layer")

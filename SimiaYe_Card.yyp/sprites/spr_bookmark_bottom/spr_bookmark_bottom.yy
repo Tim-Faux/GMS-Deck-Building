@@ -44,8 +44,8 @@
   },
   "origin":0,
   "parent":{
-    "name":"Book_Menu",
-    "path":"folders/Sprites/Book_Menu.yy",
+    "name":"Bookmarks",
+    "path":"folders/Sprites/Book_Menu/Bookmarks.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",
