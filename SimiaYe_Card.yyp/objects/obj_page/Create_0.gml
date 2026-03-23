@@ -313,7 +313,7 @@ function create_page_back_sprite(is_chapter_flip) {
 ///											or based on the page's position
 /// @param {Real} page_num				Optional number to chose a page to draw the text for
 function draw_elements_text(adjust_for_surface, page_num = current_page) {
-	if(page_num > -1 && array_length(page_data.all_pages) - 1 > page_num) {
+	if(page_num > -1 && array_length(page_data.all_pages) > page_num) {
 		draw_set_colour(c_black)
 		var page_elements = page_data.all_pages[page_num].elements
 		var page_element_names = variable_struct_get_names(page_elements)

@@ -10,7 +10,7 @@ function book_menu_page_data(page_x, page_y, page_height, page_width) constructo
 		min_y = page_y
 		first_column_x_pos = page_x + BOOK_PAGE_ELEMENT_PADDING
 		next_element_y_pos = page_y + BOOK_PAGE_ELEMENT_PADDING
-		page_max_height = page_height
+		page_max_height = page_y + page_height
 		page_max_width = page_width
 		all_pages = [{elements: {}}]
 		
