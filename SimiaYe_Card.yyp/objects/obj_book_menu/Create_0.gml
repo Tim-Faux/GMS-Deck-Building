@@ -46,10 +46,6 @@ function create_bookmarks(bookmark_start_pos = page_x_pos, start_index = 0, end_
 			is_active_bookmark : last_left_bookmark_index == bookmark_index,
 			on_bookmark_pressed : method(self, create_chapter)
 		})
-		
-		if(bookmark_index == last_left_bookmark_index) {
-			add_bookmark_bottom(bookmark_x_pos)	
-		}
 	}
 }
 
@@ -79,11 +75,28 @@ function delete_bookmarks(start_index = 0, end_index = array_length(book_bookmar
 function create_chapter(chapter, bookmark_index_pressed) {
 	delete_layers(find_layers_above(active_page_layer), bookmark_bottom_layer)
 	layer_destroy_instances(active_page_layer)
-	delete_bookmarks(last_left_bookmark_index + 1, bookmark_index_pressed)
 	
-	var bookmarks_to_flip = array_create_ext(bookmark_index_pressed + 1, function(_index) {
-		return bookmark_data[_index]
-	})
+	var flip_direction = page_flip_direction.none
+	var bookmarks_to_flip = []
+	if(last_left_bookmark_index < bookmark_index_pressed) {
+		delete_bookmarks(last_left_bookmark_index + 1, bookmark_index_pressed)
+		flip_direction = page_flip_direction.left
+		
+		bookmarks_to_flip = array_create(bookmark_index_pressed - last_left_bookmark_index)
+		for(var bookmark_index = 0; bookmark_index < array_length(bookmarks_to_flip); bookmark_index++) {
+			bookmarks_to_flip[bookmark_index] = bookmark_data[bookmark_index + last_left_bookmark_index + 1]
+		}
+	}
+	else {
+		delete_bookmarks(bookmark_index_pressed + 1, last_left_bookmark_index)
+		add_bookmark_bottom(bookmark_data[bookmark_index_pressed].x_pos)
+		flip_direction = page_flip_direction.right
+		
+		bookmarks_to_flip = array_create(last_left_bookmark_index - bookmark_index_pressed + 1)
+		for(var bookmark_index = 0; bookmark_index < array_length(bookmarks_to_flip); bookmark_index++) {
+			bookmarks_to_flip[bookmark_index] = bookmark_data[last_left_bookmark_index - bookmark_index]
+		}
+	}
 	
 	var page_x_scale = page_width / sprite_get_width(spr_cover)
 	var page_y_scale = page_height / sprite_get_height(spr_cover)
@@ -93,6 +106,7 @@ function create_chapter(chapter, bookmark_index_pressed) {
 		bookmarks_to_flip,
 		bookmark_scale,
 		book_is_open : book_opened,
+		flip_direction,
 		pages_array : {front_sprite : spr_cover_front, back_sprite : spr_cover_back, x_pos : x, y_pos : y, bend_page : false, surface : cover_surf},
 		on_cover_opened : method(self, book_finished_opening),
 		on_cover_opened_args : [bookmark_index_pressed]
@@ -108,9 +122,16 @@ function book_finished_opening(bookmark_index_pressed) {
 	sprite_index = spr_cover
 	global.object_being_clicked = false
 	book_opened = true
+	var max_left_bookmark_index = last_left_bookmark_index
 	last_left_bookmark_index = bookmark_index_pressed
-	delete_bookmarks(0, bookmark_index_pressed)
-	create_bookmarks(x, 0, bookmark_index_pressed)
+	if(max_left_bookmark_index >= bookmark_index_pressed) {
+		create_bookmarks(x, bookmark_index_pressed, max_left_bookmark_index)
+	}
+	else {
+		create_bookmarks(x, max_left_bookmark_index + 1, bookmark_index_pressed)
+	}
+	
+	add_bookmark_bottom(bookmark_data[bookmark_index_pressed].x_pos)
 	
 	if(sprite_exists(spr_cover_front)) {
 		sprite_delete(spr_cover_front)

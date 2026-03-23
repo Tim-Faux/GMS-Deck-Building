@@ -2,7 +2,6 @@
 
 current_page = -1
 run_page_flip_sprite_creation = false
-flip_direction = page_flip_direction.left
 
 page_data = new book_menu_page_data(x, y, sprite_height, sprite_width)
 page_elements_layer = layer_create(depth - 1, "page_elements_layer")

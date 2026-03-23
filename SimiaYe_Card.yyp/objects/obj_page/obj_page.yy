@@ -37,6 +37,11 @@
         "GMSprite",
       ],"listItems":[],"multiselect":true,"name":"bookmarks_to_flip","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"","varType":6,},
     {"$GMObjectProperty":"v2","%Name":"bookmark_scale","filters":[],"listItems":[],"multiselect":false,"name":"bookmark_scale","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"0","varType":0,},
+    {"$GMObjectProperty":"v2","%Name":"flip_direction","filters":[],"listItems":[
+        "page_flip_direction.none",
+        "page_flip_direction.left",
+        "page_flip_direction.right",
+      ],"multiselect":false,"name":"flip_direction","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"page_flip_direction.left","varType":6,},
   ],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
