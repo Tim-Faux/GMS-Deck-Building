@@ -24,19 +24,17 @@ create_bookmarks()
 
 /// @desc								Creates each of the bookmarks in book_bookmarks, evenly
 ///											spaced at the top of the book
-/// @param {Real} bookmark_start_pos	The starting x position for the first bookmark on the right
-///											to be based on
 /// @param {Real} start_index			The first instance to delete, defaults to 0
 /// @param {Real} end_index				The last instance to delete, defaults to all instances
-function create_bookmarks(bookmark_start_pos = page_x_pos, start_index = 0, end_index = array_length(book_bookmarks) - 1) {
+function create_bookmarks(start_index = 0, end_index = array_length(book_bookmarks) - 1) {
 	var bookmark_width = (sprite_get_width(spr_settings_bookmark_top) * bookmark_scale)
 	var bookmark_y_pos = page_y_pos - (sprite_get_height(spr_settings_bookmark_top) * bookmark_scale)
 	
 	for(var bookmark_index = start_index; bookmark_index <= end_index; bookmark_index++) {
 		var dist_from_start = (bookmark_width + (BOOKMARK_PADDING * image_xscale)) * (bookmark_index + 1)
 		var bookmark_x_pos = last_left_bookmark_index >= bookmark_index ?
-									bookmark_start_pos - dist_from_start :
-									bookmark_start_pos + dist_from_start
+									page_x_pos - dist_from_start :
+									page_x_pos + dist_from_start
 		
 		bookmark_data[bookmark_index] = { sprite : object_get_sprite(book_bookmarks[bookmark_index]), x_pos : dist_from_start }
 		instance_create_layer(bookmark_x_pos, bookmark_y_pos, bookmarks_layer, book_bookmarks[bookmark_index], { 
@@ -125,10 +123,10 @@ function book_finished_opening(bookmark_index_pressed) {
 	var max_left_bookmark_index = last_left_bookmark_index
 	last_left_bookmark_index = bookmark_index_pressed
 	if(max_left_bookmark_index >= bookmark_index_pressed) {
-		create_bookmarks(x, bookmark_index_pressed, max_left_bookmark_index)
+		create_bookmarks(bookmark_index_pressed + 1, max_left_bookmark_index)
 	}
 	else {
-		create_bookmarks(x, max_left_bookmark_index + 1, bookmark_index_pressed)
+		create_bookmarks(max_left_bookmark_index + 1, bookmark_index_pressed)
 	}
 	
 	add_bookmark_bottom(x - bookmark_data[bookmark_index_pressed].x_pos)
