@@ -164,6 +164,12 @@ function book_page_flipped(page_array) {
 			
 	}
 	else {
+		if(current_page > 1 && instance_number(obj_bookmark_bottom) > 0) {
+			obj_bookmark_bottom.visible = false
+		}
+		else if(current_page <= 1 && instance_number(obj_bookmark_bottom) > 0) {
+			obj_bookmark_bottom.visible = true
+		}
 		instance_create_layer(x, y, flip_page_layer, obj_flipping_page, {
 			flip_direction,
 			pages_to_flip : page_array,
@@ -188,6 +194,14 @@ function page_flip_finished() {
 	if(!book_is_open) {
 		book_is_open = true
 	}
+	
+	if(current_page > 0 && instance_number(obj_bookmark_bottom) > 0) {
+		obj_bookmark_bottom.visible = false
+	}
+	else if(current_page == 0 && instance_number(obj_bookmark_bottom) > 0) {
+		obj_bookmark_bottom.visible = true
+	}
+	
 	create_page_flip_button()
 	delete_pages_sprites()
 	
