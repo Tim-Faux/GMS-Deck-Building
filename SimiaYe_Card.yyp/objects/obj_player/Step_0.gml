@@ -1,4 +1,3 @@
-
 if (!arena) {
 	if(is_controlled_chara) {
 		var x_movement = InputX(INPUT_CLUSTER.NAVIGATION) * WALK_SPEED
@@ -25,4 +24,7 @@ if (!arena) {
 		teleport_effect_subimage += 1 / frames_between_subimages
 	}
 	
+}
+else {
+	display_effect_text()
 }

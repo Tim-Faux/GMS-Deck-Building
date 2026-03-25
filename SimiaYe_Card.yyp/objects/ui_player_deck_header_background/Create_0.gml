@@ -39,5 +39,8 @@ function create_close_button(layer_id) {
 	var close_button_sprite_width = sprite_get_width(object_get_sprite(ui_close_layer_button))
 	var button_x_pos = display_get_gui_width() - CLOSE_BUTTON_PADDING - close_button_sprite_width
 	var button_y_pos = CLOSE_BUTTON_PADDING
-	instance_create_layer(button_x_pos, button_y_pos, layer_id, ui_close_layer_button)
+	instance_create_layer(button_x_pos, button_y_pos, layer_id, ui_close_layer_button, {
+		on_layer_closed : on_deck_view_closed,
+		on_layer_closed_args : on_deck_view_closed_args
+	})
 }

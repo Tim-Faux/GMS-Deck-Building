@@ -1,4 +1,4 @@
-#macro DEFAULT_PLAYER_DECK [obj_battack, obj_battack, obj_battack, obj_battack, obj_battack, obj_battack, obj_battack, obj_battack, obj_battack, obj_battack]
+#macro DEFAULT_PLAYER_DECK [obj_battack, obj_card_2, obj_card_4, obj_card_5, obj_card_6, obj_card_14, obj_card_15, obj_card_24, obj_card_27, obj_card_29, obj_card_30, obj_card_33, obj_card_35]
 
 check_for_player_full_deck()
 
@@ -59,8 +59,11 @@ function draw_card() {
 		}
 		add_discarded_cards_to_current_deck()
 	}
-	var drawn_card = global.player_current_deck[random(array_length(global.player_current_deck))]
-	remove_card_from_player_current_deck(drawn_card)
+	var drawn_card = global.player_current_deck[0]
+	remove_card_from_player_current_deck(0)
+	if(variable_global_exists("add_energy_on_card_draw") && object_exists(ui_player_energy)) {
+		ui_player_energy.add_to_player_current_energy(global.add_energy_on_card_draw)
+	}
 	return drawn_card
 }
 
@@ -87,14 +90,27 @@ function add_card_to_player_current_deck(card) {
 	array_push(global.player_current_deck, card)
 }
 
-/// @desc							Temporarily removes a card from the player's hand. This should be
-///										used for non-permanent changes during combat and not a 
-///										permanent change to the deck
-/// @param {Asset.GMObject} card	The card that is being removed from the player's current deck
+/// @desc							Adds a temporary version of a card to the front player's deck. This 
+///										should not be used for permanent additions to the deck
+/// @param {Asset.GMObject} card	The card that is being added to the player's current deck
+function add_card_to_top_of_player_current_deck(card) {
+	check_for_player_current_deck()
+	array_insert(global.player_current_deck, 0, card)
+}
+
+/// @desc									Temporarily removes a card from the player's hand. This should be
+///												used for non-permanent changes during combat and not a 
+///												permanent change to the deck
+/// @param {Asset.GMObject, Real} card		The card that is being removed from the player's current deck
 function remove_card_from_player_current_deck(card) {
 	check_for_player_current_deck()
-	var card_index = array_get_index(global.player_current_deck, card)
-	array_delete(global.player_current_deck, card_index, 1)
+	if(is_real(card)) {
+		array_delete(global.player_current_deck, card, 1)
+	}
+	else {
+		var card_index = array_get_index(global.player_current_deck, card)
+		array_delete(global.player_current_deck, card_index, 1)
+	}
 }
 
 /// @desc							Checks that the player_current_deck exists and if not set it to a
@@ -105,6 +121,22 @@ function check_for_player_current_deck() {
 		var num_cards_in_full_deck = array_length(global.player_full_deck)
 		global.player_current_deck = array_create(num_cards_in_full_deck)
 		array_copy(global.player_current_deck, 0, global.player_full_deck, 0, num_cards_in_full_deck)
+		shuffle_player_current_deck()
+	}
+}
+
+/// @desc							Resets the player's current deck to have the same cards
+///										as player_full_deck
+function reset_player_current_deck() {
+	if(!variable_global_exists("player_current_deck") || global.player_current_deck == undefined) {
+		check_for_player_current_deck()
+	}
+	else {
+		check_for_player_full_deck()
+		var num_cards_in_full_deck = array_length(global.player_full_deck)
+		global.player_current_deck = array_create_ext(num_cards_in_full_deck, function(index) {
+			return global.player_full_deck[index]
+		})
 		shuffle_player_current_deck()
 	}
 }

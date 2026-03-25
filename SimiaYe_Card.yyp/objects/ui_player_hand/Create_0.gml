@@ -5,7 +5,8 @@
 player_hand_size = DEFAULT_PLAYER_HAND_SIZE
 cards_in_hand = array_create(0)
 is_hand_visible = true
-card_can_be_selected = true
+total_width_of_hand = 0
+run_card_drawn_functions = false
 
 initial_hand_setup()
 
@@ -42,24 +43,56 @@ function fill_player_hand() {
 	}
 }
 
-/// @desc							Removes all cards from the player's hand, puts them in the
-///										discard deck, and destroys their instnace
-function empty_player_hand() {
-	array_foreach(cards_in_hand, function(card, card_index) {
-		add_card_to_discard_deck(card.object_index)
-		instance_destroy(card)
-	})
-	array_resize(cards_in_hand, 0)
+/// @desc								Removes all cards from the player's hand one at a time
+///											allowing the discard to finish before using this
+///											function as a call back to discard the next card
+/// @param {function} on_hand_emptied	Call back function triggered when the last card in the
+///											player's hand is discarded
+/// @param {Real} card_index			The current cards_in_hand card index
+function empty_player_hand(on_hand_emptied, card_index = array_length(cards_in_hand) - 1) {
+	if(card_index >= 0) {
+		if(cards_in_hand[card_index].card_is_discarded_when_turn_end) {
+			cards_in_hand[card_index].discard_card(
+				method(self, empty_player_hand),
+				[on_hand_emptied, --card_index])
+		}
+		else if(cards_in_hand[card_index].card_is_exhausted_when_turn_end) {
+			cards_in_hand[card_index].exhaust_card(
+				method(self, empty_player_hand),
+				[on_hand_emptied, --card_index])
+		}
+		else {
+			empty_player_hand(on_hand_emptied, --card_index)
+		}
+	}
+	else {
+		if(on_hand_emptied != undefined && is_method(on_hand_emptied))
+			method_call(on_hand_emptied, [])
+	}
+}
+
+/// @desc							Finds all the cards in the player's current hand
+/// @returns						An array of the cards currently in the player's hand
+function get_player_current_hand() {
+	return cards_in_hand
 }
 
 /// @desc							Adds a specified card to the player's hand and shows it in the UI
 /// @param {Asset.GMObject} card	The card that is being added to the player's hand
+/// @returns {bool}					True if the card was added to the player's hand or false and it was
+///										returned to the top of the player's deck
 function add_card(card) {
 	var card_instance = instance_create_layer(x, y, "Instances", card)
 	var number_of_cards_in_hand = array_length(cards_in_hand)
 	if(number_of_cards_in_hand < MAX_PLAYER_HAND_SIZE) {
 		array_push(cards_in_hand, card_instance)
 		set_cards_in_hand_position()
+		card_instance.card_drawn_action()
+		return true
+	}
+	else {
+		add_card_to_top_of_player_current_deck(card)
+		return false
 	}
 }
 
@@ -74,7 +107,28 @@ function add_multiple_cards(cards) {
 		var card_instance = instance_create_layer(x, y, "Instances", cards[card_index])
 		cards_in_hand[card_index + current_num_cards_in_hand] = card_instance
 	}
+	run_card_drawn_functions = true
 	set_cards_in_hand_position()
+}
+
+/// @desc							Creates a copy of the given card in the player's hand
+/// @param {Id.Instance} card		The card that is being copied
+function add_copy_of_card_to_hand(card) {
+	var card_instance = instance_create_layer(x, y, "Instances", card.object_index)
+	var number_of_cards_in_hand = array_length(cards_in_hand)
+	if(number_of_cards_in_hand < MAX_PLAYER_HAND_SIZE) {
+		var card_index = array_get_index(cards_in_hand, card)
+		if(card_index != -1)
+			array_insert(cards_in_hand, card_index + 1, card_instance)
+		else
+			array_push(cards_in_hand, card_instance)
+		set_cards_in_hand_position()
+		return true
+	}
+	else {
+		add_card_to_top_of_player_current_deck(card)
+		return false
+	}
 }
 
 /// @desc							Removes the given card from the players hand if it exists
@@ -119,6 +173,15 @@ function get_width_of_player_hand() {
 		}
 	}
 	return total_width_of_hand
+}
+
+/// @desc							Runs the card_drawn_action for each of the cards in hand. This
+///										is intended to only be called when the player is drawing a
+///										completely new hand.
+function run_card_drawn_code() {
+	for(var card_index = array_length(cards_in_hand) - 1; card_index >= 0; card_index--) {
+		cards_in_hand[card_index].card_drawn_action()
+	}
 }
 
 /// @desc							Makes all the cards in the player's hand visible
