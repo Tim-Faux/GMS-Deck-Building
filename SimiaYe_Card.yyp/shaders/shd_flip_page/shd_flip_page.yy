@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"shd_flip_page",
+  "name":"shd_flip_page",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Objects/Book_Menu/Scripts.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}

@@ -13,11 +13,27 @@ function find_and_delete_related_layers(layer_id) {
 
 /// @desc									Finds all of the layers with a depth within LAYER_SEARCH_TOLERANCE 
 /// @param {String, Id.Layer} layer_id		The layer to search above and below
-/// @returns								True if provided layer is the closest layer to the camera
-function find_neighboring_layers (layer_id) {
+/// @returns {Array<Id.Layer>}				An array of all layers within LAYER_SEARCH_TOLERANCE depth
+function find_neighboring_layers(layer_id) {
 	var neighboring_layers = []
 	
 	for(var layer_depth_index = layer_get_depth(layer_id) - LAYER_SEARCH_TOLERANCE; layer_depth_index < layer_get_depth(layer_id) + LAYER_SEARCH_TOLERANCE; layer_depth_index++) {
+		var all_layers_at_depth = layer_get_id_at_depth(layer_depth_index)
+		if(all_layers_at_depth[0] != -1) {
+			neighboring_layers = array_concat(all_layers_at_depth, neighboring_layers)
+		}
+	}
+	return neighboring_layers
+}
+
+/// @desc									Finds all of the layers with a depth within LAYER_SEARCH_TOLERANCE
+///												above the given layer
+/// @param {String, Id.Layer} layer_id		The layer to search above and below
+/// @returns {Array<Id.Layer>}				An array of all layers above within LAYER_SEARCH_TOLERANCE
+function find_layers_above(layer_id) {
+	var neighboring_layers = []
+	
+	for(var layer_depth_index = layer_get_depth(layer_id) - LAYER_SEARCH_TOLERANCE; layer_depth_index < layer_get_depth(layer_id); layer_depth_index++) {
 		var all_layers_at_depth = layer_get_id_at_depth(layer_depth_index)
 		if(all_layers_at_depth[0] != -1) {
 			neighboring_layers = array_concat(all_layers_at_depth, neighboring_layers)

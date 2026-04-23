@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"enum_page_flip_direction",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"enum_page_flip_direction",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Objects/Book_Menu/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

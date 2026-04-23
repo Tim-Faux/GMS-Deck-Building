@@ -1,0 +1,1 @@
+flip_percent += PAGE_TURN_SPEED
