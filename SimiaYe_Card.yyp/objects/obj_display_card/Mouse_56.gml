@@ -1,7 +1,3 @@
-if(card_clicked) {
-	global.object_being_clicked	= false
-	card_clicked = false
-}
-if(card_expanded && remove_expanded_card) {
-	layer_destroy(layer)
+if(remove_expanded_card) {
+	find_and_delete_related_layers(layer)
 }
