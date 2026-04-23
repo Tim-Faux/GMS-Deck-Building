@@ -16,6 +16,9 @@ move_west_sprite =			noone
 stand_still_sprite =		noone
 teleport_sprite =			spr_player_teleport_effect
 
+if(!variable_global_exists("room_switching"))
+	global.room_switching = false
+
 arena = false
 collidable_items = find_room_collision_items(room)
 if(player_current_health == -1)
