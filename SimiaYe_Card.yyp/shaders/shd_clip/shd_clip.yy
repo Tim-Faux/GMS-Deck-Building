@@ -1,0 +1,12 @@
+{
+  "$GMShader":"",
+  "%Name":"shd_clip",
+  "name":"shd_clip",
+  "parent":{
+    "name":"UI",
+    "path":"folders/Objects/UI.yy",
+  },
+  "resourceType":"GMShader",
+  "resourceVersion":"2.0",
+  "type":1,
+}
