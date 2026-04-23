@@ -10,8 +10,8 @@
     "path":"folders/Objects/Map Objects/Walls.yy",
   },
   "parentObjectId":{
-    "name":"obj_wall",
-    "path":"objects/obj_wall/obj_wall.yy",
+    "name":"obj_collision_object",
+    "path":"objects/obj_collision_object/obj_collision_object.yy",
   },
   "persistent":false,
   "physicsAngularDamping":0.1,

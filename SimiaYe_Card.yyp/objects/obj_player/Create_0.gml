@@ -1,6 +1,9 @@
 #macro WALK_SPEED 7.8
+#macro STARTING_ACCELERATION_VALUE 0.3
+#macro ACCELERATION_SPEED 0.1
 #macro MAX_SPRITE_SCALE_FRAME_INDEX 14
 #macro MIN_DIST_FOR_ALLIES_TO_MOVE 3
+#macro MAX_DIST_TO_ENTER_BUILDING 50
 #macro TIME_BETWEEN_EFFECT_TEXT 12
 #macro MAX_CHARA_SHIELD 5
 
@@ -24,10 +27,14 @@ collidable_items = find_room_collision_items(room)
 if(player_current_health == -1)
 	player_current_health = player_max_health
 
-target_pos = new character_position_target(x, y, 0, sprite_width, sprite_height)
+var bbox_edge_to_origin_dist = { left :	bbox_left - x,
+									top :	bbox_top - y,
+									right:	bbox_right - x,
+									bottom:bbox_bottom - y}
+target_pos = new character_position_target(x, y, 0, sprite_width, sprite_height, bbox_edge_to_origin_dist)
 path = path_add()
+chara_acceleration = STARTING_ACCELERATION_VALUE
 character_teleporting = false
-set_follow_target()
 teleport_effect_subimage = 0
 character_teleported = true
 character_moving = false
@@ -45,12 +52,12 @@ player_current_health = player_max_health
 turns_since_gain_strength_on_attack = 1
 
 /// @desc								Sets the controlled character's initial position so they are
-///											next to the obj_map_swap_trigger with pos_num equal to
+///											next to the obj_room_change_trigger with pos_num equal to
 ///											pos_num_to_swap_to and in the direction of place_player_dir
 function set_initial_pos() {
 	if(is_controlled_chara) {
-		for(var map_swap_index = 0; map_swap_index < instance_number(obj_map_swap_trigger); map_swap_index++) {
-			var swap_trigger = instance_find(obj_map_swap_trigger, map_swap_index)
+		for(var map_swap_index = 0; map_swap_index < instance_number(obj_room_change_trigger); map_swap_index++) {
+			var swap_trigger = instance_find(obj_room_change_trigger, map_swap_index)
 			if(variable_global_exists("pos_num_to_swap_to") && global.pos_num_to_swap_to == swap_trigger.pos_num) {
 				var dist_to_walk = 0
 				var normalized_sprite_width = sprite_width - sprite_xoffset
@@ -84,6 +91,9 @@ function set_initial_pos() {
 				walk_to_next_room(swap_trigger.place_player_dir, dist_to_walk, undefined, false)
 				break
 			}
+		}
+		if(instance_exists(obj_camera_controller)) {
+			obj_camera_controller.set_camera_initial_pos()
 		}
 	}
 }
@@ -307,6 +317,9 @@ function move_horizontally(x_movement) {
 		var signed_x_step = x_movement < 0 ? -x_step : x_step
 		if (!place_meeting(x + signed_x_step, y, collidable_items)) {
 			x += signed_x_step * image_xscale
+			if(!variable_global_exists("room_switching") || !global.room_switching) {
+				x = clamp(x, 0 + sprite_xoffset, room_width - sprite_width + sprite_xoffset)
+			}
 			break
 		}
 	}
@@ -319,8 +332,12 @@ function move_horizontally(x_movement) {
 function move_vertically(y_movement) {
 	for(var y_step = abs(y_movement); y_step > 0; y_step--) {
 		var signed_y_step = y_movement < 0 ? -y_step : y_step
-		if (!place_meeting(x, y + signed_y_step, collidable_items)) {
+		if (!place_meeting(x, y + signed_y_step, collidable_items) || 
+			(variable_global_exists("room_switching") && global.room_switching)) {
 			y += signed_y_step * image_yscale
+			if(!variable_global_exists("room_switching") || !global.room_switching) {
+				y = clamp(y, 0 + sprite_yoffset, room_height - sprite_height + sprite_yoffset)
+			}
 			break
 		}
 	}
@@ -376,35 +393,29 @@ function get_movement_sprites_array() {
 
 /// @desc							Finds the an avaliable obj_player to follow
 function set_follow_target() {
-	if(!is_controlled_chara) {
-		for(var chara_index = 0; chara_index < instance_number(obj_player); chara_index++) {
-			var chara_to_follow = instance_find(obj_player, chara_index)
-			if(chara_to_follow != id && chara_to_follow != noone && chara_to_follow.follower == noone) {
-				chara_to_follow.follower = id
-				set_target_pos(chara_to_follow.x, chara_to_follow.y, 270)
-				break
-			}
-		}
+	if(!is_controlled_chara && instance_exists(obj_follower_order_manager)) {
+		obj_follower_order_manager.add_follower(id)
 	}
 }
 
-/// @desc							The struct defining the position information needed for allies to
-///										follow the player
+/// @desc							Struct to handle finding where the AI characters should path to
 /// @param {Real} _x_intent			The x position of the character that this character is following
 /// @param {Real} _y_intent			The y position of the character that this character is following
 /// @param {Real} _angle			The angle in degrees around the targeted position for this character
 ///										to align itself to
 /// @param {Real} _sprite_width		The width of this character's sprite
 /// @param {Real} _sprite_height	The height of this character's sprite
-function character_position_target(_x_intent, _y_intent, _angle, _sprite_width, _sprite_height) constructor {
+/// @param {struct} bbox_to_origin_dist			The struct containing the distance from the origin
+///													to the bbox left, top, right, and bottom edge
+function character_position_target(_x_intent, _y_intent, _angle, _sprite_width, _sprite_height, bbox_to_origin_dist) constructor {
 	#macro SPACE_BETWEEN_FOLLOWERS 5
 	x_intent = _x_intent
 	y_intent = _y_intent
 	angle = _angle
-	sprite_width = _sprite_width
-	sprite_height = _sprite_height
-	x = x_intent - ((_sprite_width + SPACE_BETWEEN_FOLLOWERS) * dcos(_angle))
-	y = y_intent + ((_sprite_height + SPACE_BETWEEN_FOLLOWERS) * dsin(_angle))
+	x = clamp(x_intent - ((_sprite_width + SPACE_BETWEEN_FOLLOWERS) * dcos(_angle)),
+				-bbox_to_origin_dist.left, room_width - bbox_to_origin_dist.right)
+	y = clamp(y_intent + ((_sprite_height + SPACE_BETWEEN_FOLLOWERS) * dsin(_angle)), 
+				-bbox_to_origin_dist.top, room_height - bbox_to_origin_dist.bottom)
 		
 	/// @desc							Used to redefine this structs variables
 	/// @param {Real} _x_intent			The x position of the character that this character is following
@@ -413,77 +424,147 @@ function character_position_target(_x_intent, _y_intent, _angle, _sprite_width, 
 	///										to align itself to
 	/// @param {Real} _sprite_width		The width of this character's sprite
 	/// @param {Real} _sprite_height	The height of this character's sprite
-	static update_target_pos = function(_x_intent, _y_intent, _angle, _sprite_width, _sprite_height) {
+	/// @param {struct} bbox_to_origin_dist			The struct containing the distance from the origin
+	///													to the bbox left, top, right, and bottom edge
+	static update_target_pos = function(_x_intent, _y_intent, _angle, _sprite_width, _sprite_height, bbox_to_origin_dist) {
 		x_intent = _x_intent
 		y_intent = _y_intent
 		angle = _angle
-		sprite_width = _sprite_width
-		sprite_height = _sprite_height
-		x = x_intent - ((_sprite_width + SPACE_BETWEEN_FOLLOWERS) * dcos(_angle))
-		y = y_intent + ((_sprite_height + SPACE_BETWEEN_FOLLOWERS) * dsin(_angle))
+		x = clamp(x_intent - ((_sprite_width + SPACE_BETWEEN_FOLLOWERS) * dcos(_angle)),
+					-bbox_to_origin_dist.left, room_width - bbox_to_origin_dist.right)
+		y = clamp(y_intent + ((_sprite_height + SPACE_BETWEEN_FOLLOWERS) * dsin(_angle)),
+					-bbox_to_origin_dist.top, room_height - bbox_to_origin_dist.bottom)
 	}
 	
-	/// @desc							Attempts to find a space this character fits by shifting them
-	///										horizontally and vertically outside of the collision box
-	/// @param {Id.Instance} collision	The object this character collided with when attempting to place
-	///										their target position
-	/// @param {Real} _sprite_width		Width of this character's current sprite. Defaults to the struct's
-	///										current sprite_width
-	/// @param {Real} _sprite_height	Height of this character's current sprite. Defaults to the struct's
-	///										current sprite_height
-	static find_open_space = function(collision, _sprite_width = sprite_width, _sprite_height = sprite_height) {
-		sprite_width = _sprite_width
-		sprite_height = _sprite_height
+	/// @desc										Attempts to find a space this character fits by shifting
+	///													them horizontally and vertically outside of the
+	///													collision box
+	/// @param {Id.Instance, Id.TileMapElement} collision		The object this character collided
+	///																with when attempting to place
+	///																their target position
+	/// @param {struct} bbox_to_origin_dist			The struct containing the distance from the origin
+	///													to the bbox left, top, right, and bottom edge
+	static find_open_space = function(collision, bbox_to_origin_dist) {
+		var collision_bounds = get_collision_bounds(collision, bbox_to_origin_dist)
 		if(abs(dcos(angle)) >= abs(dsin(angle))) {
-			shift_on_x(collision)
+			shift_on_x(collision_bounds, bbox_to_origin_dist)
 		}
 		else {
-			shift_on_y(collision)
+			shift_on_y(collision_bounds, bbox_to_origin_dist)
 		}	
+	}
+	
+	/// @desc											Finds each edge of the given collision hitbox
+	/// @param {Id.Instance, Id.TileMapElement} collision	The item that the character has collided with
+	/// @param {struct} bbox_to_origin_dist				The struct containing the distance from the origin
+	///														to the bbox left, top, right, and bottom edge
+	/// @returns {struct}								A struct containing the "left", "top", "right",
+	///														and "bottom" edges of the given collision
+	static get_collision_bounds = function (collision, bbox_to_origin_dist) {
+		var tilemap_collision = layer_tilemap_get_colmask(collision)
+		if(tilemap_collision != -1) {
+			var collision_pos = find_tile_collision(x + bbox_to_origin_dist.left,
+													y + bbox_to_origin_dist.top, 
+													x + bbox_to_origin_dist.right, 
+													y + bbox_to_origin_dist.bottom,
+													collision)
+			if(collision_pos != -1) {
+				var tile_width = tilemap_get_tile_width(collision)
+				var tile_height = tilemap_get_tile_height(collision)
+				return { left	:	collision_pos[0],
+						 top	:	collision_pos[1],
+						 right	:	collision_pos[0] + tile_width,
+						 bottom	:	collision_pos[1] + tile_height }
+			}
+		}
+		else {
+			return { left	:	collision.bbox_left,
+					 top	:	collision.bbox_top,
+					 right	:	collision.bbox_right,
+					 bottom	:	collision.bbox_bottom }
+		}
+	}
+	
+	/// @desc										Finds if there is a tile in the given tile map
+	///													that is within the given area
+	/// @param {Real} x1							The left side of the area to check
+	/// @param {Real} y1							The top of the area to check
+	/// @param {Real} x2							The right side of the area to check
+	/// @param {Real} y2							The bottom of the area to check
+	/// @param {Id.TileMapElement} tilemap_id		The tilemap to check tiles from
+	/// @returns {Array<Real>}						An array with the first index being the x position
+	///													and the second index being the y position of
+	///													the first collision found, or -1 if none found
+	static find_tile_collision = function(x1, y1, x2, y2, tilemap_id) {
+		var tile_width = tilemap_get_tile_width(tilemap_id)
+		var tile_height = tilemap_get_tile_height(tilemap_id)
+		
+		var max_y = y1 > y2 ? y1 + tile_height : y2 + tile_height
+		var max_x = x1 > x2 ? x1 + tile_height : x2 + tile_height
+		
+		for(var tile_y_to_check = y1; tile_y_to_check < max_y; tile_y_to_check += tile_height) {
+			for(var tile_x_to_check = x1; tile_x_to_check < max_x; tile_x_to_check += tile_width) {
+				var tile_data = tilemap_get_at_pixel(tilemap_id, tile_x_to_check, tile_y_to_check)
+				if(!tile_get_empty(tile_data)) {
+					var tile_x = tilemap_get_cell_x_at_pixel(tilemap_id, tile_x_to_check, tile_y_to_check) 
+					var tile_y = tilemap_get_cell_y_at_pixel(tilemap_id, tile_x_to_check, tile_y_to_check) 
+					if(tile_x != -1) {
+						return [tile_x * tile_width, tile_y * tile_height]
+					}
+				}
+			}
+		}
+		return -1
 	}
 	
 	/// @desc								Attempts to shift this character horizontally to the edge of the
 	///											collision box so long as it doesnt pass the x_intent
-	/// @param {Id.Instance} collision		The object this character collided with when attempting to place
-	///											their target position
-	/// @param {bool} shift_y_attempted		Optional flag to determine if shifting y should be attempted if
-	///											shifting x fails
-	static shift_on_x = function(collision, shift_y_attempted = false) {
-		if(collision.bbox_right < x_intent) {
-			x = collision.bbox_right + (sprite_width / 2)
+	/// @param {struct} collision_bounds		The struct containting the edges of object collided with
+	/// @param {struct} bbox_to_origin_dist		The struct containing the distance from the origin to the
+	///												bbox left, top, right, and bottom edge
+	/// @param {bool} shift_y_attempted			Optional flag to determine if shifting y should be attempted
+	///												if shifting x fails
+	static shift_on_x = function(collision_bounds, bbox_to_origin_dist, shift_y_attempted = false) {
+		if(collision_bounds.right < x_intent) {
+			x = collision_bounds.right - bbox_to_origin_dist.left + 1
 		}
-		else if(collision.bbox_left > x_intent) {
-			x = collision.bbox_left - (sprite_width / 2)
+		else if(collision_bounds.left > x_intent) {
+			x = collision_bounds.left - bbox_to_origin_dist.right - 1
 		}
 		else if(!shift_y_attempted) {
-			shift_on_y(collision, true)
+			shift_on_y(collision_bounds, bbox_to_origin_dist, true)
 		}
 		else {
 			x = x_intent
 			y = y_intent
 		}
+		x = clamp(x, 0, room_width + bbox_to_origin_dist.right)
+		y = clamp(y, 0, room_height + bbox_to_origin_dist.bottom)
 	}
 	
-	/// @desc								Attempts to shift this character vertically to the edge of the
-	///											collision box so long as it doesnt pass the y_intent
-	/// @param {Id.Instance} collision		The object this character collided with when attempting to place
-	///											their target position
-	/// @param {bool} shift_x_attempted		Optional flag to determine if shifting x should be attempted if
-	///											shifting y fails
-	static shift_on_y = function(collision, shift_x_attempted = false) {
-		if(collision.bbox_bottom < y_intent) {
-			y = collision.bbox_bottom + (sprite_height / 2)
+	/// @desc									Attempts to shift this character vertically to the edge of
+	///												the collision box so long as it doesnt pass the y_intent
+	/// @param {struct} collision_bounds		The struct containting the edges of object collided with
+	/// @param {struct} bbox_to_origin_dist		The struct containing the distance from the origin to the
+	///												bbox left, top, right, and bottom edge
+	/// @param {bool} shift_x_attempted			Optional flag to determine if shifting x should be attempted 
+	///												if shifting y fails
+	static shift_on_y = function(collision_bounds, bbox_to_origin_dist, shift_x_attempted = false) {
+		if(collision_bounds.bottom < y_intent + bbox_to_origin_dist.top + 1) {
+			y = collision_bounds.bottom - bbox_to_origin_dist.top + 1
 		}
-		else if(collision.bbox_top > y_intent) {
-			y = collision.bbox_top - (sprite_height / 2)
+		else if(collision_bounds.top > y_intent + bbox_to_origin_dist.bottom - 1) {
+			y = collision_bounds.top - bbox_to_origin_dist.bottom - 1
 		}
 		else if(!shift_x_attempted) {
-			shift_on_x(collision, true)
+			shift_on_x(collision_bounds, bbox_to_origin_dist, true)
 		}
 		else {
 			x = x_intent
 			y = y_intent
 		}
+		x = clamp(x, 0, room_width + bbox_to_origin_dist.right)
+		y = clamp(y, 0, room_height + bbox_to_origin_dist.bottom)
 	}
 }
 
@@ -495,14 +576,21 @@ function character_position_target(_x_intent, _y_intent, _angle, _sprite_width, 
 ///										to align itself to
 function set_target_pos(leader_x, leader_y, angle) {
 	character_moving = true
-	target_pos.update_target_pos(leader_x, leader_y, angle, sprite_height, sprite_width)
+	var bbox_edge_to_origin_dist = { left :	bbox_left - x,
+									 top :	bbox_top - y,
+									 right:	bbox_right - x,
+									 bottom:bbox_bottom - y}
+	target_pos.update_target_pos(leader_x, leader_y, angle, sprite_height, sprite_width, bbox_edge_to_origin_dist)
+	
 	var num_open_space_attempts = 0
 	while(true) {
-		var collision = collision_rectangle(target_pos.x - sprite_xoffset, target_pos.y - sprite_yoffset,
-											target_pos.x + sprite_xoffset, target_pos.y + sprite_yoffset,
-											obj_brick, false, false)
+		var collision = collision_rectangle(ceil(target_pos.x + bbox_edge_to_origin_dist.left) + 1,
+											ceil(target_pos.y + bbox_edge_to_origin_dist.top) + 1,
+											floor(target_pos.x + bbox_edge_to_origin_dist.right) - 1,
+											floor(target_pos.y + bbox_edge_to_origin_dist.bottom) - 1,
+											collidable_items, false, false)
 		if(collision != noone && num_open_space_attempts < 10) {
-			target_pos.find_open_space(collision, sprite_width, sprite_height)
+			target_pos.find_open_space(collision, bbox_edge_to_origin_dist)
 		}
 		else {
 			if(follower != noone) {
@@ -520,21 +608,27 @@ function set_target_pos(leader_x, leader_y, angle) {
 function chase_target() {
 	var dist_to_target_pos_squared = sqr(target_pos.x - x) + sqr(target_pos.y - y)
 	if(dist_to_target_pos_squared > sqr(MIN_DIST_FOR_ALLIES_TO_MOVE)) {
-		var dist_move_speed_modifier = dist_to_target_pos_squared / sqr(sprite_width / 2)
-		var move_speed = clamp(WALK_SPEED + dist_move_speed_modifier, WALK_SPEED, WALK_SPEED * 2)
+		if(variable_global_exists("pathing_grid") && global.pathing_grid != -1) {
+			chara_acceleration = clamp(chara_acceleration + ACCELERATION_SPEED, STARTING_ACCELERATION_VALUE, 1)
+			var min_walk_speed = WALK_SPEED * 2/3
+			var max_walk_speed = WALK_SPEED * 3/2
+			var dist_move_speed_modifier = 2 * dist_to_target_pos_squared / sqr(sprite_width)
+			var move_speed = clamp((min_walk_speed + dist_move_speed_modifier) * chara_acceleration, min_walk_speed, max_walk_speed)
+			
+			var x_offset = floor((bbox_left - x) + (bbox_right - bbox_left) / 2)
+			var y_offset = floor((bbox_top - y) + (bbox_bottom - bbox_top) / 2)
+			if(mp_grid_path(global.pathing_grid, path, x + x_offset, y + y_offset, target_pos.x + x_offset, target_pos.y + y_offset, true)) {
+				path_start(path, move_speed, path_action_stop, false)
 
-		mp_potential_settings(180, 30, 1, false)
-		if(mp_potential_path_object(path, target_pos.x, target_pos.y, move_speed, 4, obj_brick)) {
-			path_start(path, move_speed, path_action_stop, false)
-
-			if(follower != noone) {
-				follower.set_target_pos(x, y, target_pos.angle)
+				if(follower != noone) {
+					follower.set_target_pos(x, y, target_pos.angle)
+				}
 			}
-		}
-		else {
-			path_end()
-			character_moving = false
-			teleport_character()
+			else {
+				path_end()
+				character_moving = false
+				teleport_character()
+			}
 		}
 	}
 }
@@ -586,5 +680,14 @@ function scale_sprite_for_teleport() {
 			character_teleporting = false
 			character_teleported = false
 		}
+	}
+}
+
+/// @desc							Searches for any building triggers that are close enough to be
+///										interacted with and activates them to start listening
+function check_for_building_entrance() {
+	var closest_trigger = instance_nearest(x, y, obj_enter_building_trigger)
+	if(distance_to_object(closest_trigger) < MAX_DIST_TO_ENTER_BUILDING) {
+		closest_trigger.wake_up()	
 	}
 }

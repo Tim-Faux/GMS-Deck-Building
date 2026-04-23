@@ -3,16 +3,18 @@
   "%Name":"obj_map_swap_trigger",
   "eventList":[
     {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
-    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
   ],
   "managed":true,
   "name":"obj_map_swap_trigger",
   "overriddenProperties":[],
   "parent":{
-    "name":"Map Objects",
-    "path":"folders/Objects/Map Objects.yy",
+    "name":"Triggers",
+    "path":"folders/Objects/Map Objects/Triggers.yy",
   },
-  "parentObjectId":null,
+  "parentObjectId":{
+    "name":"obj_room_change_trigger",
+    "path":"objects/obj_room_change_trigger/obj_room_change_trigger.yy",
+  },
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,
@@ -26,19 +28,7 @@
   "physicsShape":1,
   "physicsShapePoints":[],
   "physicsStartAwake":true,
-  "properties":[
-    {"$GMObjectProperty":"v2","%Name":"new_room","filters":[
-        "GMRoom",
-      ],"listItems":[],"multiselect":false,"name":"new_room","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"","varType":5,},
-    {"$GMObjectProperty":"v2","%Name":"pos_num","filters":[],"listItems":[],"multiselect":false,"name":"pos_num","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"-1","varType":1,},
-    {"$GMObjectProperty":"v2","%Name":"pos_num_to_swap_to","filters":[],"listItems":[],"multiselect":false,"name":"pos_num_to_swap_to","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"-1","varType":1,},
-    {"$GMObjectProperty":"v2","%Name":"place_player_dir","filters":[],"listItems":[
-        "dir_to_place_player.Top",
-        "dir_to_place_player.Left",
-        "dir_to_place_player.Bottom",
-        "dir_to_place_player.Right",
-      ],"multiselect":false,"name":"place_player_dir","rangeEnabled":false,"rangeMax":10.0,"rangeMin":0.0,"resourceType":"GMObjectProperty","resourceVersion":"2.0","value":"dir_to_place_player.Top","varType":6,},
-  ],
+  "properties":[],
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,

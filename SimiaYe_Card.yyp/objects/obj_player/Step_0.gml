@@ -1,6 +1,6 @@
 if (!arena) {
 	if(is_controlled_chara) {
-		if(global.room_switching) {
+		if(variable_global_exists("room_switching") && global.room_switching) {
 			animate_player_leaving_room()	
 		}
 		else {
@@ -15,6 +15,8 @@ if (!arena) {
 			if(follower != noone && (x_movement != 0 || y_movement != 0)) {
 				follower.set_target_pos(x, y, InputDirection(0, INPUT_CLUSTER.NAVIGATION))
 			}
+			
+			check_for_building_entrance()
 		}
 	}
 	else if (!character_teleporting) {
@@ -22,6 +24,7 @@ if (!arena) {
 		set_movement_sprite(direction)
 		if(path_position == 1) {
 			character_moving = false
+			acceleration = STARTING_ACCELERATION_VALUE
 		}
 	}
 	else if (character_teleporting) {

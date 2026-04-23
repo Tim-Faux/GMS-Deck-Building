@@ -1,6 +1,6 @@
 /// If any item have collision with the player they should be placed in this list
 /// NOTE: Please use parent objects when possible here to keep things organized
-#macro all_collision_items [ obj_brick, "walls" ]
+#macro all_collision_items [ obj_collision_object, "walls" ]
 
 /// @desc													Finds all the objects in the given room that
 ///																can be collided with
@@ -34,8 +34,8 @@ function find_room_collision_items(room_index) {
 ///													otherwise noone is returned
 function find_instance_collision_items(room_data, collidable_object) {
 	for(var instance_data_index = 0; instance_data_index < array_length(room_data.instances); instance_data_index++) {
-		var room_object_index = room_data.instances[instance_data_index][$ "object_index"]
-		if(asset_get_index(room_object_index) == collidable_object) {
+		var room_object_index = asset_get_index(room_data.instances[instance_data_index][$ "object_index"])
+		if(room_object_index == collidable_object || object_is_ancestor(room_object_index, collidable_object)) {
 			return collidable_object
 		}
 	}
