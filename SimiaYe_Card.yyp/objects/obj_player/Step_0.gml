@@ -1,4 +1,3 @@
-
 if (!arena) {
 	if(is_controlled_chara) {
 		if(variable_global_exists("room_switching") && global.room_switching) {
@@ -33,4 +32,7 @@ if (!arena) {
 		teleport_effect_subimage += 1 / frames_between_subimages
 	}
 	
+}
+else {
+	display_effect_text()
 }

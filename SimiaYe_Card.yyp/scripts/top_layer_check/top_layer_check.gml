@@ -16,6 +16,8 @@ function find_layer_ids_to_ignore() {
 ///												but still checks if an object is on top. new layers are assumed
 ///												to be at least 100 away from eachother to be considered seperate
 /// @param {String, Id.Layer} layer_id		Your current layer (should just be able to use "layer")
+/// @param {Real} check_pos_x				The optional x position to check for instances above the given layer
+/// @param {Real} check_pos_y				The optional y position to check for instances above the given layer
 /// @returns {Boolean}						True if provided layer is the closest layer to the camera
 function is_top_layer(layer_id, check_pos_x = -1, check_pos_y = -1){
 	var all_layers = layer_get_all()

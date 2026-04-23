@@ -3,11 +3,49 @@ event_inherited();
 
 button_can_be_pressed = true
 
-/// @desc			Controls the end of a players turn, filling the player's hand with cards
-function end_player_turn() {
+/// @desc								Starts the end turn process by looping through all the cards
+///											and running their player_turn_end_action
+/// @param {Real} card_index			The index of the card in the player's hand to run the 
+///											player_turn_end_action for. NOTE: This must be incremented
+///											and function run again as this is acting as a loop
+function end_player_turn(card_index = 0) {
 	if(instance_exists(ui_player_hand) && ui_player_hand.is_hand_visible) {
-		ui_player_hand.empty_player_hand()
+		var players_current_hand = ui_player_hand.get_player_current_hand()
+		if(array_length(players_current_hand) > card_index) {
+			players_current_hand[card_index].player_turn_end_action(end_player_turn, [++card_index])
+		}
+		else {
+			discard_player_hand()
+		}
 	}
+}
+
+/// @desc								Discards all of the cards in the player's hand
+function discard_player_hand() {
+	if(instance_exists(ui_player_hand) && ui_player_hand.is_hand_visible) {
+		ui_player_hand.empty_player_hand(trigger_player_end_of_turn_effects)
+	}
+}
+
+/// @desc			Triggers the end of turn effects and end of turn buffs on each player character
+function trigger_player_end_of_turn_effects() {
+	if(variable_global_exists("add_energy_on_card_draw") ) {
+		global.add_energy_on_card_draw = 0
+	}
+	
+	var num_player_charas = instance_number(obj_player)
+	var player_charas = array_create(num_player_charas)
+	for(var chara_index = 0; chara_index < num_player_charas; chara_index++) {
+		player_charas[chara_index] = instance_find(obj_player, chara_index)
+	}
+	
+	array_sort(player_charas, sort_players)
+	
+	for(var chara_index = 0; chara_index < num_player_charas; chara_index++) {
+		player_charas[chara_index].trigger_end_of_turn_buffs()
+	}
+	
+	start_enemy_turn()
 }
 
 /// @desc			Finds all the enemies that currently exist and allows them to take their turn
@@ -42,11 +80,23 @@ function end_enemy_turn() {
 		enemies[enemy_index].trigger_end_of_turn_debuffs()
 	}
 	
-	button_can_be_pressed = true
-	ui_player_hand.fill_player_hand()
-	if(position_meeting(mouse_x, mouse_y, ui_end_turn_button)) {
-		handle_mouse_enter()
+	if(skip_players_next_turn) {
+		skip_players_next_turn = false
+		end_player_turn()
 	}
+	else {
+		button_can_be_pressed = true
+		ui_player_hand.fill_player_hand()
+		ui_player_energy.reset_player_current_energy()
+		if(position_meeting(mouse_x, mouse_y, ui_end_turn_button)) {
+			handle_mouse_enter()
+		}
+	}
+}
+
+/// @desc			Basic player sorting algorithm to determine the farthest left player chara
+function sort_players(chara1, chara2) {
+	return chara1.x - chara2.x
 }
 
 /// @desc			Basic enemy sorting algorithm to determine the farthest left enemy
