@@ -1,4 +1,4 @@
-#macro WALK_SPEED 6
+#macro WALK_SPEED 7.8
 #macro MAX_SPRITE_SCALE_FRAME_INDEX 14
 #macro MIN_DIST_FOR_ALLIES_TO_MOVE 3
 #macro TIME_BETWEEN_EFFECT_TEXT 12
@@ -16,7 +16,11 @@ move_west_sprite =			noone
 stand_still_sprite =		noone
 teleport_sprite =			spr_player_teleport_effect
 
+if(!variable_global_exists("room_switching"))
+	global.room_switching = false
+
 arena = false
+collidable_items = find_room_collision_items(room)
 if(player_current_health == -1)
 	player_current_health = player_max_health
 
@@ -27,6 +31,10 @@ set_follow_target()
 teleport_effect_subimage = 0
 character_teleported = true
 character_moving = false
+dir_player_enters_room = dir_to_place_player.Top
+dist_to_move_chara = 0
+on_walk_animation_end = undefined
+chara_leaving_room = undefined
 
 class = chara_class.damage
 active_buffs = {}
@@ -36,8 +44,103 @@ chara_shield = 0
 player_current_health = player_max_health
 turns_since_gain_strength_on_attack = 1
 
-/// @desc								Handles the character being hit and check if player is
-///											still alive
+/// @desc								Sets the controlled character's initial position so they are
+///											next to the obj_map_swap_trigger with pos_num equal to
+///											pos_num_to_swap_to and in the direction of place_player_dir
+function set_initial_pos() {
+	if(is_controlled_chara) {
+		for(var map_swap_index = 0; map_swap_index < instance_number(obj_map_swap_trigger); map_swap_index++) {
+			var swap_trigger = instance_find(obj_map_swap_trigger, map_swap_index)
+			if(variable_global_exists("pos_num_to_swap_to") && global.pos_num_to_swap_to == swap_trigger.pos_num) {
+				var dist_to_walk = 0
+				var normalized_sprite_width = sprite_width - sprite_xoffset
+				var normalized_sprite_height = sprite_height - sprite_yoffset
+				switch(swap_trigger.place_player_dir) {
+					case dir_to_place_player.Top :
+						x = swap_trigger.x
+						y = swap_trigger.bbox_bottom + normalized_sprite_height
+						dist_to_walk = swap_trigger.sprite_height + (2 * normalized_sprite_height) +
+											(sprite_height / 2)
+						break
+					case dir_to_place_player.Left :
+						x = swap_trigger.bbox_right + normalized_sprite_width
+						y = swap_trigger.y
+						dist_to_walk = swap_trigger.sprite_width + (2 * normalized_sprite_width) + 
+											(sprite_width / 2)
+						break
+					case dir_to_place_player.Bottom :
+						x = swap_trigger.x
+						y = swap_trigger.bbox_top - normalized_sprite_height
+						dist_to_walk = swap_trigger.sprite_height + (2 * normalized_sprite_height) + 
+											(sprite_height / 2)
+						break
+					case dir_to_place_player.Right :
+						x = swap_trigger.bbox_left - normalized_sprite_width
+						y = swap_trigger.y
+						dist_to_walk = swap_trigger.sprite_width + (2 * normalized_sprite_width) + 
+											(sprite_width / 2)
+						break
+				}
+				walk_to_next_room(swap_trigger.place_player_dir, dist_to_walk, undefined, false)
+				break
+			}
+		}
+	}
+}
+
+/// @desc									Sets up the character automatically walking in the given
+///												direction for the given distance
+/// @param {Real} dir_player_is_placed		The opposite of the direction the character will move in
+/// @param {Real} dist_to_walk				How far the character will walk, this is used to determine
+///												how long the animation will take
+/// @param {Function} on_walk_finished		The callback function for when the walk animation is finished
+/// @param {Bool} leaving_room				Flag to determine the direction the character is moving
+function walk_to_next_room(dir_player_is_placed, dist_to_walk, on_walk_finished, leaving_room) {
+	dir_player_enters_room = dir_player_is_placed
+	dist_to_move_chara = dist_to_walk / WALK_SPEED
+	on_walk_animation_end = on_walk_finished
+	chara_leaving_room = leaving_room
+	set_room_switch_trigger_sprite(dir_player_is_placed, leaving_room)
+	animate_player_leaving_room()
+}
+
+/// @desc								Uses the variables set up in walk_to_next_room to have the
+///											character leave the room. NOTE: This should be called
+///											every frame in the step function to animate properly
+function animate_player_leaving_room() {
+	var walk_direction = 1
+	if(chara_leaving_room) {
+		walk_direction = -1	
+	}
+	switch (dir_player_enters_room) {
+		case dir_to_place_player.Top:
+			move_vertically(-WALK_SPEED * walk_direction)
+			break
+		case dir_to_place_player.Left:
+			move_horizontally(-WALK_SPEED * walk_direction)
+			break
+		case dir_to_place_player.Bottom:
+			move_vertically(WALK_SPEED * walk_direction)
+			break
+		case dir_to_place_player.Right:
+			move_horizontally(WALK_SPEED * walk_direction)
+			break
+	}
+	dist_to_move_chara--
+	
+	if(dist_to_move_chara <= 0)
+	{
+		if(!chara_leaving_room) {
+			global.room_switching = false
+		}
+		if(on_walk_animation_end != undefined && is_method(on_walk_animation_end)) {
+			method_call(on_walk_animation_end)
+		}
+	}	
+}
+
+/// @desc								Removes health from the player equal to damage_taken and
+///											check if player is still alive
 /// @param {Real} damage_taken			The amount of damage the player is taking
 function hit_by_enemy(damage_taken) {
 	damage_taken = clamp(damage_taken - chara_shield, 0, damage_taken)
@@ -202,9 +305,8 @@ function trigger_end_of_turn_buffs() {
 function move_horizontally(x_movement) {
 	for(var x_step = abs(x_movement); x_step > 0; x_step--) {
 		var signed_x_step = x_movement < 0 ? -x_step : x_step
-		var collision = instance_place(x + signed_x_step, y, obj_wall)
-		if (collision == noone) {
-			x += signed_x_step
+		if (!place_meeting(x + signed_x_step, y, collidable_items)) {
+			x += signed_x_step * image_xscale
 			break
 		}
 	}
@@ -217,9 +319,8 @@ function move_horizontally(x_movement) {
 function move_vertically(y_movement) {
 	for(var y_step = abs(y_movement); y_step > 0; y_step--) {
 		var signed_y_step = y_movement < 0 ? -y_step : y_step
-		var collision = instance_place(x, y + signed_y_step, obj_wall)
-		if (collision == noone) {
-			y += signed_y_step
+		if (!place_meeting(x, y + signed_y_step, collidable_items)) {
+			y += signed_y_step * image_yscale
 			break
 		}
 	}
@@ -236,6 +337,31 @@ function set_movement_sprite(movement_angle) {
 	}
 	var movement_sprites = get_movement_sprites_array()
 	sprite_index = movement_sprites[y_sprite_index][x_sprite_index]
+}
+
+/// @desc										Updates the character's sprite based on the given direction
+/// @param {Real} direction_player_enters_room	The direction the player character enters the room from.
+///													NOTE: This is always the place_player_dir of the
+///													trigger, which is the opposite of the direction they move
+/// @param {Bool} leaving_room					Flag to determine if the player is entering or leaving
+///													the room
+function set_room_switch_trigger_sprite(direction_player_enters_room, leaving_room) {
+	var movement_sprites = get_movement_sprites_array()
+
+	switch (direction_player_enters_room) {
+		case dir_to_place_player.Bottom:
+			sprite_index = movement_sprites[!leaving_room * 2][1]
+			break
+		case dir_to_place_player.Right:
+			sprite_index = movement_sprites[1][!leaving_room * 2]
+			break
+		case dir_to_place_player.Top:
+			sprite_index = movement_sprites[leaving_room * 2][1]
+			break
+		case dir_to_place_player.Left:
+			sprite_index = movement_sprites[1][leaving_room * 2]
+			break
+	}
 }
 
 /// @desc									Creates a 2D array with all of the charater's movement 
