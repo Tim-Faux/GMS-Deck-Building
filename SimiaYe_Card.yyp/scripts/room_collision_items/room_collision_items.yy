@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"room_collision_items",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"room_collision_items",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

@@ -1,0 +1,1 @@
+//Sprite should not be drawn for triggers
